@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hedge Fund Edge Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --ink: #262a33;
+    --ink-light: #3d424d;
+    --ink-mid: #5a5f6b;
+    --ink-subtle: #73788a;
+    --grey-100: #f3f4f6;
+    --grey-200: #e5e7eb;
+    --grey-300: #d1d5db;
+    --grey-400: #9ea2b0;
+    --paper: #FFF1E5;
+    --accent: #0d7680;
+    --accent-light: #0e8c97;
+    --blush: #ffe4d6;
+    --blush-dark: #ffd6c2;
+    --warm: #c9926b;
+    --green: #16a34a;
+    --orange: #f59e0b;
+    --red: #cc0000;
+    --purple: #7c3aed;
+    --purple-dark: #5b21b6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Lato', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    padding-top: 56px;
+}
+.container { max-width: 1120px; margin: 0 auto; padding: 0 2rem; }
+
+/* Header */
+.header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--ink); height: 56px;
+    display: flex; align-items: center; padding: 0 2rem;
+}
+.header .logo {
+    font-family: 'Montserrat', sans-serif; font-weight: 700;
+    color: #fff; font-size: 1.3rem; letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.header .nav { display: flex; gap: 1.5rem; margin-left: 3rem; }
+.header .nav a {
+    color: var(--grey-400); text-decoration: none;
+    font-size: 0.82rem; letter-spacing: 0.04em;
+    transition: color 0.2s;
+}
+.header .nav a:hover { color: #fff; }
+.header .meta {
+    margin-left: auto; color: var(--grey-400);
+    font-size: 0.78rem; letter-spacing: 0.02em;
+}
+
+/* Hero */
+.hero {
+    background: var(--ink); color: #fff;
+    padding: 3rem 0 2.5rem; margin-top: -56px; padding-top: calc(56px + 3rem);
+}
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 700;
+    letter-spacing: -0.01em; margin-bottom: 0.5rem;
+}
+.hero .subtitle {
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #FFA089; margin-bottom: 1rem;
+}
+.hero .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 400; font-style: italic;
+    color: var(--grey-300); max-width: 600px; margin-bottom: 1.5rem;
+}
+.stat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem; margin-top: 1rem;
+}
+.stat-box .num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
+}
+.stat-box .label {
+    font-size: 0.72rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--grey-400);
+}
+
+/* Sections */
+.section { padding: 3rem 0; }
+.section-label {
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+}
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 600; margin-bottom: 0.5rem;
+}
+.section-intro {
+    color: var(--ink-mid); font-size: 0.95rem;
+    max-width: 680px; margin-bottom: 2rem;
+}
+
+/* Trading Sheet Table */
+.trading-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.85rem; overflow-x: auto;
+}
+.trading-table thead th {
+    position: sticky; top: 56px; z-index: 10;
+    background: #fff; padding: 0.7rem 0.6rem;
+    text-align: left; font-weight: 700;
+    font-size: 0.72rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-subtle);
+    border-bottom: 2px solid var(--grey-200);
+    white-space: nowrap;
+}
+.trading-table tbody tr {
+    border-bottom: 1px solid var(--grey-100);
+    transition: background 0.15s;
+}
+.trading-table tbody tr:hover { background: var(--blush); }
+.trading-table td {
+    padding: 0.55rem 0.6rem; vertical-align: middle;
+}
+.td-discovered { font-size: 0.78rem; color: var(--ink-subtle); white-space: nowrap; }
+.td-band {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 1rem; text-align: center;
+    width: 2.5rem;
+}
+.td-asset { max-width: 220px; }
+.td-asset .name { font-weight: 700; font-size: 0.88rem; }
+.td-asset .ticker { font-size: 0.75rem; color: var(--ink-subtle); }
+.td-asset .thesis { font-size: 0.72rem; color: var(--ink-mid); font-style: italic; margin-top: 2px; }
+.td-dir {
+    font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 0.04em; text-align: center;
+    padding: 2px 8px; border-radius: 3px;
+    display: inline-block;
+}
+.td-price { font-weight: 700; white-space: nowrap; }
+.td-pnl { font-weight: 700; white-space: nowrap; text-align: right; }
+.td-state {
+    font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 0.04em; text-align: center;
+    padding: 2px 8px; border-radius: 3px;
+    display: inline-block; white-space: nowrap;
+}
+.td-timeline {
+    font-size: 0.75rem; white-space: nowrap;
+    max-width: 300px; overflow-x: auto;
+}
+.tl-point { display: inline-block; margin: 0 1px; }
+.tl-point sup { font-size: 0.55rem; color: var(--ink-subtle); }
+.tl-point sub { font-size: 0.6rem; }
+.tl-arrow { color: var(--grey-300); margin: 0 2px; font-size: 0.7rem; }
+.tl-empty { color: var(--grey-400); font-style: italic; }
+.kill-marker {
+    display: inline-block; background: var(--purple-dark);
+    color: #fff; font-weight: 700; font-size: 0.65rem;
+    width: 16px; height: 16px; line-height: 16px;
+    text-align: center; border-radius: 50%; margin: 0 2px;
+}
+.watch-marker {
+    display: inline-block; background: var(--purple);
+    color: #fff; font-weight: 700; font-size: 0.65rem;
+    width: 16px; height: 16px; line-height: 16px;
+    text-align: center; border-radius: 50%; margin: 0 2px;
+}
+
+/* Killed/Watch rows */
+.killed-row { opacity: 0.7; }
+.killed-row .td-asset .name { color: var(--purple-dark); }
+.killed-row .td-discovered { color: var(--purple-dark); }
+.watch-row { }
+.watch-row .td-asset .name { color: var(--purple); }
+
+/* Band cluster cards */
+.band-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+}
+.band-card {
+    background: #fff; border: 1px solid var(--grey-200);
+    border-radius: 4px; padding: 1.5rem;
+    border-left: 5px solid;
+}
+.band-card .band-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700;
+}
+.band-card .band-label {
+    font-size: 0.72rem; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 0.8rem;
+}
+.band-card .band-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.4rem; font-size: 0.82rem; margin-bottom: 0.8rem;
+}
+.band-card .band-stats .num { font-weight: 700; }
+.band-card .members { font-size: 0.78rem; }
+.band-card .members .member {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 2px 0; border-bottom: 1px solid var(--grey-100);
+}
+
+/* Learning dashboard */
+.learn-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+.learn-card {
+    background: #fff; border: 1px solid var(--grey-200);
+    border-radius: 4px; padding: 1.5rem;
+}
+.learn-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+.learn-card table {
+    width: 100%; font-size: 0.82rem;
+    border-collapse: collapse;
+}
+.learn-card th {
+    text-align: left; font-weight: 700;
+    font-size: 0.72rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--ink-subtle);
+    padding: 0.3rem 0; border-bottom: 1px solid var(--grey-200);
+}
+.learn-card td {
+    padding: 0.3rem 0; border-bottom: 1px solid var(--grey-100);
+}
+
+/* Footer */
+.footer {
+    background: var(--ink); color: var(--grey-400);
+    padding: 2.5rem 0; margin-top: 3rem;
+    font-size: 0.82rem;
+}
+.footer .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; color: #fff; font-size: 1.1rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container { padding: 0 1rem; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .trading-table { font-size: 0.78rem; }
+    .band-grid { grid-template-columns: 1fr; }
+    .learn-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="logo">HF Edge</div>
+    <div class="nav">
+        <a href="#sheet">Sheet</a>
+        <a href="#clusters">Clusters</a>
+        <a href="#learning">Learning</a>
+    </div>
+    <div class="meta">2026-02-14 23:54 UTC</div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="container">
+        <div class="subtitle">Hedge Fund Intelligence &middot; Paper Trading</div>
+        <h1>Edge Tracker</h1>
+        <div class="headline">New recommendations pending due diligence. The trader is assessing.</div>
+        <div class="stat-grid">
+            <div class="stat-box">
+                <div class="num">38</div>
+                <div class="label">Positions</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">0</div>
+                <div class="label">Active</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">0</div>
+                <div class="label">Watching</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">+0.0%</div>
+                <div class="label">Total P&amp;L</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">0%</div>
+                <div class="label">Win Rate</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">14</div>
+                <div class="label">Killed</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trading Sheet -->
+<div class="section" id="sheet">
+    <div class="container">
+        <div class="section-label">Act I</div>
+        <div class="section-title">Trading Sheet</div>
+        <div class="section-intro">All positions scored, ranked, and colour-coded. Active trades in green, watched positions in purple, kills in dark purple. Scan in 10 seconds.</div>
+        <div style="overflow-x: auto;">
+            <table class="trading-table">
+                <thead>
+                    <tr>
+                        <th>Discovered</th>
+                        <th>Band</th>
+                        <th>Asset / Theme</th>
+                        <th>Dir</th>
+                        <th>Conf</th>
+                        <th>Entry</th>
+                        <th>Current</th>
+                        <th>P&amp;L</th>
+                        <th>Timeline</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">Regulatory setbacks: CRLs / clinical holds (select</div>
+        <div class="ticker">AQST</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">85%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">Infant formula safety: recalls / toxin threshold t</div>
+        <div class="ticker">NSRGY</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">85%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">Pharmaceuticals</div>
+        <div class="ticker">PFE</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">83%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">Kyndryl: adverse financial disclosures and litigat</div>
+        <div class="ticker">KD</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">69%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">Akums Drugs & Pharma: industry financials and stra</div>
+        <div class="ticker">AKUMS.NSE</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">64%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">First Solar: corporate governance and compliance</div>
+        <div class="ticker">FSLR</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">62%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">Immunic, Inc.: clinical studies</div>
+        <div class="ticker">IMUX</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">60%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">Faruqi & Faruqi, LLP: securities litigation</div>
+        <div class="ticker">IHE</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">58%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">Genentech / SanegeneBio: RNAi licensing signals</div>
+        <div class="ticker">RHHBY</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">57%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">State of Connecticut: antitrust litigation</div>
+        <div class="ticker">AMRX</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">55%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">Gallagher Re: reinsurance capacity</div>
+        <div class="ticker">AJG</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">53%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">RegenxBio / REGENXBIO: clinical hold signals</div>
+        <div class="ticker">RGNX</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">52%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">Medtronic: diabetes device access / clearance sign</div>
+        <div class="ticker">MDT</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">52%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">Harmony Biosciences, LLC: litigation procedure</div>
+        <div class="ticker">HRMY</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">48%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">Steward Health Care System: litigation and financi</div>
+        <div class="ticker">ELV</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">46%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">[Event] acquisition: GSK</div>
+        <div class="ticker">GSK</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">45%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">[Event] funding_round: GHIT Fund</div>
+        <div class="ticker">4523.T</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">45%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">[Event] executive_appointment: Moderna</div>
+        <div class="ticker">MRNA</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">45%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">GLP-1 vision-loss litigation: Novo Nordisk / Eli L</div>
+        <div class="ticker">NVO</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">0%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">Talc verdict risk: Johnson & Johnson</div>
+        <div class="ticker">JNJ</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">0%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">Medicare IRA price negotiation expansion (CMS list</div>
+        <div class="ticker">XLV</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">0%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">Supreme Court preemption focus: glyphosate / Round</div>
+        <div class="ticker">BAYRY</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">0%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">Compounding GLP-1 antitrust escalation (Strive vs </div>
+        <div class="ticker">LLY</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">0%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr>
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">[Event] product_launch: MetaVia (DA-1726 Phase Ib)</div>
+        <div class="ticker">MTVA</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">0%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#9ea2b0;background:#f1f5f9">PENDING</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">FDA PreCheck: manufacturing acceleration / pilot s</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">80%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">The Schall Law Firm: securities fraud (no instrume</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">71%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">GSK: layoffs / R&D restructuring signals</div>
+        <div class="ticker">GSK</div>
+        <div class="thesis"></div>
+        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">Direction reversed: was SHORT, now LONG</div>
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">69%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">Anvisa: regulatory action (no instrument)</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">69%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#166534">A</td>
+    <td class="td-asset">
+        <div class="name">Letitia James: securities law enforcement (no inst</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">65%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">Alckmin: adverse drug events (no instrument)</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">64%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">ConcertAI: AI clinical trials platform launch clus</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">60%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">DOJ / False Claims Act enforcement cluster (health</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">60%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#92400e">B</td>
+    <td class="td-asset">
+        <div class="name">Medicines and Healthcare products Regulatory Agenc</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
+    <td style="text-align:center;font-weight:700">57%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">Lupin: US generic Dasatinib launch cluster</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
+    <td style="text-align:center;font-weight:700">52%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#6b5b00">C</td>
+    <td class="td-asset">
+        <div class="name">patient harm reports (medical negligence)</div>
+        <div class="ticker">PTCT</div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">52%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">Mike Stuart: patent infringement and drug regulati</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">32%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">Alo Yoga: litigation (no instrument)</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">31%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+<tr class="killed-row">
+    <td class="td-discovered">2026-02-14</td>
+    <td class="td-band" style="color:#73788a">E</td>
+    <td class="td-asset">
+        <div class="name">Laffey Bucci D'Andrea Reich & Ryan: litigation (no</div>
+        <div class="ticker"></div>
+        <div class="thesis"></div>
+        
+    </td>
+    <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
+    <td style="text-align:center;font-weight:700">31%</td>
+    <td class="td-price">---</td>
+    <td class="td-price">---</td>
+    <td class="td-pnl">---</td>
+    <td class="td-timeline"><span class="tl-empty">awaiting data</span></td>
+    <td><span class="td-state" style="color:#5b21b6;background:#ede9fe">KILLED</span></td>
+</tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Confidence Clusters -->
+<div class="section" id="clusters">
+    <div class="container">
+        <div class="section-label">Act II</div>
+        <div class="section-title">Confidence Clusters</div>
+        <div class="section-intro">Performance by confidence band. Which probability tier produces the best results &mdash; the blue chips or the dark horses?</div>
+        <div class="band-grid">
+            <div class="band-card" style="border-left-color:#166534">
+    <div class="band-letter" style="color:#166534">A</div>
+    <div class="band-label" style="color:#166534">Blue Chip</div>
+    <div class="band-stats">
+        <div><span class="num">9</span> positions</div>
+        <div><span class="num">5</span> traded</div>
+        <div><span class="num">0%</span> win rate</div>
+        <div><span class="num" style="color:#16a34a">+0.0%</span> avg P&amp;L</div>
+    </div>
+    <div class="members"><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Regulatory setbacks: CRLs (AQST) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Infant formula safety: re (NSRGY) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b21b6"></span> FDA PreCheck: manufacturi () <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b21b6"></span> GSK: layoffs / R&D restru (GSK) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Pharmaceuticals (PFE) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b21b6"></span> The Schall Law Firm: secu () <span style="margin-left:auto;font-weight:700">---</span></div></div>
+</div>
+<div class="band-card" style="border-left-color:#92400e">
+    <div class="band-letter" style="color:#92400e">B</div>
+    <div class="band-label" style="color:#92400e">Bread & Butter</div>
+    <div class="band-stats">
+        <div><span class="num">10</span> positions</div>
+        <div><span class="num">4</span> traded</div>
+        <div><span class="num">0%</span> win rate</div>
+        <div><span class="num" style="color:#16a34a">+0.0%</span> avg P&amp;L</div>
+    </div>
+    <div class="members"><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Genentech / SanegeneBio:  (RHHBY) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b21b6"></span> ConcertAI: AI clinical tr () <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b21b6"></span> DOJ / False Claims Act en () <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b21b6"></span> Alckmin: adverse drug eve () <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Akums Drugs & Pharma: ind (AKUMS.NSE) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> First Solar: corporate go (FSLR) <span style="margin-left:auto;font-weight:700">---</span></div></div>
+</div>
+<div class="band-card" style="border-left-color:#6b5b00">
+    <div class="band-letter" style="color:#6b5b00">C</div>
+    <div class="band-label" style="color:#6b5b00">Contested</div>
+    <div class="band-stats">
+        <div><span class="num">10</span> positions</div>
+        <div><span class="num">2</span> traded</div>
+        <div><span class="num">0%</span> win rate</div>
+        <div><span class="num" style="color:#16a34a">+0.0%</span> avg P&amp;L</div>
+    </div>
+    <div class="members"><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> RegenxBio / REGENXBIO: cl (RGNX) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b21b6"></span> Lupin: US generic Dasatin () <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Medtronic: diabetes devic (MDT) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> [Event] acquisition: GSK (GSK) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> [Event] funding_round: GH (4523.T) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> [Event] executive_appoint (MRNA) <span style="margin-left:auto;font-weight:700">---</span></div></div>
+</div>
+<div class="band-card" style="border-left-color:#73788a">
+    <div class="band-letter" style="color:#73788a">E</div>
+    <div class="band-label" style="color:#73788a">Frontier Scout</div>
+    <div class="band-stats">
+        <div><span class="num">9</span> positions</div>
+        <div><span class="num">3</span> traded</div>
+        <div><span class="num">0%</span> win rate</div>
+        <div><span class="num" style="color:#16a34a">+0.0%</span> avg P&amp;L</div>
+    </div>
+    <div class="members"><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> GLP-1 vision-loss litigat (NVO) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Talc verdict risk: Johnso (JNJ) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Medicare IRA price negoti (XLV) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Supreme Court preemption  (BAYRY) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> Compounding GLP-1 antitru (LLY) <span style="margin-left:auto;font-weight:700">---</span></div><div class="member"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ea2b0"></span> [Event] product_launch: M (MTVA) <span style="margin-left:auto;font-weight:700">---</span></div></div>
+</div>
+        </div>
+    </div>
+</div>
+
+<!-- Learning Dashboard -->
+<div class="section" id="learning">
+    <div class="container">
+        <div class="section-label">Act III</div>
+        <div class="section-title">Learning Dashboard</div>
+        <div class="section-intro">What is the system learning? Edge quality, direction accuracy, kill validation, and optimal timing by confidence band.</div>
+        <div class="learn-grid">
+            <div class="learn-card">
+    <h3>Edge Quality</h3>
+    <table><thead><tr><th>Quality</th><th>Count</th><th>Win Rate</th><th>Avg P&amp;L</th></tr></thead>
+    <tbody><tr><td>HIGH</td><td>38</td><td>0%</td><td>0%</td></tr></tbody></table>
+</div>
+<div class="learn-card">
+    <h3>Direction Analysis</h3>
+    <table><thead><tr><th>Direction</th><th>Count</th><th>Win Rate</th><th>Avg P&amp;L</th></tr></thead>
+    <tbody><tr><td style='color:#cc0000'>SHORT</td><td>15</td><td>0%</td><td>0%</td></tr><tr><td style='color:#16a34a'>LONG</td><td>13</td><td>0%</td><td>0%</td></tr><tr><td style='color:#92400e'>MIXED</td><td>10</td><td>0%</td><td>0%</td></tr></tbody></table>
+</div>
+<div class="learn-card">
+    <h3>Kill Validation</h3>
+    <table><thead><tr><th>Metric</th><th>Value</th></tr></thead>
+    <tbody>
+        <tr><td>Total Kills</td><td style="font-weight:700">1</td></tr>
+        <tr><td>Good Kills (avoided loss)</td><td style="font-weight:700;color:var(--green)">0</td></tr>
+        <tr><td>Bad Kills (missed profit)</td><td style="font-weight:700;color:var(--red)">0</td></tr>
+        <tr><td>Neutral</td><td style="font-weight:700">1</td></tr>
+        <tr><td>Kill Accuracy</td><td style="font-weight:700">0%</td></tr>
+    </tbody></table>
+</div>
+<div class="learn-card">
+    <h3>Optimal Holding Period</h3>
+    <table><thead><tr><th>Band</th><th>Best Window</th><th>Avg P&amp;L</th><th>Data Points</th></tr></thead>
+    <tbody><tr><td style='color:#166534'>A (Blue Chip)</td><td>0-6h</td><td>0%</td><td>0</td></tr><tr><td style='color:#92400e'>B (Bread & Butter)</td><td>0-6h</td><td>0%</td><td>0</td></tr><tr><td style='color:#6b5b00'>C (Contested)</td><td>0-6h</td><td>0%</td><td>0</td></tr><tr><td style='color:#73788a'>E (Frontier Scout)</td><td>0-6h</td><td>0%</td><td>0</td></tr></tbody></table>
+</div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <div class="container">
+        <div class="logo">HF Edge Tracker</div>
+        <p>Information asymmetry intelligence &mdash; paper trading hedge fund recommendations to learn which signals work.</p>
+        <p style="margin-top: 0.8rem; font-size: 0.75rem;">
+            Report generated 2026-02-14 23:54 UTC. All positions are paper trades for analytical purposes only. Not investment advice.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
