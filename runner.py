@@ -51,10 +51,11 @@ signal.signal(signal.SIGTERM, signal_handler)
 
 
 def push_to_github():
-    """Copy latest.html to index.html and push to GitHub Pages."""
+    """Copy latest.html to index.html at project root and push to GitHub Pages."""
     try:
         latest = os.path.join(REPORTS_DIR, "latest.html")
-        index = os.path.join(REPORTS_DIR, "index.html")
+        project_root = os.path.dirname(REPORTS_DIR)
+        index = os.path.join(project_root, "index.html")
         if not os.path.exists(latest):
             logger.warning("No latest.html to push")
             return False
@@ -63,24 +64,15 @@ def push_to_github():
         # Check if we're in a git repo
         result = subprocess.run(
             ["git", "rev-parse", "--is-inside-work-tree"],
-            cwd=REPORTS_DIR, capture_output=True, timeout=10
+            cwd=project_root, capture_output=True, timeout=10
         )
         if result.returncode != 0:
-            # Not a git repo in reports — try project root
-            project_root = os.path.dirname(REPORTS_DIR)
-            result = subprocess.run(
-                ["git", "rev-parse", "--is-inside-work-tree"],
-                cwd=project_root, capture_output=True, timeout=10
-            )
-            if result.returncode != 0:
-                logger.debug("Not in a git repo, skipping push")
-                return False
-            git_cwd = project_root
-        else:
-            git_cwd = REPORTS_DIR
+            logger.debug("Not in a git repo, skipping push")
+            return False
+        git_cwd = project_root
 
         subprocess.run(
-            ["git", "add", "reports/latest.html", "reports/index.html"],
+            ["git", "add", "index.html", "reports/latest.html"],
             cwd=git_cwd, capture_output=True, check=True
         )
         now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
