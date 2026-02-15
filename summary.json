@@ -1,0 +1,19 @@
+{
+  "system": "hedgefund",
+  "title": "Hedge Fund Edge Tracker",
+  "updated_at": "2026-02-15T00:54:00.544499+00:00",
+  "total_positions": 38,
+  "active_count": 0,
+  "publish_count": 0,
+  "watch_count": 0,
+  "killed_count": 29,
+  "pending_count": 9,
+  "total_pnl": 0,
+  "win_rate": 0,
+  "best_trade": 0,
+  "worst_trade": 0,
+  "short_count": 15,
+  "long_count": 13,
+  "active_trades": [],
+  "report_url": "https://ivanmassow.github.io/hedgefund-tracker/"
+}
