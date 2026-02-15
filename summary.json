@@ -1,19 +1,19 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-15T07:08:10.788520+00:00",
-  "total_positions": 38,
+  "updated_at": "2026-02-15T10:47:12.580449+00:00",
+  "total_positions": 56,
   "active_count": 0,
   "publish_count": 0,
   "watch_count": 0,
-  "killed_count": 29,
-  "pending_count": 9,
+  "killed_count": 42,
+  "pending_count": 14,
   "total_pnl": 0,
   "win_rate": 0,
   "best_trade": 0,
   "worst_trade": 0,
-  "short_count": 15,
-  "long_count": 13,
+  "short_count": 20,
+  "long_count": 21,
   "recent_positions": [
     {
       "asset": "Kyndryl: adverse financial disclosures and litigat",
@@ -27,7 +27,11 @@
       "headline": "Kyndryl's Filing Delay Is a Control-Risk Event: The Discount Can Persist Until t",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "Faruqi & Faruqi, LLP: securities litigation",
@@ -41,7 +45,11 @@
       "headline": "The Plaintiff-Bar Distribution Machine Is Back: Lawsuit SEO Can Extend a Sector ",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "State of Connecticut: antitrust litigation",
@@ -55,7 +63,11 @@
       "headline": "Generic-Drug Antitrust Never Dies: Procedural Wins Can Reprice Liability Tails f",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "Gallagher Re: reinsurance capacity",
@@ -69,7 +81,11 @@
       "headline": "Reinsurance Is Softening, But Complexity Can Still Be a Broker's Friend: AJG Get",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "Harmony Biosciences, LLC: litigation procedure",
@@ -83,7 +99,11 @@
       "headline": "Harmony's Real Story Is the 2030 Generic Date: Procedure Noise Is Background, IP",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "Steward Health Care System: litigation and financi",
@@ -97,7 +117,11 @@
       "headline": "Steward's Trustee Is Naming Names: Even Small-Dollar Payer Suits Can Add Scrutin",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "Akums Drugs & Pharma: industry financials and stra",
@@ -111,7 +135,11 @@
       "headline": "Akums is building a regulated-market runway - EU-GMP plus a long-dated Europe co",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "First Solar: corporate governance and compliance",
@@ -125,7 +153,11 @@
       "headline": "First Solar\u2019s \u2018fraud probe\u2019 looks like litigation-headline plumbing - still a le",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
       "asset": "Immunic, Inc.: clinical studies",
@@ -139,21 +171,29 @@
       "headline": "Immunic\u2019s long game: execution de-risking now, real value event end-2026 - and t",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Awaiting due diligence"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     },
     {
-      "asset": "Alo Yoga: litigation (no instrument)",
-      "ticker": "",
-      "direction": "MIXED",
-      "confidence": 31.0,
-      "band": "E",
+      "asset": "Apple Inc.: litigation and regulatory development",
+      "ticker": "AAPL",
+      "direction": "SHORT",
+      "confidence": 66.0,
+      "band": "A",
       "entry_price": null,
       "current_pnl": null,
-      "state": "KILLED",
-      "headline": "Alo Yoga Litigation: A Real Lawsuit With No Listed Handle Means It's Not a Trade",
+      "state": "PENDING",
+      "headline": "Apple's EU compliance grind: not one big verdict, a thousand small cuts",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "No investable instrument"
+      "state_reason": "Awaiting due diligence",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0
     }
   ],
   "report_url": "https://ivanmassow.github.io/hedgefund-tracker/"
