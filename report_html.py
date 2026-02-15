@@ -450,15 +450,15 @@ body {{
 <div class="header">
     <a href="https://ivanmassow.github.io/noah-dashboard/" style="text-decoration:none"><div class="logo">NOAH</div></a>
     <div class="nav">
+        <a href="https://ivanmassow.github.io/polyhunter/">Poly Market</a>
+        <a href="https://ivanmassow.github.io/hedgefund-tracker/" style="color:#fff">Hedge Fund</a>
+        <a href="https://ivanmassow.github.io/company-watch/">Company Watch</a>
+        <span style="color:rgba(255,255,255,0.15)">|</span>
         <a href="#sheet">Sheet</a>
         <a href="#clusters">Clusters</a>
         <a href="#learning">Learning</a>
-        <span style="color:rgba(255,255,255,0.15)">|</span>
-        <a href="https://ivanmassow.github.io/polyhunter/">Poly Market</a>
-        <a href="https://ivanmassow.github.io/hedgefund-tracker/">Hedge Fund</a>
-        <a href="https://ivanmassow.github.io/company-watch/">Company Watch</a>
     </div>
-    <div class="meta">{now_str}</div>
+    <div class="meta">Hedge Fund &middot; Paper Trading &middot; {now_str}</div>
 </div>
 
 <!-- Hero -->
