@@ -1,20 +1,80 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-15T15:16:35.586646+00:00",
+  "updated_at": "2026-02-15T15:43:37.093669+00:00",
   "total_positions": 56,
-  "active_count": 0,
+  "active_count": 3,
   "publish_count": 0,
   "watch_count": 0,
   "killed_count": 42,
-  "pending_count": 14,
-  "total_pnl": 0,
-  "win_rate": 0,
-  "best_trade": 0,
-  "worst_trade": 0,
+  "pending_count": 11,
+  "total_pnl": 0.0,
+  "win_rate": 0.0,
+  "best_trade": 0.0,
+  "worst_trade": 0.0,
   "short_count": 20,
   "long_count": 21,
   "recent_positions": [
+    {
+      "asset": "Akums Drugs & Pharma: industry financials and stra",
+      "ticker": "AKUMS.NSE",
+      "direction": "LONG",
+      "confidence": 64.0,
+      "band": "B",
+      "entry_price": 467.2,
+      "current_pnl": null,
+      "state": "ACTIVE",
+      "headline": "Akums is building a regulated-market runway - EU-GMP plus a long-dated Europe co",
+      "publish_headline": "",
+      "kill_reason": "",
+      "state_reason": "Moderate staleness (28h) but price stable (moved 0.0%)",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
+    },
+    {
+      "asset": "First Solar: corporate governance and compliance",
+      "ticker": "FSLR",
+      "direction": "SHORT",
+      "confidence": 62.0,
+      "band": "B",
+      "entry_price": 225.65,
+      "current_pnl": 0.0,
+      "state": "ACTIVE",
+      "headline": "First Solar\u2019s \u2018fraud probe\u2019 looks like litigation-headline plumbing - still a le",
+      "publish_headline": "",
+      "kill_reason": "",
+      "state_reason": "Moderate staleness (28h) but price stable (moved 0.0%)",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
+    },
+    {
+      "asset": "Immunic, Inc.: clinical studies",
+      "ticker": "IMUX",
+      "direction": "LONG",
+      "confidence": 60.0,
+      "band": "B",
+      "entry_price": 0.913,
+      "current_pnl": 0.0,
+      "state": "ACTIVE",
+      "headline": "Immunic\u2019s long game: execution de-risking now, real value event end-2026 - and t",
+      "publish_headline": "",
+      "kill_reason": "",
+      "state_reason": "Moderate staleness (28h) but price stable (moved 0.3%)",
+      "conviction": null,
+      "thesis_status": null,
+      "watching_for": "",
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
+    },
     {
       "asset": "Kyndryl: adverse financial disclosures and litigat",
       "ticker": "KD",
@@ -31,7 +91,9 @@
       "conviction": null,
       "thesis_status": null,
       "watching_for": "",
-      "journal_count": 0
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
     },
     {
       "asset": "Faruqi & Faruqi, LLP: securities litigation",
@@ -49,7 +111,9 @@
       "conviction": null,
       "thesis_status": null,
       "watching_for": "",
-      "journal_count": 0
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
     },
     {
       "asset": "State of Connecticut: antitrust litigation",
@@ -67,7 +131,9 @@
       "conviction": null,
       "thesis_status": null,
       "watching_for": "",
-      "journal_count": 0
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
     },
     {
       "asset": "Gallagher Re: reinsurance capacity",
@@ -85,7 +151,9 @@
       "conviction": null,
       "thesis_status": null,
       "watching_for": "",
-      "journal_count": 0
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
     },
     {
       "asset": "Harmony Biosciences, LLC: litigation procedure",
@@ -103,7 +171,9 @@
       "conviction": null,
       "thesis_status": null,
       "watching_for": "",
-      "journal_count": 0
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
     },
     {
       "asset": "Steward Health Care System: litigation and financi",
@@ -121,61 +191,9 @@
       "conviction": null,
       "thesis_status": null,
       "watching_for": "",
-      "journal_count": 0
-    },
-    {
-      "asset": "Akums Drugs & Pharma: industry financials and stra",
-      "ticker": "AKUMS.NSE",
-      "direction": "LONG",
-      "confidence": 64.0,
-      "band": "B",
-      "entry_price": null,
-      "current_pnl": null,
-      "state": "PENDING",
-      "headline": "Akums is building a regulated-market runway - EU-GMP plus a long-dated Europe co",
-      "publish_headline": "",
-      "kill_reason": "",
-      "state_reason": "Awaiting due diligence",
-      "conviction": null,
-      "thesis_status": null,
-      "watching_for": "",
-      "journal_count": 0
-    },
-    {
-      "asset": "First Solar: corporate governance and compliance",
-      "ticker": "FSLR",
-      "direction": "SHORT",
-      "confidence": 62.0,
-      "band": "B",
-      "entry_price": null,
-      "current_pnl": null,
-      "state": "PENDING",
-      "headline": "First Solar\u2019s \u2018fraud probe\u2019 looks like litigation-headline plumbing - still a le",
-      "publish_headline": "",
-      "kill_reason": "",
-      "state_reason": "Awaiting due diligence",
-      "conviction": null,
-      "thesis_status": null,
-      "watching_for": "",
-      "journal_count": 0
-    },
-    {
-      "asset": "Immunic, Inc.: clinical studies",
-      "ticker": "IMUX",
-      "direction": "LONG",
-      "confidence": 60.0,
-      "band": "B",
-      "entry_price": null,
-      "current_pnl": null,
-      "state": "PENDING",
-      "headline": "Immunic\u2019s long game: execution de-risking now, real value event end-2026 - and t",
-      "publish_headline": "",
-      "kill_reason": "",
-      "state_reason": "Awaiting due diligence",
-      "conviction": null,
-      "thesis_status": null,
-      "watching_for": "",
-      "journal_count": 0
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
     },
     {
       "asset": "Apple Inc.: litigation and regulatory development",
@@ -193,7 +211,9 @@
       "conviction": null,
       "thesis_status": null,
       "watching_for": "",
-      "journal_count": 0
+      "journal_count": 0,
+      "signal_velocity": "quiet",
+      "signal_hits_24h": 0
     }
   ],
   "report_url": "https://ivanmassow.github.io/hedgefund-tracker/"
