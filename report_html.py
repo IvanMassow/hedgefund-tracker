@@ -128,6 +128,16 @@ def generate_html_report():
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hedge Fund Edge Tracker</title>
+<!-- Open Graph / Social sharing preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="NOAH Hedge Fund Edge Tracker">
+<meta property="og:description" content="Information asymmetry intelligence. Paper trading hedge fund recommendations to learn which signals work.">
+<meta property="og:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png">
+<meta property="og:url" content="https://ivanmassow.github.io/hedgefund-tracker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NOAH Hedge Fund Edge Tracker">
+<meta name="twitter:description" content="Information asymmetry intelligence. Paper trading hedge fund recommendations to learn which signals work.">
+<meta name="twitter:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {{
@@ -298,6 +308,45 @@ body {{
     width: 16px; height: 16px; line-height: 16px;
     text-align: center; border-radius: 50%; margin: 0 2px;
 }}
+
+/* Journal / Conviction display */
+.conviction-gauge {{
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 0.75rem; font-weight: 700;
+}}
+.conviction-bar {{
+    display: inline-block; width: 50px; height: 6px;
+    background: var(--grey-200); border-radius: 3px;
+    overflow: hidden; vertical-align: middle;
+}}
+.conviction-fill {{
+    height: 100%; border-radius: 3px;
+    transition: width 0.3s;
+}}
+.thesis-badge {{
+    display: inline-block; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.03em; text-transform: uppercase;
+    padding: 1px 6px; border-radius: 3px;
+    margin-left: 4px;
+}}
+.journal-block {{
+    margin-top: 6px; padding: 6px 8px;
+    background: rgba(255,255,255,0.6); border-radius: 4px;
+    border-left: 3px solid var(--grey-300);
+    font-size: 0.72rem; color: var(--ink-mid);
+}}
+.journal-block .journal-watching {{
+    color: var(--accent); font-weight: 700; margin-bottom: 2px;
+}}
+.journal-block .journal-concerns {{
+    color: #b45309; font-style: italic; margin-bottom: 2px;
+}}
+.journal-block .journal-narrative {{
+    color: var(--ink-light); line-height: 1.4;
+}}
+.journal-block .journal-meta {{
+    font-size: 0.65rem; color: var(--grey-400); margin-top: 3px;
+}}
 .watch-marker {{
     display: inline-block; background: var(--purple);
     color: #fff; font-weight: 700; font-size: 0.65rem;
@@ -405,8 +454,9 @@ body {{
         <a href="#clusters">Clusters</a>
         <a href="#learning">Learning</a>
         <span style="color:rgba(255,255,255,0.15)">|</span>
-        <a href="https://ivanmassow.github.io/noah-dashboard/">Dashboard</a>
-        <a href="https://ivanmassow.github.io/polyhunter/">PolyHunter</a>
+        <a href="https://ivanmassow.github.io/polyhunter/">Poly Market</a>
+        <a href="https://ivanmassow.github.io/hedgefund-tracker/">Hedge Fund</a>
+        <a href="https://ivanmassow.github.io/company-watch/">Company Watch</a>
     </div>
     <div class="meta">{now_str}</div>
 </div>
@@ -503,8 +553,13 @@ body {{
 <!-- Footer -->
 <div class="footer">
     <div class="container">
-        <div class="logo">NOAH</div>
+        <a href="https://ivanmassow.github.io/noah-dashboard/" style="text-decoration:none"><div class="logo">NOAH</div></a>
         <p>Information asymmetry intelligence &mdash; paper trading hedge fund recommendations to learn which signals work.</p>
+        <p style="margin-top: 0.8rem; font-size: 0.72rem; color: rgba(255,241,229,0.5);">
+            <a href="https://ivanmassow.github.io/polyhunter/" style="color:rgba(255,241,229,0.5);text-decoration:none">Poly Market</a> &middot;
+            <a href="https://ivanmassow.github.io/hedgefund-tracker/" style="color:rgba(255,241,229,0.5);text-decoration:none">Hedge Fund</a> &middot;
+            <a href="https://ivanmassow.github.io/company-watch/" style="color:rgba(255,241,229,0.5);text-decoration:none">Company Watch</a>
+        </p>
         <p style="margin-top: 0.8rem; font-size: 0.75rem;">
             Report generated {now_str}. All positions are paper trades for analytical purposes only. Not investment advice.
         </p>
@@ -670,6 +725,64 @@ def _build_trading_rows(candidates):
                 state_reason[:60]
             )
 
+        # Journal / conviction display for active positions
+        journal_html = ""
+        if state in ("ACTIVE", "PUBLISH") and m.get("latest_conviction"):
+            conv = m["latest_conviction"]
+            conv_pct = min(conv * 10, 100)
+            if conv >= 7:
+                conv_color = "#16a34a"
+            elif conv >= 5:
+                conv_color = "#f59e0b"
+            elif conv >= 3:
+                conv_color = "#ea580c"
+            else:
+                conv_color = "#cc0000"
+
+            thesis_st = m.get("latest_thesis_status", "")
+            thesis_colors = {
+                "intact": ("#166534", "#dcfce7"),
+                "strengthening": ("#065f46", "#d1fae5"),
+                "weakening": ("#92400e", "#fef3c7"),
+                "invalidated": ("#991b1b", "#fef2f2"),
+            }
+            tc, tbg = thesis_colors.get(thesis_st, ("#73788a", "#f1f5f9"))
+            thesis_badge = ""
+            if thesis_st:
+                thesis_badge = '<span class="thesis-badge" style="color:{};background:{}">{}</span>'.format(
+                    tc, tbg, thesis_st
+                )
+
+            journal_html = '<div style="margin-top:4px;">'
+            journal_html += '<span class="conviction-gauge">'
+            journal_html += '<span class="conviction-bar"><span class="conviction-fill" style="width:{}%;background:{}"></span></span>'.format(
+                conv_pct, conv_color)
+            journal_html += ' <span style="color:{}">{}/10</span>'.format(conv_color, conv)
+            journal_html += '</span>'
+            journal_html += thesis_badge
+            journal_html += '</div>'
+
+            # Journal details block
+            watching = m.get("latest_watching_for", "")
+            concerns = m.get("latest_concerns", "")
+            narratives = m.get("latest_narrative_entries", [])
+
+            if watching or concerns or narratives:
+                journal_html += '<div class="journal-block">'
+                if watching:
+                    journal_html += '<div class="journal-watching">&#128269; {}</div>'.format(
+                        watching[:120])
+                if concerns:
+                    journal_html += '<div class="journal-concerns">&#9888; {}</div>'.format(
+                        concerns[:120])
+                if narratives:
+                    latest = narratives[0]
+                    journal_html += '<div class="journal-narrative">{}</div>'.format(
+                        latest["narrative"][:200])
+                    journal_html += '<div class="journal-meta">Cycle {} &middot; {}</div>'.format(
+                        latest["cycle"], latest["timestamp"])
+                journal_html += '</div>'
+
         rows.append("""<tr{row_class}>
     <td class="td-discovered">{disc}</td>
     <td class="td-band" style="color:{bc}">{band}</td>
@@ -678,6 +791,7 @@ def _build_trading_rows(candidates):
         <div class="ticker">{ticker}</div>
         <div class="thesis">{thesis}</div>
         {note}
+        {journal_html}
     </td>
     <td><span class="td-dir" style="color:{dc};background:{db}">{direction}</span></td>
     <td style="text-align:center;font-weight:700">{conf:.0f}%</td>
@@ -689,6 +803,7 @@ def _build_trading_rows(candidates):
 </tr>""".format(
             row_class=row_class, disc=disc, bc=bc, band=band,
             asset=asset, ticker=ticker, thesis=thesis, note=note,
+            journal_html=journal_html,
             dc=dc, db=db, direction=direction, conf=conf,
             entry_str=entry_str, current_str=current_str,
             pnl_str=pnl_str, timeline_html=timeline_html,
