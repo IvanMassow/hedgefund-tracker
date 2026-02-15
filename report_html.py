@@ -228,7 +228,7 @@ body {{
 }}
 
 /* Sections */
-.section {{ padding: 3rem 0; }}
+.section {{ padding: 3rem 0; scroll-margin-top: 72px; }}
 .section-label {{
     font-size: 0.72rem; font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase;
@@ -561,8 +561,14 @@ body {{
             <a href="https://ivanmassow.github.io/company-watch/" style="color:rgba(255,241,229,0.5);text-decoration:none">Company Watch</a>
         </p>
         <p style="margin-top: 0.8rem; font-size: 0.75rem;">
-            Report generated {now_str}. All positions are paper trades for analytical purposes only. Not investment advice.
+            Report generated {now_str}.
         </p>
+        <div style="margin-top:1.2rem;max-width:560px;margin-left:auto;margin-right:auto;padding:0.8rem 1rem;border-top:1px solid rgba(255,241,229,0.12)">
+            <p style="font-size:0.7rem;color:rgba(255,241,229,0.55);line-height:1.7;text-align:center;margin:0">
+                <strong style="color:rgba(255,241,229,0.7);letter-spacing:0.08em;text-transform:uppercase;font-size:0.65rem">Disclaimer</strong><br>
+                You are welcome to view these pages. The trading algorithms and analysis presented here are experimental and under active development. Nothing on this site constitutes financial advice. We accept no responsibility for any losses incurred from acting on information found here. These pages are intended for internal research purposes. You are strongly advised to conduct your own due diligence before making any investment decisions.
+            </p>
+        </div>
     </div>
 </div>
 
