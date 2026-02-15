@@ -132,12 +132,12 @@ def generate_html_report():
 <meta property="og:type" content="website">
 <meta property="og:title" content="NOAH Hedge Fund Edge Tracker">
 <meta property="og:description" content="Information asymmetry intelligence. Paper trading hedge fund recommendations to learn which signals work.">
-<meta property="og:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png">
+<meta property="og:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
 <meta property="og:url" content="https://ivanmassow.github.io/hedgefund-tracker/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="NOAH Hedge Fund Edge Tracker">
 <meta name="twitter:description" content="Information asymmetry intelligence. Paper trading hedge fund recommendations to learn which signals work.">
-<meta name="twitter:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png">
+<meta name="twitter:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {{
@@ -346,6 +346,12 @@ body {{
 }}
 .journal-block .journal-meta {{
     font-size: 0.65rem; color: var(--grey-400); margin-top: 3px;
+}}
+.signal-badge {{
+    display: inline-block; font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+    vertical-align: middle;
 }}
 .watch-marker {{
     display: inline-block; background: var(--purple);
@@ -759,6 +765,21 @@ def _build_trading_rows(candidates):
                     tc, tbg, thesis_st
                 )
 
+            # Signal velocity badge
+            sig_velocity = m.get("signal_velocity", "quiet")
+            sig_hits = m.get("signal_hits_24h", 0)
+            sig_colors = {
+                "quiet": ("#166534", "#dcfce7", "&#128263;"),
+                "stirring": ("#92400e", "#fef3c7", "&#128264;"),
+                "propagating": ("#b45309", "#ffedd5", "&#128266;"),
+                "mainstream": ("#991b1b", "#fef2f2", "&#128680;"),
+            }
+            sig_c, sig_bg, sig_icon = sig_colors.get(sig_velocity, ("#73788a", "#f1f5f9", ""))
+            signal_badge = ""
+            if sig_velocity != "quiet" or sig_hits > 0:
+                signal_badge = '<span class="signal-badge" style="color:{};background:{}">{} {} ({})</span>'.format(
+                    sig_c, sig_bg, sig_icon, sig_velocity, sig_hits)
+
             journal_html = '<div style="margin-top:4px;">'
             journal_html += '<span class="conviction-gauge">'
             journal_html += '<span class="conviction-bar"><span class="conviction-fill" style="width:{}%;background:{}"></span></span>'.format(
@@ -766,6 +787,7 @@ def _build_trading_rows(candidates):
             journal_html += ' <span style="color:{}">{}/10</span>'.format(conv_color, conv)
             journal_html += '</span>'
             journal_html += thesis_badge
+            journal_html += signal_badge
             journal_html += '</div>'
 
             # Journal details block
