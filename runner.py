@@ -50,6 +50,74 @@ signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
 
+def export_dashboard_json():
+    """Export a lightweight JSON summary for the Noah Dashboard."""
+    import json
+    from analytics import generate_analytics
+    try:
+        data = generate_analytics()
+        s = data["summary"]
+        now = datetime.now(timezone.utc)
+
+        # All recent positions for the dashboard (up to 10, prioritised)
+        # Show PUBLISH first, then ACTIVE, WATCH, PENDING, recent KILLED
+        recent_positions = []
+        state_order = {"PUBLISH": 0, "ACTIVE": 1, "WATCH": 2, "PENDING": 3, "KILLED": 4, "EXPIRED": 5}
+        sorted_candidates = sorted(
+            data["candidates"],
+            key=lambda m: (state_order.get(m.get("state", "EXPIRED"), 5), m.get("discovered_at", ""))
+        )
+        for m in sorted_candidates:
+            if m.get("state") == "EXPIRED":
+                continue
+            recent_positions.append({
+                "asset": (m.get("asset_theme") or "?")[:50],
+                "ticker": m.get("primary_ticker", "?"),
+                "direction": m.get("direction", "?"),
+                "confidence": m.get("confidence_pct", 0),
+                "band": m.get("band", "E"),
+                "entry_price": m.get("entry_price"),
+                "current_pnl": m.get("current_pnl"),
+                "state": m.get("state", "PENDING"),
+                "headline": (m.get("headline") or m.get("mechanism") or "")[:80],
+                "publish_headline": (m.get("publish_headline") or "")[:80],
+                "kill_reason": (m.get("kill_reason") or "")[:60],
+                "state_reason": (m.get("state_reason") or "")[:60],
+            })
+            if len(recent_positions) >= 10:
+                break
+
+        summary_json = {
+            "system": "hedgefund",
+            "title": "Hedge Fund Edge Tracker",
+            "updated_at": now.isoformat(),
+            "total_positions": s.get("total_candidates", 0),
+            "active_count": s.get("active_count", 0),
+            "publish_count": s.get("publish_count", 0),
+            "watch_count": s.get("watch_count", 0),
+            "killed_count": s.get("killed_count", 0),
+            "pending_count": s.get("pending_count", 0),
+            "total_pnl": s.get("total_pnl", 0),
+            "win_rate": s.get("win_rate", 0),
+            "best_trade": s.get("best_trade", 0),
+            "worst_trade": s.get("worst_trade", 0),
+            "short_count": s.get("short_count", 0),
+            "long_count": s.get("long_count", 0),
+            "recent_positions": recent_positions,
+            "report_url": "https://ivanmassow.github.io/hedgefund-tracker/",
+        }
+
+        project_root = os.path.dirname(REPORTS_DIR)
+        json_path = os.path.join(project_root, "summary.json")
+        with open(json_path, "w") as f:
+            json.dump(summary_json, f, indent=2)
+        logger.info("Dashboard JSON exported to {}".format(json_path))
+        return json_path
+    except Exception as e:
+        logger.warning("Failed to export dashboard JSON: {}".format(e))
+        return None
+
+
 def push_to_github():
     """Copy latest.html to index.html at project root and push to GitHub Pages."""
     try:
@@ -60,6 +128,9 @@ def push_to_github():
             logger.warning("No latest.html to push")
             return False
         shutil.copy2(latest, index)
+
+        # Also export dashboard JSON
+        export_dashboard_json()
 
         # Check if we're in a git repo
         result = subprocess.run(
@@ -72,7 +143,7 @@ def push_to_github():
         git_cwd = project_root
 
         subprocess.run(
-            ["git", "add", "index.html", "reports/latest.html"],
+            ["git", "add", "index.html", "reports/latest.html", "summary.json"],
             cwd=git_cwd, capture_output=True, check=True
         )
         now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")

@@ -8,7 +8,7 @@ import logging
 from datetime import datetime, timezone
 
 from analytics import generate_analytics
-from config import REPORTS_DIR, BANDS
+from config import REPORTS_DIR, BANDS, KILL_DISPLAY_HOURS
 
 logger = logging.getLogger("hedgefund.report")
 
@@ -22,13 +22,13 @@ def _band_bg(band):
 def _state_color(state):
     return {
         "ACTIVE": "#16a34a", "WATCH": "#7c3aed", "KILLED": "#5b21b6",
-        "PENDING": "#9ea2b0", "EXPIRED": "#c4c8d4",
+        "PUBLISH": "#d97706", "PENDING": "#9ea2b0", "EXPIRED": "#c4c8d4",
     }.get(state, "#9ea2b0")
 
 def _state_bg(state):
     return {
         "ACTIVE": "#dcfce7", "WATCH": "#f3e8ff", "KILLED": "#ede9fe",
-        "PENDING": "#f1f5f9", "EXPIRED": "#f8f9fa",
+        "PUBLISH": "#fef3c7", "PENDING": "#f1f5f9", "EXPIRED": "#f8f9fa",
     }.get(state, "#f1f5f9")
 
 def _direction_color(d):
@@ -235,13 +235,16 @@ body {{
 }}
 
 /* Trading Sheet Table */
+.table-scroll {{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}}
 .trading-table {{
     width: 100%; border-collapse: collapse;
-    font-size: 0.85rem; overflow-x: auto;
+    font-size: 0.85rem;
 }}
 .trading-table thead th {{
-    position: sticky; top: 56px; z-index: 10;
-    background: #fff; padding: 0.7rem 0.6rem;
+    background: var(--paper); padding: 0.7rem 0.6rem;
     text-align: left; font-weight: 700;
     font-size: 0.72rem; letter-spacing: 0.06em;
     text-transform: uppercase; color: var(--ink-subtle);
@@ -308,6 +311,9 @@ body {{
 .killed-row .td-discovered {{ color: var(--purple-dark); }}
 .watch-row {{ }}
 .watch-row .td-asset .name {{ color: var(--purple); }}
+.publish-row {{ background: #fffbeb; border-left: 3px solid #d97706; }}
+.publish-row .td-asset .name {{ color: #92400e; }}
+.publish-row .td-state {{ font-weight: 700; }}
 
 /* Band cluster cards */
 .band-grid {{
@@ -393,11 +399,14 @@ body {{
 
 <!-- Header -->
 <div class="header">
-    <div class="logo">NOAH</div>
+    <a href="https://ivanmassow.github.io/noah-dashboard/" style="text-decoration:none"><div class="logo">NOAH</div></a>
     <div class="nav">
         <a href="#sheet">Sheet</a>
         <a href="#clusters">Clusters</a>
         <a href="#learning">Learning</a>
+        <span style="color:rgba(255,255,255,0.15)">|</span>
+        <a href="https://ivanmassow.github.io/noah-dashboard/">Dashboard</a>
+        <a href="https://ivanmassow.github.io/polyhunter/">PolyHunter</a>
     </div>
     <div class="meta">{now_str}</div>
 </div>
@@ -443,7 +452,7 @@ body {{
         <div class="section-label">Act I</div>
         <div class="section-title">Trading Sheet</div>
         <div class="section-intro">All positions scored, ranked, and colour-coded. Active trades in green, watched positions in purple, kills in dark purple. Scan in 10 seconds.</div>
-        <div style="overflow-x: auto;">
+        <div class="table-scroll">
             <table class="trading-table">
                 <thead>
                     <tr>
@@ -556,14 +565,35 @@ def _dynamic_headline(s):
 
 
 def _build_trading_rows(candidates):
-    """Build HTML table rows for the trading sheet."""
+    """Build HTML table rows for the trading sheet.
+    Killed positions older than KILL_DISPLAY_HOURS are hidden from the sheet
+    but still counted in analytics/learning.
+    """
     if not candidates:
         return '<tr><td colspan="10" style="text-align:center;color:var(--grey-400);padding:2rem;font-style:italic;">No positions yet. Awaiting reports.</td></tr>'
 
-    # Sort: ACTIVE first, then WATCH, then PENDING, then KILLED
-    state_order = {"ACTIVE": 0, "WATCH": 1, "PENDING": 2, "KILLED": 3, "EXPIRED": 4}
-    sorted_c = sorted(candidates, key=lambda m: (
-        state_order.get(m["state"], 5), -(m.get("confidence_pct") or 0)
+    # Filter out old kills
+    now = datetime.now(timezone.utc)
+    visible = []
+    hidden_kills = 0
+    for m in candidates:
+        if m["state"] == "KILLED" and m.get("killed_at"):
+            try:
+                kill_time = datetime.fromisoformat(m["killed_at"])
+                if kill_time.tzinfo is None:
+                    kill_time = kill_time.replace(tzinfo=timezone.utc)
+                hours_since_kill = (now - kill_time).total_seconds() / 3600
+                if hours_since_kill > KILL_DISPLAY_HOURS:
+                    hidden_kills += 1
+                    continue
+            except (ValueError, TypeError):
+                pass
+        visible.append(m)
+
+    # Sort: PUBLISH first, then ACTIVE, then WATCH, then PENDING, then KILLED
+    state_order = {"PUBLISH": 0, "ACTIVE": 1, "WATCH": 2, "PENDING": 3, "KILLED": 4, "EXPIRED": 5}
+    sorted_c = sorted(visible, key=lambda m: (
+        state_order.get(m["state"], 6), -(m.get("confidence_pct") or 0)
     ))
 
     rows = []
@@ -573,6 +603,8 @@ def _build_trading_rows(candidates):
             row_class = ' class="killed-row"'
         elif m["state"] == "WATCH":
             row_class = ' class="watch-row"'
+        elif m["state"] == "PUBLISH":
+            row_class = ' class="publish-row"'
 
         # Discovered
         disc = m.get("discovered_at", "")[:10]
@@ -617,9 +649,19 @@ def _build_trading_rows(candidates):
         sc = _state_color(state)
         sb = _state_bg(state)
 
-        # Kill/watch note
+        # State-specific note
         note = ""
-        if state == "KILLED" and m.get("kill_reason"):
+        if state == "PUBLISH":
+            pub_headline = m.get("publish_headline") or ""
+            pub_angle = m.get("publish_angle") or ""
+            pub_text = pub_headline or pub_angle
+            if pub_text:
+                note = '<div style="font-size:0.7rem;color:#d97706;font-weight:700;margin-top:2px;">&#9998; {}</div>'.format(
+                    pub_text[:80]
+                )
+            else:
+                note = '<div style="font-size:0.7rem;color:#d97706;font-weight:700;margin-top:2px;">&#9998; Editorial candidate</div>'
+        elif state == "KILLED" and m.get("kill_reason"):
             note = '<div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">{}</div>'.format(
                 m["kill_reason"][:60]
             )
@@ -652,6 +694,19 @@ def _build_trading_rows(candidates):
             pnl_str=pnl_str, timeline_html=timeline_html,
             sc=sc, sb=sb, state=state
         ))
+
+    # Add a note about hidden kills if any
+    if hidden_kills > 0:
+        rows.append(
+            '<tr><td colspan="10" style="text-align:center;color:var(--grey-400);'
+            'padding:0.8rem;font-size:0.78rem;font-style:italic;border:none;">'
+            '{} killed position{} older than {}h removed from view '
+            '&mdash; still counted in learning analytics</td></tr>'.format(
+                hidden_kills,
+                "s" if hidden_kills != 1 else "",
+                int(KILL_DISPLAY_HOURS)
+            )
+        )
 
     return "\n".join(rows)
 
