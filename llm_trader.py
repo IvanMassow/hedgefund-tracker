@@ -1,6 +1,6 @@
 """
 Hedge Fund Edge Tracker - LLM Trader
-Uses Claude for due diligence assessment and trade decisions.
+Uses OpenAI GPT for due diligence assessment and trade decisions.
 Also handles kill switch analysis when new reports arrive.
 """
 import os
@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import requests as http_requests
 
 from db import get_conn
-from config import ANTHROPIC_API_KEY
+from config import OPENAI_API_KEY
 
 logger = logging.getLogger("hedgefund.llm_trader")
 
@@ -82,9 +82,9 @@ RESPONSE FORMAT (JSON only):
 
 def assess_trade(candidate, current_price, staleness_hours):
     """Call Claude to assess whether a trade recommendation is still valid."""
-    api_key = ANTHROPIC_API_KEY or os.environ.get("ANTHROPIC_API_KEY")
+    api_key = OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        logger.debug("No ANTHROPIC_API_KEY, skipping LLM DD")
+        logger.debug("No OPENAI_API_KEY, skipping LLM DD")
         return None
 
     # Build context
@@ -144,14 +144,14 @@ Should we TRADE, WATCH, or KILL this position?""".format(
         market_status="open" if _is_market_hours() else "closed"
     )
 
-    return _call_claude(api_key, DD_SYSTEM_PROMPT, user_prompt)
+    return _call_llm(api_key, DD_SYSTEM_PROMPT, user_prompt)
 
 
 def kill_switch_assessment(active_candidates, new_candidates, new_report_title):
     """Assess whether new report information should kill any active positions."""
-    api_key = ANTHROPIC_API_KEY or os.environ.get("ANTHROPIC_API_KEY")
+    api_key = OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        logger.debug("No ANTHROPIC_API_KEY, skipping kill switch")
+        logger.debug("No OPENAI_API_KEY, skipping kill switch")
         return []
 
     if not active_candidates:
@@ -194,7 +194,7 @@ def kill_switch_assessment(active_candidates, new_candidates, new_report_title):
         )
 
     user_prompt = "\n".join(parts)
-    result = _call_claude(api_key, KILL_SWITCH_SYSTEM_PROMPT, user_prompt)
+    result = _call_llm(api_key, KILL_SWITCH_SYSTEM_PROMPT, user_prompt)
 
     if result:
         return result.get("kills", [])
@@ -251,27 +251,29 @@ def apply_llm_kills(kills, report_id):
     return applied
 
 
-def _call_claude(api_key, system_prompt, user_prompt):
-    """Make a Claude API call and parse JSON response."""
+def _call_llm(api_key, system_prompt, user_prompt):
+    """Make an OpenAI API call and parse JSON response."""
     try:
         resp = http_requests.post(
-            "https://api.anthropic.com/v1/messages",
+            "https://api.openai.com/v1/chat/completions",
             headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
+                "Authorization": "Bearer {}".format(api_key),
+                "Content-Type": "application/json",
             },
             json={
-                "model": "claude-sonnet-4-20250514",
+                "model": "gpt-4o-mini",
                 "max_tokens": 2048,
-                "system": system_prompt,
-                "messages": [{"role": "user", "content": user_prompt}]
+                "response_format": {"type": "json_object"},
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ]
             },
             timeout=60
         )
         resp.raise_for_status()
         data = resp.json()
-        content = data["content"][0]["text"]
+        content = data["choices"][0]["message"]["content"]
         return json.loads(content)
     except json.JSONDecodeError as e:
         logger.error("LLM returned invalid JSON: {}".format(e))

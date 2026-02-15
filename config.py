@@ -14,8 +14,8 @@ ALPHA_VANTAGE_KEY = os.environ.get("ALPHA_VANTAGE_KEY", "")
 ALPHA_VANTAGE_BASE = "https://www.alphavantage.co/query"
 AV_RATE_LIMIT = 12  # seconds between calls (5/min on free tier)
 
-# Anthropic
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+# OpenAI
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 # Intervals (seconds)
 SCAN_INTERVAL = 30 * 60        # Check RSS every 30 minutes

@@ -393,7 +393,7 @@ body {{
 
 <!-- Header -->
 <div class="header">
-    <div class="logo">HF Edge</div>
+    <div class="logo">NOAH</div>
     <div class="nav">
         <a href="#sheet">Sheet</a>
         <a href="#clusters">Clusters</a>
@@ -494,7 +494,7 @@ body {{
 <!-- Footer -->
 <div class="footer">
     <div class="container">
-        <div class="logo">HF Edge Tracker</div>
+        <div class="logo">NOAH</div>
         <p>Information asymmetry intelligence &mdash; paper trading hedge fund recommendations to learn which signals work.</p>
         <p style="margin-top: 0.8rem; font-size: 0.75rem;">
             Report generated {now_str}. All positions are paper trades for analytical purposes only. Not investment advice.
