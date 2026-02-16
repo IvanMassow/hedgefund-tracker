@@ -205,24 +205,11 @@ body {
     padding: 1px 6px; border-radius: 3px;
     margin-left: 4px;
 }
-.journal-block {
-    margin-top: 6px; padding: 6px 8px;
-    background: rgba(255,255,255,0.6); border-radius: 4px;
-    border-left: 3px solid var(--grey-300);
-    font-size: 0.72rem; color: var(--ink-mid);
+.notes-link {
+    text-decoration: none; font-size: 0.85rem; opacity: 0.5;
+    transition: opacity 0.2s; cursor: pointer; margin-left: 4px;
 }
-.journal-block .journal-watching {
-    color: var(--accent); font-weight: 700; margin-bottom: 2px;
-}
-.journal-block .journal-concerns {
-    color: #b45309; font-style: italic; margin-bottom: 2px;
-}
-.journal-block .journal-narrative {
-    color: var(--ink-light); line-height: 1.4;
-}
-.journal-block .journal-meta {
-    font-size: 0.65rem; color: var(--grey-400); margin-top: 3px;
-}
+.notes-link:hover { opacity: 1; }
 .signal-badge {
     display: inline-block; font-size: 0.6rem; font-weight: 700;
     letter-spacing: 0.04em; text-transform: uppercase;
@@ -386,7 +373,7 @@ body {
         <a href="#clusters">Clusters</a>
         <a href="#learning">Learning</a>
     </div>
-    <div class="meta">Hedge Fund &middot; Paper Trading &middot; 2026-02-16 22:47 UTC</div>
+    <div class="meta">Hedge Fund &middot; Paper Trading &middot; 2026-02-16 23:15 UTC</div>
 </div>
 
 <!-- Hero -->
@@ -452,11 +439,10 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">Nicox: regulatory approval</div>
+        <div class="name">Nicox: regulatory approval <a href="positions/position_4.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">XBI<span class="state-label state-label-watching">WATCHING</span></div>
         <div class="thesis">Nicox pre-NDA feedback puts a date on the next catalyst - summer 2026 submission</div>
-        <div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
-        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:60%;background:#f59e0b"></span></span> <span style="color:#f59e0b">6/10</span></span><span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span></div><div class="journal-block"><div class="journal-watching">&#128269; I will look for updates from Nicox about the NDA submission timeline, partner confirmation from Kowa, and early signs of</div><div class="journal-concerns">&#9888; The primary worry is that the lack of interest from news sources may diminish the opportunity. If this situation continu</div><div class="journal-narrative">As I reflect on my previous entries, the situation is still very much in a holding pattern. While the regulatory mechanism is clear and the feedback from the FDA is positive, the continuing silence in</div><div class="journal-meta">Cycle 4 &middot; 2026-02-16T16:36</div></div>
+        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:60%;background:#f59e0b"></span></span> <span style="color:#f59e0b">6/10</span></span><span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span></div>
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
     <td style="text-align:center;font-weight:700">55%</td>
@@ -471,11 +457,10 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">SGS: regulatory approval</div>
+        <div class="name">SGS: regulatory approval <a href="positions/position_7.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">SPY<span class="state-label state-label-watching">WATCHING</span></div>
         <div class="thesis">SGS 'approval' signal is contaminated by mismatch risk - bullish mechanism, but </div>
-        <div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
-        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:50%;background:#f59e0b"></span></span> <span style="color:#f59e0b">5/10</span></span><span class="thesis-badge" style="color:#92400e;background:#fef3c7">weakening</span></div><div class="journal-block"><div class="journal-watching">&#128269; I will be looking for official documentation or confirmations from regulatory bodies regarding the SGS designation, as w</div><div class="journal-concerns">&#9888; My major concern lies in the mismatch risk. If the approval cannot be correctly associated with the right entity, the th</div><div class="journal-narrative">As I reflect on the current status of this thesis, I find myself maintaining a cautious stance. The potential for regulatory approval remains compelling, but the presence of mismatch risk creates a si</div><div class="journal-meta">Cycle 4 &middot; 2026-02-16T16:36</div></div>
+        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:50%;background:#f59e0b"></span></span> <span style="color:#f59e0b">5/10</span></span><span class="thesis-badge" style="color:#92400e;background:#fef3c7">weakening</span></div>
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
     <td style="text-align:center;font-weight:700">49%</td>
@@ -490,11 +475,10 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">drug seizure and trafficking (pharmaceuticals)</div>
+        <div class="name">drug seizure and trafficking (pharmaceuticals) <a href="positions/position_10.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE<span class="state-label state-label-watching">WATCHING</span></div>
         <div class="thesis">Counterfeit and seizure narratives are everywhere - the signal is real, but it i</div>
-        <div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
-        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:60%;background:#f59e0b"></span></span> <span style="color:#f59e0b">6/10</span></span><span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span><span class="signal-badge" style="color:#92400e;background:#fef3c7">&#128264; stirring (2)</span></div><div class="journal-block"><div class="journal-watching">&#128269; I will be looking for a coherent enforcement action or a clearer narrative focusing on a specific manufacturer or distri</div><div class="journal-concerns">&#9888; The blending narratives continue to lack specificity, which could dilute the focus needed for a confident trade. Additio</div><div class="journal-narrative">As I reflect on my previous entries, the stirring signal from niche sources remains, but I still find the original thesis compelling for future development. I continue to be cautious about entering wi</div><div class="journal-meta">Cycle 2 &middot; 2026-02-16T16:36</div></div>
+        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:60%;background:#f59e0b"></span></span> <span style="color:#f59e0b">6/10</span></span><span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span></div>
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
     <td style="text-align:center;font-weight:700">44%</td>
@@ -509,10 +493,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">ICICI Securities: growth and margin improvement</div>
+        <div class="name">ICICI Securities: growth and margin improvement <a href="positions/position_21.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">ICICISEC.NS<span class="state-label state-label-watching">WATCHING</span></div>
         <div class="thesis"></div>
-        <div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -528,10 +511,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">SGS: regulatory approval</div>
+        <div class="name">SGS: regulatory approval <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">SGSOY</div>
         <div class="thesis">SGS Says Belgium Cleared Its Radiolabelled ADME Unit Again - Small Operational G</div>
-        
         
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
@@ -547,10 +529,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Bernstein Liebhard LLP: legal action</div>
+        <div class="name">Bernstein Liebhard LLP: legal action <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">ORGN</div>
         <div class="thesis">Origin Materials' Class Action Moves Into Settlement Mechanics - A Quiet Headlin</div>
-        
         
     </td>
     <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
@@ -566,10 +547,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Nicox: regulatory approval</div>
+        <div class="name">Nicox: regulatory approval <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">COX</div>
         <div class="thesis">Nicox Says the FDA Pre-NDA Readout Was Positive - The De-Risking Is Real, But th</div>
-        
         
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
@@ -585,10 +565,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Dr. Lonser: regulatory development</div>
+        <div class="name">Dr. Lonser: regulatory development <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">SLDB</div>
         <div class="thesis">Solid Biosciences' FDA-Path Narrative Is Back in Circulation - High Optionality,</div>
-        
         
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
@@ -604,10 +583,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">12 Panel Now: regulation</div>
+        <div class="name">12 Panel Now: regulation <a href="positions/position_1.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">XBI</div>
         <div class="thesis">Drug-testing 'rule change' story looks like vendor marketing - the asymmetric ed</div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The original thesis focused on a potentially non-exist</div>
         
     </td>
     <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
@@ -623,10 +601,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">William Panzera: drug trafficking and cryptocurren</div>
+        <div class="name">William Panzera: drug trafficking and cryptocurren <a href="positions/position_2.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">SPY</div>
         <div class="thesis">DOJ fentanyl case is real, but the tradeable read-through is second-order: compl</div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The mechanism surrounding the DOJ fentanyl case and it</div>
         
     </td>
     <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
@@ -642,10 +619,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">Allison Blonski: legal_action</div>
+        <div class="name">Allison Blonski: legal_action <a href="positions/position_3.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis">Depo-Provera mass-tort narrative is scaling - even before verdicts, the overhang</div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The mass-tort narrative surrounding Depo-Provera is ga</div>
         
     </td>
     <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
@@ -661,10 +637,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">ICE: regulatory and legal developments</div>
+        <div class="name">ICE: regulatory and legal developments <a href="positions/position_5.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">ICE</div>
         <div class="thesis">ICE macro cluster is both crowded and polluted by name collisions - fading it is</div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The original thesis proposed that regulatory and legal</div>
         
     </td>
     <td><span class="td-dir" style="color:#92400e;background:#fef3c7">MIXED</span></td>
@@ -680,10 +655,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Tylenol: adverse drug events</div>
+        <div class="name">Tylenol: adverse drug events <a href="positions/position_6.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis">Tylenol safety 'signal' fails the date test - the surfaced FDA artefact is 2021,</div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">LLM DD (HIGH confidence): The actionable content is based on</div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -699,10 +673,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Eli Lilly: clinical studies</div>
+        <div class="name">Eli Lilly: clinical studies <a href="positions/position_8.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">LLY</div>
         <div class="thesis">Lilly clinical-study chatter is bullish, but it is already crowded - this is a l</div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The clinical studies chatter around Eli Lilly is becom</div>
         
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
@@ -718,10 +691,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">clinical research (clinical research)</div>
+        <div class="name">clinical research (clinical research) <a href="positions/position_9.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">JNJ</div>
         <div class="thesis">Registry-driven JNJ research signal has already travelled - the right call is to</div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The original thesis centered around a registry-driven </div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -737,10 +709,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">medical debates (public health)</div>
+        <div class="name">medical debates (public health) <a href="positions/position_14.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">XBI</div>
         <div class="thesis"></div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The original thesis had no mechanism or tripwire, and </div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -756,10 +727,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">Evolution Wealth Management Inc.: regulatory</div>
+        <div class="name">Evolution Wealth Management Inc.: regulatory <a href="positions/position_16.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis"></div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The original thesis for Evolution Wealth Management In</div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -775,10 +745,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">Envestnet Asset Management Inc.: investment adjust</div>
+        <div class="name">Envestnet Asset Management Inc.: investment adjust <a href="positions/position_17.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis"></div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The original thesis lacks a clear mechanism and eviden</div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -794,10 +763,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">Homeland Security Investigations: drug enforcement</div>
+        <div class="name">Homeland Security Investigations: drug enforcement <a href="positions/position_19.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">SPY</div>
         <div class="thesis"></div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The thesis regarding drug enforcement under Homeland S</div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -813,10 +781,9 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#73788a">E</td>
     <td class="td-asset">
-        <div class="name">Richard Pazdur: regulatory scrutiny</div>
+        <div class="name">Richard Pazdur: regulatory scrutiny <a href="positions/position_22.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis"></div>
-        <div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">KILL: The original thesis proposed regulatory scrutiny relat</div>
         
     </td>
     <td><span class="td-dir" style="color:#9ea2b0;background:#f1f5f9">FADE</span></td>
@@ -947,7 +914,7 @@ body {
             <a href="https://ivanmassow.github.io/company-watch/" style="color:rgba(255,241,229,0.5);text-decoration:none">Company Watch</a>
         </p>
         <p style="margin-top: 0.8rem; font-size: 0.75rem;">
-            Report generated 2026-02-16 22:47 UTC.
+            Report generated 2026-02-16 23:15 UTC.
         </p>
         <div style="margin-top:1.2rem;max-width:560px;margin-left:auto;margin-right:auto;padding:0.8rem 1rem;border-top:1px solid rgba(255,241,229,0.12)">
             <p style="font-size:0.7rem;color:rgba(255,241,229,0.55);line-height:1.7;text-align:center;margin:0">
