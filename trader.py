@@ -91,6 +91,8 @@ def price_moved_pct(report_price, current_price):
 
 def price_moved_in_thesis_direction(report_price, current_price, direction):
     """Check if price moved in the thesis direction (bad — edge may be captured)."""
+    if not report_price or not current_price:
+        return False
     if direction == "SHORT":
         return current_price < report_price
     elif direction == "LONG":
@@ -297,25 +299,58 @@ def run_due_diligence(candidate_id, dd_type="pre_trade", llm_trader=None):
     ))
 
     # 6. Apply decision
-    if decision == "TRADE":
-        entry_price = current_price or report_price
+    # PHILOSOPHY: DD validates the thesis, but does NOT auto-enter trades.
+    # All positions go to WATCH. The position monitor + signal hunter
+    # decide when to promote WATCH → ACTIVE (the "pounce").
+    # This makes the bot a patient stalker, not an instant executor.
+    if decision in ("TRADE", "PUBLISH"):
+        dd_price = current_price or report_price
+        watch_reason = "DD approved — watching for signal confirmation"
+        if decision == "PUBLISH":
+            watch_reason = "DD approved (publishable) — watching for signal confirmation"
+
+        # Store editorial metadata for PUBLISH candidates
+        publish_angle = ""
+        publish_headline = ""
+        if decision == "PUBLISH" and llm_result:
+            publish_angle = llm_result.get("publish_angle", "")
+            publish_headline = llm_result.get("publish_headline", "")
+
         conn.execute("""
             UPDATE candidates SET
-                state = 'ACTIVE',
+                state = 'WATCH',
                 state_reason = ?,
                 state_changed_at = ?,
-                entry_price = ?,
-                entry_time = ?,
-                entry_method = 'dd_approved',
+                dd_approved_price = ?,
+                dd_approved_at = ?,
+                entry_method = ?,
+                watch_conditions = ?,
                 last_dd_at = ?,
                 dd_count = dd_count + 1
             WHERE id = ?
-        """, (reason, now.isoformat(), entry_price, now.isoformat(),
-              now.isoformat(), candidate_id))
-        logger.info("TRADE: {} ({}) @ ${:.2f} — {}".format(
-            candidate["asset_theme"][:30], primary_ticker,
-            entry_price, reason[:60]
+        """, (
+            watch_reason, now.isoformat(),
+            dd_price, now.isoformat(),
+            "dd_publish" if decision == "PUBLISH" else "dd_approved",
+            watch_conditions or "Signal confirmation + conviction build",
+            now.isoformat(), candidate_id
         ))
+
+        if publish_angle or publish_headline:
+            conn.execute("""
+                UPDATE candidates SET
+                    publish_angle = ?,
+                    publish_headline = ?,
+                    pre_publish_price = ?
+                WHERE id = ?
+            """, (publish_angle, publish_headline, dd_price, candidate_id))
+
+        logger.info("WATCH (DD approved): {} ({}) @ ${:.2f} — {}".format(
+            candidate["asset_theme"][:30], primary_ticker,
+            dd_price, reason[:60]
+        ))
+        if decision == "PUBLISH":
+            logger.info("  Editorial angle: {}".format(publish_angle[:80] if publish_angle else "N/A"))
 
     elif decision == "WATCH":
         conn.execute("""

@@ -133,6 +133,52 @@ def init_db():
         FOREIGN KEY (candidate_id) REFERENCES candidates(id)
     );
 
+    CREATE TABLE IF NOT EXISTS trader_journal (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        candidate_id INTEGER NOT NULL,
+        cycle_number INTEGER NOT NULL,
+        timestamp TEXT DEFAULT (datetime('now')),
+        hours_since_entry REAL,
+        price_at_review REAL,
+        pnl_pct REAL,
+        peak_gain_pct REAL,
+        max_drawdown_pct REAL,
+
+        decision TEXT,
+        conviction_score INTEGER,
+        conviction_change TEXT,
+        thesis_status TEXT,
+
+        situation_summary TEXT,
+        what_changed TEXT,
+        watching_for TEXT,
+        concerns TEXT,
+        would_sell_if TEXT,
+        would_hold_if TEXT,
+        narrative TEXT,
+
+        risk_level TEXT,
+        time_pressure TEXT,
+        llm_raw TEXT,
+
+        FOREIGN KEY (candidate_id) REFERENCES candidates(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS signal_scans (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        candidate_id INTEGER NOT NULL,
+        timestamp TEXT DEFAULT (datetime('now')),
+        source TEXT,
+        article_title TEXT,
+        article_url TEXT UNIQUE,
+        article_source TEXT,
+        published_at TEXT,
+        sentiment_score REAL,
+        relevance_score REAL,
+        is_signal_hit INTEGER DEFAULT 0,
+        FOREIGN KEY (candidate_id) REFERENCES candidates(id)
+    );
+
     CREATE INDEX IF NOT EXISTS idx_snapshots_candidate
         ON price_snapshots(candidate_id, timestamp);
     CREATE INDEX IF NOT EXISTS idx_candidates_active
@@ -141,7 +187,44 @@ def init_db():
         ON candidates(state);
     CREATE INDEX IF NOT EXISTS idx_candidates_report
         ON candidates(report_id);
+    CREATE INDEX IF NOT EXISTS idx_journal_candidate
+        ON trader_journal(candidate_id, cycle_number);
+    CREATE INDEX IF NOT EXISTS idx_signal_scans_candidate
+        ON signal_scans(candidate_id, timestamp);
     """)
+
+    # Add PUBLISH columns if they don't exist yet (safe migration)
+    existing_cols = {row[1] for row in conn.execute("PRAGMA table_info(candidates)").fetchall()}
+    new_cols = [
+        ("publish_angle", "TEXT"),
+        ("publish_headline", "TEXT"),
+        ("published_at", "TEXT"),
+        ("published_url", "TEXT"),
+        ("pre_publish_price", "REAL"),
+        ("post_publish_price", "REAL"),
+        ("publish_impact_pct", "REAL"),
+        # Position monitor columns
+        ("last_monitor_at", "TEXT"),
+        ("monitor_count", "INTEGER DEFAULT 0"),
+        ("current_conviction", "INTEGER"),
+        ("exit_price", "REAL"),
+        ("exit_time", "TEXT"),
+        ("exit_reason", "TEXT"),
+        ("exit_pnl_pct", "REAL"),
+        ("total_held_hours", "REAL"),
+        # Signal hunting columns
+        ("signal_query", "TEXT"),
+        ("last_signal_scan_at", "TEXT"),
+        ("signal_hits_24h", "INTEGER DEFAULT 0"),
+        ("signal_velocity", "TEXT DEFAULT 'quiet'"),
+        # Stalking mode: DD approves but bot watches before entering
+        ("dd_approved_price", "REAL"),
+        ("dd_approved_at", "TEXT"),
+    ]
+    for col_name, col_type in new_cols:
+        if col_name not in existing_cols:
+            conn.execute("ALTER TABLE candidates ADD COLUMN {} {}".format(col_name, col_type))
+
     conn.commit()
     conn.close()
 

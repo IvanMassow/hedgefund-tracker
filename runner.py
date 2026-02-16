@@ -15,12 +15,14 @@ from db import init_db
 from scanner import scan
 from tracker import track_prices
 from trader import process_pending_candidates, recheck_watched, is_market_open
+from position_monitor import run_position_monitoring
+from signal_hunter import run_signal_scan
 from report_html import generate_html_report
 from analytics import generate_claude_briefing
 import llm_trader
 from config import (
-    SCAN_INTERVAL, TRACK_INTERVAL, DD_INTERVAL, REPORT_INTERVAL,
-    REPORTS_DIR, LOGS_DIR
+    SCAN_INTERVAL, TRACK_INTERVAL, DD_INTERVAL, MONITOR_INTERVAL,
+    SIGNAL_SCAN_INTERVAL, REPORT_INTERVAL, REPORTS_DIR, LOGS_DIR
 )
 
 # Configure logging
@@ -83,6 +85,14 @@ def export_dashboard_json():
                 "publish_headline": (m.get("publish_headline") or "")[:80],
                 "kill_reason": (m.get("kill_reason") or "")[:60],
                 "state_reason": (m.get("state_reason") or "")[:60],
+                # Journal metadata
+                "conviction": m.get("latest_conviction"),
+                "thesis_status": m.get("latest_thesis_status"),
+                "watching_for": (m.get("latest_watching_for") or "")[:80],
+                "journal_count": m.get("journal_count", 0),
+                # Signal hunting metadata
+                "signal_velocity": m.get("signal_velocity", "quiet"),
+                "signal_hits_24h": m.get("signal_hits_24h", 0),
             })
             if len(recent_positions) >= 10:
                 break
@@ -184,6 +194,8 @@ def run():
     last_scan = 0
     last_track = 0
     last_dd = 0
+    last_signal_scan = 0
+    last_monitor = 0
     last_report = 0
 
     # Initial scan
@@ -224,9 +236,10 @@ def run():
         logger.error("Initial report failed: {}".format(e), exc_info=True)
 
     logger.info("Entering main loop. Ctrl+C to stop.")
-    logger.info("  Scan: {}min | Track: {}min | DD: {}h | Report: {}h".format(
+    logger.info("  Scan: {}min | Track: {}min | DD: {}h | Signal: {}h | Monitor: {}h | Report: {}h".format(
         SCAN_INTERVAL // 60, TRACK_INTERVAL // 60,
-        DD_INTERVAL // 3600, REPORT_INTERVAL // 3600
+        DD_INTERVAL // 3600, SIGNAL_SCAN_INTERVAL // 3600,
+        MONITOR_INTERVAL // 3600, REPORT_INTERVAL // 3600
     ))
 
     while running:
@@ -269,12 +282,15 @@ def run():
             except Exception as e:
                 logger.error("Track error: {}".format(e), exc_info=True)
 
-        # Re-check watched positions (during market hours only)
+        # Process pending candidates + re-check watched (during market hours only)
         if now - last_dd >= DD_INTERVAL and is_market_open():
             try:
+                # First: process any pending candidates waiting for DD
+                processed = process_pending_candidates(llm_trader)
+                # Then: re-check watched positions
                 rechecked = recheck_watched(llm_trader)
                 last_dd = now
-                if rechecked > 0:
+                if processed > 0 or rechecked > 0:
                     try:
                         path = generate_html_report()
                         last_report = now
@@ -283,6 +299,32 @@ def run():
                         logger.error("Post-DD report error: {}".format(e), exc_info=True)
             except Exception as e:
                 logger.error("DD recheck error: {}".format(e), exc_info=True)
+
+        # Signal hunting — search for thesis propagation evidence
+        if now - last_signal_scan >= SIGNAL_SCAN_INTERVAL and is_market_open():
+            try:
+                scanned = run_signal_scan()
+                last_signal_scan = now
+                if scanned > 0:
+                    logger.info("Signal scan complete: {} positions scanned".format(scanned))
+            except Exception as e:
+                logger.error("Signal scan error: {}".format(e), exc_info=True)
+
+        # Position monitoring — intelligent ongoing thesis review
+        if now - last_monitor >= MONITOR_INTERVAL and is_market_open():
+            try:
+                monitored = run_position_monitoring(llm_trader)
+                last_monitor = now
+                if monitored > 0:
+                    try:
+                        path = generate_html_report()
+                        last_report = now
+                        logger.info("Report regenerated after position monitoring: {}".format(path))
+                        push_to_github()
+                    except Exception as e:
+                        logger.error("Post-monitor report error: {}".format(e), exc_info=True)
+            except Exception as e:
+                logger.error("Position monitoring error: {}".format(e), exc_info=True)
 
         # Heartbeat report
         if now - last_report >= REPORT_INTERVAL:
@@ -315,6 +357,12 @@ def run_once():
 
     tracked = track_prices()
     logger.info("Track: {} prices".format(tracked))
+
+    scanned = run_signal_scan()
+    logger.info("Signal scan: {} positions scanned".format(scanned))
+
+    monitored = run_position_monitoring(llm_trader)
+    logger.info("Monitor: {} positions reviewed".format(monitored))
 
     path = generate_html_report()
     logger.info("Report: {}".format(path))

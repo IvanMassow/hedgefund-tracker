@@ -236,12 +236,58 @@ body {
     text-align: center; border-radius: 50%; margin: 0 2px;
 }
 
+/* State indicators: WATCH (grey/stalking) and ACTIVE (blue/trading) */
+.state-watch {
+    opacity: 0.55;
+    filter: grayscale(40%);
+    transition: opacity 0.2s, filter 0.2s;
+}
+.state-watch:hover {
+    opacity: 0.85;
+    filter: grayscale(0%);
+}
+.state-watch .td-band { opacity: 0.6; }
+.state-watch .td-pnl { color: var(--grey-400) !important; }
+.state-label {
+    display: inline-block; font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 1px 6px; border-radius: 3px; margin-left: 6px;
+    vertical-align: middle;
+}
+.state-label-watching {
+    color: #6b7280; background: #f3f4f6;
+    border: 1px solid #d1d5db;
+}
+.state-label-trading {
+    color: #2563eb; background: #dbeafe;
+    border: 1px solid #93c5fd;
+}
+.trade-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #2563eb; color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 0.65rem;
+    line-height: 1; margin-left: 4px;
+    vertical-align: middle;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+}
+
 /* Killed/Watch rows */
 .killed-row { opacity: 0.7; }
 .killed-row .td-asset .name { color: var(--purple-dark); }
 .killed-row .td-discovered { color: var(--purple-dark); }
-.watch-row { }
-.watch-row .td-asset .name { color: var(--purple); }
+.watch-row {
+    background: #fafafa;
+    border-left: 3px solid #d1d5db;
+}
+.watch-row .td-asset .name { color: #6b7280; }
+.watch-row .td-asset .ticker { color: #9ca3af; }
+.watch-row .td-asset .thesis { color: #9ca3af; }
+.active-row {
+    border-left: 3px solid #2563eb;
+}
+.active-row .td-asset .name { color: var(--ink); }
 .publish-row { background: #fffbeb; border-left: 3px solid #d97706; }
 .publish-row .td-asset .name { color: #92400e; }
 .publish-row .td-state { font-weight: 700; }
@@ -340,7 +386,7 @@ body {
         <a href="#clusters">Clusters</a>
         <a href="#learning">Learning</a>
     </div>
-    <div class="meta">Hedge Fund &middot; Paper Trading &middot; 2026-02-16 14:42 UTC</div>
+    <div class="meta">Hedge Fund &middot; Paper Trading &middot; 2026-02-16 14:45 UTC</div>
 </div>
 
 <!-- Hero -->
@@ -383,7 +429,7 @@ body {
     <div class="container">
         <div class="section-label">Act I</div>
         <div class="section-title">Trading Sheet</div>
-        <div class="section-intro">All positions scored, ranked, and colour-coded. Active trades in green, watched positions in purple, kills in dark purple. Scan in 10 seconds.</div>
+        <div class="section-intro">All positions scored, ranked, and colour-coded. Blue <strong>B</strong> badges mark active trades; greyed-out rows are being stalked. Kills in purple. Scan in 10 seconds.</div>
         <div class="table-scroll">
             <table class="trading-table">
                 <thead>
@@ -401,15 +447,15 @@ body {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="watch-row">
+                    <tr class="watch-row state-watch">
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
         <div class="name">William Panzera: drug trafficking and cryptocurren</div>
-        <div class="ticker">SPY</div>
+        <div class="ticker">SPY<span class="state-label state-label-watching">WATCHING</span></div>
         <div class="thesis">DOJ fentanyl case is real, but the tradeable read-through is second-order: compl</div>
-        <div style="font-size:0.7rem;color:var(--purple);font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
-        
+        <div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
+        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:60%;background:#f59e0b"></span></span> <span style="color:#f59e0b">6/10</span></span><span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span><span class="signal-badge" style="color:#991b1b;background:#fef2f2">&#128680; mainstream (50)</span></div><div class="journal-block"><div class="journal-watching">&#128269; I will monitor for any emerging policy changes or guidance coming from the DOJ that can provide further confirmation of </div><div class="journal-concerns">&#9888; The primary concern is that the market may have already priced in this news, which would limit the potential downside an</div><div class="journal-narrative">In this initial review, I'm observing a high volume of mainstream media coverage regarding the DOJ investigation. While the narrative fits with the broader compliance tightening theme, I am cautious a</div><div class="journal-meta">Cycle 1 &middot; 2026-02-16T14:39</div></div>
     </td>
     <td><span class="td-dir" style="color:#cc0000;background:#fef2f2">SHORT</span></td>
     <td style="text-align:center;font-weight:700">59%</td>
@@ -417,17 +463,17 @@ body {
     <td class="td-price">$681.75</td>
     <td class="td-pnl">---</td>
     <td class="td-timeline"><span class="tl-point" style="color:#7c3aed" title="2026-02-16 13:57 (0h): $681.75 "><sup class="tl-time">13:57</sup>$681.75<sub></sub></span></td>
-    <td><span class="td-state" style="color:#7c3aed;background:#f3e8ff">WATCH</span></td>
+    <td><span class="td-state" style="color:#6b7280;background:#f3f4f6">WATCH</span></td>
 </tr>
-<tr class="watch-row">
+<tr class="watch-row state-watch">
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
         <div class="name">Nicox: regulatory approval</div>
-        <div class="ticker">XBI</div>
+        <div class="ticker">XBI<span class="state-label state-label-watching">WATCHING</span></div>
         <div class="thesis">Nicox pre-NDA feedback puts a date on the next catalyst - summer 2026 submission</div>
-        <div style="font-size:0.7rem;color:var(--purple);font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
-        
+        <div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
+        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:60%;background:#f59e0b"></span></span> <span style="color:#f59e0b">6/10</span></span><span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span></div><div class="journal-block"><div class="journal-watching">&#128269; Moving forward, I'm watching for any updates from Nicox regarding the NDA submission timeline and partner confirmations,</div><div class="journal-concerns">&#9888; My primary concern right now is the lack of signal propagation, with no articles or interest being generated around the </div><div class="journal-narrative">Given that this is the first review, it’s important to monitor how this narrative develops. I find the mechanism sound due to the clear regulatory milestone; however, the absence of propagation makes </div><div class="journal-meta">Cycle 1 &middot; 2026-02-16T14:40</div></div>
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
     <td style="text-align:center;font-weight:700">55%</td>
@@ -435,17 +481,17 @@ body {
     <td class="td-price">$122.86</td>
     <td class="td-pnl">---</td>
     <td class="td-timeline"><span class="tl-point" style="color:#7c3aed" title="2026-02-16 13:57 (0h): $122.86 "><sup class="tl-time">13:57</sup>$122.86<sub></sub></span></td>
-    <td><span class="td-state" style="color:#7c3aed;background:#f3e8ff">WATCH</span></td>
+    <td><span class="td-state" style="color:#6b7280;background:#f3f4f6">WATCH</span></td>
 </tr>
-<tr class="watch-row">
+<tr class="watch-row state-watch">
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
         <div class="name">SGS: regulatory approval</div>
-        <div class="ticker">SPY</div>
+        <div class="ticker">SPY<span class="state-label state-label-watching">WATCHING</span></div>
         <div class="thesis">SGS 'approval' signal is contaminated by mismatch risk - bullish mechanism, but </div>
-        <div style="font-size:0.7rem;color:var(--purple);font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
-        
+        <div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">DD approved — watching for signal confirmation</div>
+        <div style="margin-top:4px;"><span class="conviction-gauge"><span class="conviction-bar"><span class="conviction-fill" style="width:40%;background:#ea580c"></span></span> <span style="color:#ea580c">4/10</span></span><span class="thesis-badge" style="color:#92400e;background:#fef3c7">weakening</span></div><div class="journal-block"><div class="journal-watching">&#128269; I will be looking for any updates or clarifications from regulatory bodies regarding the SGS designation, as well as con</div><div class="journal-concerns">&#9888; The major concern is the mismatch risk and whether the approval can be correctly associated with the right entity. If th</div><div class="journal-narrative">I'm currently holding on this thesis as I find it interesting, but I'm wary of the mismatch risk described in the mechanism. The initial bullish tone is dependent on clean identification of the approv</div><div class="journal-meta">Cycle 1 &middot; 2026-02-16T14:41</div></div>
     </td>
     <td><span class="td-dir" style="color:#16a34a;background:#f0fdf4">LONG</span></td>
     <td style="text-align:center;font-weight:700">49%</td>
@@ -453,7 +499,7 @@ body {
     <td class="td-price">$681.75</td>
     <td class="td-pnl">---</td>
     <td class="td-timeline"><span class="tl-point" style="color:#7c3aed" title="2026-02-16 13:57 (0h): $681.75 "><sup class="tl-time">13:57</sup>$681.75<sub></sub></span></td>
-    <td><span class="td-state" style="color:#7c3aed;background:#f3e8ff">WATCH</span></td>
+    <td><span class="td-state" style="color:#6b7280;background:#f3f4f6">WATCH</span></td>
 </tr>
 <tr class="killed-row">
     <td class="td-discovered">2026-02-16</td>
@@ -934,7 +980,7 @@ body {
             <a href="https://ivanmassow.github.io/company-watch/" style="color:rgba(255,241,229,0.5);text-decoration:none">Company Watch</a>
         </p>
         <p style="margin-top: 0.8rem; font-size: 0.75rem;">
-            Report generated 2026-02-16 14:42 UTC.
+            Report generated 2026-02-16 14:45 UTC.
         </p>
         <div style="margin-top:1.2rem;max-width:560px;margin-left:auto;margin-right:auto;padding:0.8rem 1rem;border-top:1px solid rgba(255,241,229,0.12)">
             <p style="font-size:0.7rem;color:rgba(255,241,229,0.55);line-height:1.7;text-align:center;margin:0">

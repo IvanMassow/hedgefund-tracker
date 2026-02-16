@@ -21,14 +21,14 @@ def _band_bg(band):
 
 def _state_color(state):
     return {
-        "ACTIVE": "#16a34a", "WATCH": "#7c3aed", "KILLED": "#5b21b6",
-        "PUBLISH": "#d97706", "PENDING": "#9ea2b0", "EXPIRED": "#c4c8d4",
+        "ACTIVE": "#2563eb", "WATCH": "#6b7280", "KILLED": "#5b21b6",
+        "PUBLISH": "#2563eb", "PENDING": "#9ea2b0", "EXPIRED": "#c4c8d4",
     }.get(state, "#9ea2b0")
 
 def _state_bg(state):
     return {
-        "ACTIVE": "#dcfce7", "WATCH": "#f3e8ff", "KILLED": "#ede9fe",
-        "PUBLISH": "#fef3c7", "PENDING": "#f1f5f9", "EXPIRED": "#f8f9fa",
+        "ACTIVE": "#dbeafe", "WATCH": "#f3f4f6", "KILLED": "#ede9fe",
+        "PUBLISH": "#dbeafe", "PENDING": "#f1f5f9", "EXPIRED": "#f8f9fa",
     }.get(state, "#f1f5f9")
 
 def _direction_color(d):
@@ -360,12 +360,58 @@ body {{
     text-align: center; border-radius: 50%; margin: 0 2px;
 }}
 
+/* State indicators: WATCH (grey/stalking) and ACTIVE (blue/trading) */
+.state-watch {{
+    opacity: 0.55;
+    filter: grayscale(40%);
+    transition: opacity 0.2s, filter 0.2s;
+}}
+.state-watch:hover {{
+    opacity: 0.85;
+    filter: grayscale(0%);
+}}
+.state-watch .td-band {{ opacity: 0.6; }}
+.state-watch .td-pnl {{ color: var(--grey-400) !important; }}
+.state-label {{
+    display: inline-block; font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 1px 6px; border-radius: 3px; margin-left: 6px;
+    vertical-align: middle;
+}}
+.state-label-watching {{
+    color: #6b7280; background: #f3f4f6;
+    border: 1px solid #d1d5db;
+}}
+.state-label-trading {{
+    color: #2563eb; background: #dbeafe;
+    border: 1px solid #93c5fd;
+}}
+.trade-badge {{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #2563eb; color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 0.65rem;
+    line-height: 1; margin-left: 4px;
+    vertical-align: middle;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+}}
+
 /* Killed/Watch rows */
 .killed-row {{ opacity: 0.7; }}
 .killed-row .td-asset .name {{ color: var(--purple-dark); }}
 .killed-row .td-discovered {{ color: var(--purple-dark); }}
-.watch-row {{ }}
-.watch-row .td-asset .name {{ color: var(--purple); }}
+.watch-row {{
+    background: #fafafa;
+    border-left: 3px solid #d1d5db;
+}}
+.watch-row .td-asset .name {{ color: #6b7280; }}
+.watch-row .td-asset .ticker {{ color: #9ca3af; }}
+.watch-row .td-asset .thesis {{ color: #9ca3af; }}
+.active-row {{
+    border-left: 3px solid #2563eb;
+}}
+.active-row .td-asset .name {{ color: var(--ink); }}
 .publish-row {{ background: #fffbeb; border-left: 3px solid #d97706; }}
 .publish-row .td-asset .name {{ color: #92400e; }}
 .publish-row .td-state {{ font-weight: 700; }}
@@ -507,7 +553,7 @@ body {{
     <div class="container">
         <div class="section-label">Act I</div>
         <div class="section-title">Trading Sheet</div>
-        <div class="section-intro">All positions scored, ranked, and colour-coded. Active trades in green, watched positions in purple, kills in dark purple. Scan in 10 seconds.</div>
+        <div class="section-intro">All positions scored, ranked, and colour-coded. Blue <strong>B</strong> badges mark active trades; greyed-out rows are being stalked. Kills in purple. Scan in 10 seconds.</div>
         <div class="table-scroll">
             <table class="trading-table">
                 <thead>
@@ -669,9 +715,11 @@ def _build_trading_rows(candidates):
         if m["state"] == "KILLED":
             row_class = ' class="killed-row"'
         elif m["state"] == "WATCH":
-            row_class = ' class="watch-row"'
+            row_class = ' class="watch-row state-watch"'
+        elif m["state"] == "ACTIVE":
+            row_class = ' class="active-row"'
         elif m["state"] == "PUBLISH":
-            row_class = ' class="publish-row"'
+            row_class = ' class="publish-row active-row"'
 
         # Discovered
         disc = m.get("discovered_at", "")[:10]
@@ -682,9 +730,18 @@ def _build_trading_rows(candidates):
 
         # Asset name + thesis
         asset = m.get("asset_theme", "Unknown")[:50]
-        ticker = m.get("primary_ticker", "")
+        ticker_raw = m.get("primary_ticker", "")
         thesis = (m.get("headline") or m.get("mechanism") or "")[:80]
         state_reason = m.get("state_reason", "")
+
+        # Build ticker display with state indicator badges
+        state = m["state"]
+        if state in ("ACTIVE", "PUBLISH"):
+            ticker = '{}<span class="trade-badge">B</span><span class="state-label state-label-trading">TRADING</span>'.format(ticker_raw)
+        elif state == "WATCH":
+            ticker = '{}<span class="state-label state-label-watching">WATCHING</span>'.format(ticker_raw)
+        else:
+            ticker = ticker_raw
 
         # Direction badge
         direction = m.get("direction", "MIXED")
@@ -733,13 +790,13 @@ def _build_trading_rows(candidates):
                 m["kill_reason"][:60]
             )
         elif state == "WATCH" and state_reason:
-            note = '<div style="font-size:0.7rem;color:var(--purple);font-style:italic;margin-top:2px;">{}</div>'.format(
+            note = '<div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">{}</div>'.format(
                 state_reason[:60]
             )
 
-        # Journal / conviction display for active positions
+        # Journal / conviction display for active and watched positions
         journal_html = ""
-        if state in ("ACTIVE", "PUBLISH") and m.get("latest_conviction"):
+        if state in ("ACTIVE", "PUBLISH", "WATCH") and m.get("latest_conviction"):
             conv = m["latest_conviction"]
             conv_pct = min(conv * 10, 100)
             if conv >= 7:

@@ -361,144 +361,94 @@ def _parse_pipe_row(cells):
 def parse_position_details(html):
     """Parse detailed position analysis cards from the report HTML.
 
-    Each position has: headline, mechanism quote, tripwire, evidence, risks,
-    trade confidence score, propagation posture, freshness score.
+    The report structure per position is:
+    1. <h2> heading (thesis headline)
+    2. <table> with rank, ticker, direction, etc.
+    3. <p> blocks with bold labels: "The Opportunity:", "The Timing:", "The Evidence:"
+
     Returns dict keyed by rank number.
     """
     details = {}
 
-    # Find position card sections — look for rank numbers with headings
-    # Pattern: cards with rank badges and position titles
-    sections = re.split(r'<(?:div|section)[^>]*class="[^"]*edge-card[^"]*"[^>]*>', html)
-    if len(sections) <= 1:
-        # Try splitting on rank circles or h3/h2 headings with numbers
-        sections = re.split(r'<(?:div)[^>]*class="[^"]*rank-circle[^"]*"[^>]*>\s*(\d+)\s*</div>', html)
+    # Split the article body into sections by <hr /> boundaries
+    # Each position section sits between two <hr /> tags
+    hr_sections = re.split(r'<hr\s*/?\s*>', html)
 
-    # Extract per-position detail by searching for content blocks
-    for rank_num in range(1, 10):
+    for section in hr_sections:
+        # Check if this section contains a per-position table (has Rank column)
+        rank_match = re.search(
+            r'<td[^>]*>\s*(\d+)\s*</td>',
+            section, re.DOTALL
+        )
+        if not rank_match:
+            continue
+
+        rank_num = int(rank_match.group(1))
         detail = {}
 
-        # Find headline (h4 italic)
-        h4_pattern = r'(?:rank.*?{r}|#{r}\s).*?<h4[^>]*>(.*?)</h4>'.format(r=rank_num)
-        h4_match = re.search(h4_pattern, html, re.DOTALL | re.IGNORECASE)
-        if h4_match:
-            detail["headline"] = strip_html(h4_match.group(1))
+        # Headline from the <h2> in this section
+        # Skip generic headings like "Our Analysis", "Decision Panel"
+        skip_headings = {"our analysis", "decision panel", "market regime",
+                         "appendix", "methodology", "disclaimer"}
+        h2_matches = re.findall(r'<h2[^>]*>(.*?)</h2>', section, re.DOTALL)
+        for h2_html in h2_matches:
+            h2_text = strip_html(h2_html)
+            if h2_text.lower() not in skip_headings and len(h2_text) > 10:
+                detail["headline"] = h2_text
+                break
 
-        # Find mechanism quote (blockquote or bordered div with italic)
-        # Look in the vicinity of this rank's content
-        rank_region = _extract_rank_region(html, rank_num)
-        if rank_region:
-            # Mechanism quote
-            mech = re.search(
-                r'class="[^"]*mechanism[^"]*"[^>]*>(.*?)</(?:div|blockquote|p)',
-                rank_region, re.DOTALL | re.IGNORECASE
-            )
-            if mech:
-                detail["mechanism"] = strip_html(mech.group(1))
-            else:
-                # Try pull-quote class
-                mech = re.search(
-                    r'class="[^"]*pull-quote[^"]*"[^>]*>(.*?)</(?:div|blockquote|p)',
-                    rank_region, re.DOTALL | re.IGNORECASE
-                )
-                if mech:
-                    detail["mechanism"] = strip_html(mech.group(1))
+        # Extract labelled paragraphs: "The Opportunity:", "The Timing:", "The Evidence:"
+        # These are <p> tags with <strong> labels
+        paragraphs = re.findall(r'<p>(.*?)</p>', section, re.DOTALL)
 
-            # Tripwire
-            trip = re.search(
-                r'(?:TRIPWIRE|CATALYST)[^<]*</[^>]*>(.*?)</(?:div|p)',
-                rank_region, re.DOTALL | re.IGNORECASE
-            )
-            if trip:
-                detail["tripwire"] = strip_html(trip.group(1))
-            else:
-                trip = re.search(
-                    r'class="[^"]*tripwire[^"]*"[^>]*>(.*?)</div>',
-                    rank_region, re.DOTALL | re.IGNORECASE
-                )
-                if trip:
-                    detail["tripwire"] = strip_html(trip.group(1))
+        for p_html in paragraphs:
+            p_text = strip_html(p_html)
 
-            # Evidence sources
-            evidence = []
-            ev_items = re.findall(
-                r'class="[^"]*evidence[^"]*"[^>]*>.*?<li[^>]*>(.*?)</li>',
-                rank_region, re.DOTALL | re.IGNORECASE
-            )
-            if not ev_items:
-                ev_items = re.findall(
-                    r'<li[^>]*class="[^"]*evidence[^"]*"[^>]*>(.*?)</li>',
-                    rank_region, re.DOTALL | re.IGNORECASE
-                )
-            for ev in ev_items:
-                evidence.append(strip_html(ev))
-            if evidence:
-                detail["evidence"] = json.dumps(evidence)
+            if p_text.startswith("The Opportunity:"):
+                detail["mechanism"] = p_text[len("The Opportunity:"):].strip()
 
-            # Risks
-            risks = []
-            risk_items = re.findall(
-                r'class="[^"]*risk[^"]*"[^>]*>.*?<li[^>]*>(.*?)</li>',
-                rank_region, re.DOTALL | re.IGNORECASE
-            )
-            for r in risk_items:
-                risks.append(strip_html(r))
-            if risks:
-                detail["risks"] = json.dumps(risks)
+            elif p_text.startswith("The Timing:"):
+                timing_text = p_text[len("The Timing:"):].strip()
+                detail["tripwire"] = timing_text
+                # Also extract propagation posture
+                prop = re.search(r'(IGNITE|CATALYTIC|SILENT|FRAGILE)', timing_text, re.IGNORECASE)
+                if prop:
+                    detail["propagation"] = prop.group(1).upper()
+                # Extract freshness score
+                fresh = re.search(r'Freshness\s+(?:is\s+)?(\d+)', timing_text, re.IGNORECASE)
+                if not fresh:
+                    fresh = re.search(r'Fresh(?:ness)?\s+(\d+)', timing_text, re.IGNORECASE)
+                if fresh:
+                    detail["freshness_score"] = float(fresh.group(1))
 
-            # Trade confidence score
-            tc = re.search(
-                r'(?:Trade\s+Confidence|Confidence\s+Score)[^:]*[:]\s*(\d+)',
-                rank_region, re.IGNORECASE
-            )
-            if tc:
-                detail["trade_confidence_score"] = float(tc.group(1))
+            elif p_text.startswith("The Evidence:"):
+                detail["evidence"] = p_text[len("The Evidence:"):].strip()
 
-            # Freshness score
-            fresh = re.search(
-                r'(?:Freshness|Fresh)[^:]*[:]\s*(\d+)',
-                rank_region, re.IGNORECASE
-            )
-            if fresh:
-                detail["freshness_score"] = float(fresh.group(1))
+            elif p_text.startswith("The Risk") or p_text.startswith("Key Risk"):
+                detail["risks"] = p_text.split(":", 1)[-1].strip()
 
-            # Propagation posture
-            prop = re.search(
-                r'(IGNITE|CATALYTIC|SILENT|FRAGILE)',
-                rank_region, re.IGNORECASE
+        # If no explicit risk paragraph, try to extract risks from timing text
+        if "risks" not in detail and "tripwire" in detail:
+            risk_match = re.search(
+                r'(?:risk|whipsaw|downside)[^.]*\.',
+                detail["tripwire"], re.IGNORECASE
             )
-            if prop:
-                detail["propagation"] = prop.group(1).upper()
+            if risk_match:
+                detail["risks"] = risk_match.group(0)
+
+        # Also extract the asset name from the per-position table for name-based matching
+        asset_match = re.search(
+            r'<td[^>]*>\s*\d+\s*</td>\s*<td[^>]*>(.*?)</td>',
+            section, re.DOTALL
+        )
+        if asset_match:
+            detail["_asset_name"] = strip_html(asset_match.group(1)).strip()
 
         if detail:
             details[rank_num] = detail
+            logger.debug("Parsed details for rank {}: {} keys".format(rank_num, len(detail)))
 
     return details
-
-
-def _extract_rank_region(html, rank_num):
-    """Extract the HTML region for a specific rank number."""
-    # Try to find the content between this rank and the next
-    patterns = [
-        # Edge card with rank circle
-        r'class="[^"]*rank-circle[^"]*"[^>]*>\s*{r}\s*</div>(.*?)(?:class="[^"]*rank-circle[^"]*"[^>]*>\s*{n}\s*</div>|class="[^"]*section-label|$)'.format(r=rank_num, n=rank_num + 1),
-        # h2/h3 with rank number
-        r'<h[23][^>]*>[^<]*{r}[^<]*</h[23]>(.*?)(?:<h[23][^>]*>[^<]*{n}[^<]*</h[23]>|$)'.format(r=rank_num, n=rank_num + 1),
-    ]
-    for pat in patterns:
-        m = re.search(pat, html, re.DOTALL | re.IGNORECASE)
-        if m:
-            return m.group(1)
-
-    # Broader search: just look for content near the rank number
-    # Find position of rank in the HTML and take a chunk
-    rank_positions = [m.start() for m in re.finditer(r'>\s*{}\s*<'.format(rank_num), html)]
-    if rank_positions:
-        start = rank_positions[0]
-        # Take up to 5000 chars after the rank marker
-        return html[start:start + 5000]
-
-    return None
 
 
 def parse_market_regime(html):
@@ -639,9 +589,21 @@ def ingest_report(item):
     tracking_until = (now + timedelta(hours=TRACKING_WINDOW_HOURS)).isoformat()
     inserted = 0
 
+    # Build asset-name lookup for position details (fallback when rank=0)
+    asset_detail_map = {}
+    for _rank, _det in position_details.items():
+        aname = _det.get("_asset_name", "")
+        if aname:
+            asset_detail_map[aname.lower()[:30]] = _det
+
     for tc in table_candidates:
         rank = tc.get("rank", 0)
         details = position_details.get(rank, {})
+
+        # Fallback: match by asset name when rank is 0
+        if not details and rank == 0:
+            asset_key = tc.get("asset_theme", "").lower()[:30]
+            details = asset_detail_map.get(asset_key, {})
 
         # Merge table data with position details
         confidence = tc.get("confidence_pct", 0)
@@ -675,35 +637,31 @@ def ingest_report(item):
             continue
 
         if continuity == "reversal" and existing_id:
-            # Kill old position
+            # Log the reversal but DON'T kill — let the position monitor decide
+            old_dir = conn.execute("SELECT direction FROM candidates WHERE id = ?",
+                                   (existing_id,)).fetchone()["direction"]
             conn.execute("""
                 UPDATE candidates
-                SET state = 'KILLED',
-                    killed_at = ?,
-                    kill_reason = ?,
-                    killed_by = 'reversal',
-                    state_changed_at = ?
+                SET momentum_notes = COALESCE(momentum_notes, '') || ?
                 WHERE id = ?
             """, (
-                now.isoformat(),
-                "Direction reversed: was {}, now {}".format(
-                    conn.execute("SELECT direction FROM candidates WHERE id = ?",
-                                 (existing_id,)).fetchone()["direction"],
-                    tc.get("direction")
+                "\n[{}] REVERSAL WARNING: new report suggests {} (was {})".format(
+                    now.strftime("%Y-%m-%d %H:%M"), tc.get("direction"), old_dir
                 ),
-                now.isoformat(),
                 existing_id
             ))
-            logger.info("REVERSAL: killed position {} for {}".format(
-                existing_id, tc.get("primary_ticker")
+            logger.info("REVERSAL NOTE (not killed): position {} for {} — was {}, now {}".format(
+                existing_id, tc.get("primary_ticker"), old_dir, tc.get("direction")
             ))
 
         # Determine initial state
+        # PHILOSOPHY: Keep everything alive. Only kill if truly uninvestable (no ticker).
+        # FADE direction, low confidence, etc. — let the bot decide after investigation.
         initial_state = "PENDING"
         state_reason = "Awaiting due diligence"
-        if tc.get("action") == "AVOID":
+        if not tc.get("primary_ticker") or tc["primary_ticker"] in ("", "-", "\u2013"):
             initial_state = "KILLED"
-            state_reason = "No investable instrument"
+            state_reason = "No investable instrument (no ticker)"
 
         conn.execute("""
             INSERT INTO candidates (

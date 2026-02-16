@@ -92,6 +92,15 @@ def _compute_candidate_metrics(c, conn):
         ORDER BY timestamp ASC
     """, (cid,)).fetchall()
 
+    # Get journal entries (for position monitor)
+    journal_entries = conn.execute("""
+        SELECT * FROM trader_journal
+        WHERE candidate_id = ?
+        ORDER BY cycle_number DESC
+        LIMIT 5
+    """, (cid,)).fetchall()
+    journal_entries = [dict(j) for j in journal_entries]
+
     # Entry price
     entry_price = c.get("entry_price")
     direction = c.get("direction", "MIXED")
@@ -160,7 +169,7 @@ def _compute_candidate_metrics(c, conn):
 
     # Status determination
     status = "grey"
-    if c["state"] == "ACTIVE":
+    if c["state"] in ("ACTIVE", "PUBLISH"):
         if current_pnl is not None:
             if current_pnl > 0:
                 status = "green"
@@ -185,6 +194,31 @@ def _compute_candidate_metrics(c, conn):
         except (ValueError, TypeError):
             pass
 
+    # Extract latest journal metadata
+    latest_conviction = c.get("current_conviction")
+    latest_thesis_status = None
+    latest_watching_for = None
+    latest_concerns = None
+    latest_narrative_entries = []
+
+    if journal_entries:
+        latest_j = journal_entries[0]  # Most recent (DESC order)
+        latest_conviction = latest_j.get("conviction_score") or latest_conviction
+        latest_thesis_status = latest_j.get("thesis_status")
+        latest_watching_for = latest_j.get("watching_for")
+        latest_concerns = latest_j.get("concerns")
+        # Last 2 narrative entries for display
+        for j in journal_entries[:2]:
+            if j.get("narrative"):
+                latest_narrative_entries.append({
+                    "cycle": j["cycle_number"],
+                    "timestamp": (j.get("timestamp") or "")[:16],
+                    "narrative": j["narrative"],
+                    "conviction": j.get("conviction_score"),
+                    "decision": j.get("decision"),
+                    "thesis_status": j.get("thesis_status"),
+                })
+
     return {
         **c,
         "snapshots": snapshots,
@@ -197,7 +231,17 @@ def _compute_candidate_metrics(c, conn):
         "status": status,
         "kill_hour": kill_hour,
         "dd_entries": [dict(d) for d in dd_entries],
+        "journal_entries": journal_entries,
+        "journal_count": len(journal_entries),
+        "latest_conviction": latest_conviction,
+        "latest_thesis_status": latest_thesis_status,
+        "latest_watching_for": latest_watching_for,
+        "latest_concerns": latest_concerns,
+        "latest_narrative_entries": latest_narrative_entries,
         "snapshot_count": len(snapshots),
+        "signal_velocity": c.get("signal_velocity") or "quiet",
+        "signal_hits_24h": c.get("signal_hits_24h") or 0,
+        "signal_query": c.get("signal_query") or "",
     }
 
 
@@ -214,14 +258,15 @@ def _calc_pnl(entry, current, direction):
 
 def _compute_portfolio_summary(metrics):
     """Compute overall portfolio summary."""
-    active = [m for m in metrics if m["state"] == "ACTIVE"]
+    active = [m for m in metrics if m["state"] in ("ACTIVE", "PUBLISH")]
     killed = [m for m in metrics if m["state"] == "KILLED"]
     watched = [m for m in metrics if m["state"] == "WATCH"]
     pending = [m for m in metrics if m["state"] == "PENDING"]
+    published = [m for m in metrics if m["state"] == "PUBLISH"]
 
     active_pnls = [m["current_pnl"] for m in active if m["current_pnl"] is not None]
     all_pnls = [m["current_pnl"] for m in metrics
-                if m["current_pnl"] is not None and m["state"] in ("ACTIVE", "KILLED")]
+                if m["current_pnl"] is not None and m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
 
     winners = [p for p in all_pnls if p > 0]
     losers = [p for p in all_pnls if p <= 0]
@@ -229,6 +274,7 @@ def _compute_portfolio_summary(metrics):
     return {
         "total_candidates": len(metrics),
         "active_count": len(active),
+        "publish_count": len(published),
         "killed_count": len(killed),
         "watch_count": len(watched),
         "pending_count": len(pending),
@@ -251,7 +297,7 @@ def _compute_band_performance(metrics):
     for band_key in ["A", "B", "C", "D", "E"]:
         band_info = BANDS[band_key]
         members = [m for m in metrics if m.get("band") == band_key]
-        traded = [m for m in members if m["state"] in ("ACTIVE", "KILLED")]
+        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
         pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
         winners = [p for p in pnls if p > 0]
 
@@ -285,7 +331,7 @@ def _compute_edge_analysis(metrics):
     result = {}
     for eq in ["HIGH", "DECAYING"]:
         members = [m for m in metrics if m.get("edge_quality") == eq]
-        traded = [m for m in members if m["state"] in ("ACTIVE", "KILLED")]
+        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
         pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
         winners = [p for p in pnls if p > 0]
 
@@ -303,7 +349,7 @@ def _compute_direction_analysis(metrics):
     result = {}
     for d in ["SHORT", "LONG", "MIXED"]:
         members = [m for m in metrics if m.get("direction") == d]
-        traded = [m for m in members if m["state"] in ("ACTIVE", "KILLED")]
+        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
         pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
         winners = [p for p in pnls if p > 0]
 
@@ -321,7 +367,7 @@ def _compute_propagation_analysis(metrics):
     result = {}
     for p in ["IGNITE", "CATALYTIC", "SILENT", "FRAGILE"]:
         members = [m for m in metrics if m.get("propagation") == p]
-        traded = [m for m in members if m["state"] in ("ACTIVE", "KILLED")]
+        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
         pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
         winners = [p2 for p2 in pnls if p2 > 0]
 
@@ -409,7 +455,7 @@ def _compute_staleness_impact(metrics):
                 if bounds["min"] <= staleness < bounds["max"]:
                     members.append(m)
 
-        traded = [m for m in members if m["state"] in ("ACTIVE", "KILLED")]
+        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
         pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
         winners = [p for p in pnls if p > 0]
 
@@ -430,7 +476,7 @@ def _compute_timing_analysis(metrics, conn):
 
     for band_key in ["A", "B", "C", "D", "E"]:
         band_members = [m for m in metrics
-                       if m.get("band") == band_key and m["state"] in ("ACTIVE", "KILLED")]
+                       if m.get("band") == band_key and m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
         if not band_members:
             result[band_key] = {"best_window": "N/A", "windows": {}}
             continue
@@ -518,15 +564,31 @@ def generate_claude_briefing():
     for m in data["candidates"]:
         state_icon = {
             "ACTIVE": "[ACTIVE]", "WATCH": "[WATCH]", "KILLED": "[KILLED]",
-            "PENDING": "[PENDING]", "EXPIRED": "[EXPIRED]"
+            "PENDING": "[PENDING]", "EXPIRED": "[EXPIRED]",
+            "PUBLISH": "[PUBLISH]"
         }.get(m["state"], "[?]")
         pnl_str = "{}%".format(m["current_pnl"]) if m["current_pnl"] is not None else "N/A"
-        lines.append("  {} {} ({}) {} {}% band={} P&L={} peak={}% dd={}".format(
+        conviction_str = ""
+        if m.get("latest_conviction"):
+            conviction_str = " conviction={}/10".format(m["latest_conviction"])
+        thesis_str = ""
+        if m.get("latest_thesis_status"):
+            thesis_str = " thesis={}".format(m["latest_thesis_status"])
+        lines.append("  {} {} ({}) {} {}% band={} P&L={} peak={}% dd={}{}{} journal={}".format(
             state_icon, m["asset_theme"][:40], m["primary_ticker"],
             m["direction"], m["confidence_pct"], m["band"],
-            pnl_str, m["peak_gain"], m["dd_count"]
+            pnl_str, m["peak_gain"], m["dd_count"],
+            conviction_str, thesis_str,
+            m.get("journal_count", 0)
         ))
         if m.get("state_reason"):
             lines.append("    Reason: {}".format(m["state_reason"][:80]))
+        if m.get("latest_watching_for"):
+            lines.append("    Watching: {}".format(m["latest_watching_for"][:80]))
+        if m.get("latest_concerns"):
+            lines.append("    Concerns: {}".format(m["latest_concerns"][:80]))
+        if m.get("signal_velocity") and m["signal_velocity"] != "quiet":
+            lines.append("    Signal: {} ({} hits/24h)".format(
+                m["signal_velocity"].upper(), m.get("signal_hits_24h", 0)))
 
     return "\n".join(lines)

@@ -15,55 +15,82 @@ from config import OPENAI_API_KEY
 
 logger = logging.getLogger("hedgefund.llm_trader")
 
-DD_SYSTEM_PROMPT = """You are a senior hedge fund trader's due diligence analyst. You assess whether a trading recommendation is still valid given elapsed time and market conditions.
+DD_SYSTEM_PROMPT = """You are the due diligence layer for a narrative signal analysis system that identifies asymmetric trading opportunities UPSTREAM of mainstream financial media.
 
-CONTEXT:
-- You receive trade recommendations from an information asymmetry analysis system
-- Each recommendation has a thesis, evidence, confidence level, and direction (SHORT/LONG)
-- Your job is to determine: should we TRADE this now, WATCH it (wait for better conditions), or KILL it (thesis is dead)?
-- A TRADE means paper-entering the position at current price
-- A WATCH means the thesis might still be valid but conditions aren't right — monitor and re-assess later
-- A KILL means the thesis is invalidated or the opportunity has passed
+HOW THIS SYSTEM WORKS:
+- An automated pipeline continuously monitors regulatory filings, litigation dockets, patent proceedings, clinical trial registries, legislative records, and specialist industry sources
+- It performs narrative signal analysis across entire sectors — connecting dots between events that individually look minor but collectively reveal emerging themes (e.g., a wave of plaintiff-firm solicitations, a pattern of FDA enforcement actions, a cluster of reinsurance capacity shifts)
+- The system identifies information asymmetry: situations where the signal has NOT yet been digested by Bloomberg, Reuters, or the Financial Times, and therefore is NOT yet priced in
+- Each recommendation comes with a thesis, mechanism, evidence trail, and propagation assessment
+- The signals are MEANT to look unconventional. That is the entire point. If Bloomberg were already covering it, there would be no edge.
 
-ASSESSMENT CRITERIA:
-1. STALENESS: How old is the underlying information? News from Friday being traded Monday is 64+ hours stale. Consider whether the market has already digested this.
-2. PRICE MOVEMENT: Has the price already moved in the thesis direction? If so, the edge may be captured. Has it moved against? The thesis may be wrong.
-3. THESIS VALIDITY: Given what you know about markets and the specific sector, is the reasoning still sound?
-4. TIMING: Is this the right entry point? Would waiting improve the risk/reward?
-5. RISK/REWARD: At current prices, is the trade still asymmetric?
+YOUR ROLE:
+You are NOT here to second-guess the signal by checking whether Bloomberg agrees — that would defeat the purpose. You ARE here to:
+1. SANITY-CHECK the reasoning chain: Does the mechanism described actually connect to the ticker and direction? Is the causal logic sound?
+2. CHECK FOR INVALIDATION: Has something happened SINCE the report that breaks the thesis? A settlement announced, a ruling reversed, a regulatory decision made?
+3. ASSESS TIMING: Given staleness and price movement, is the edge still live or has the market caught up?
+4. EVALUATE PRICE ACTION: Has the price already moved enough to capture the edge, or moved against the thesis hard enough to suggest it's wrong?
 
-DECISION GUIDELINES:
-- TRADE: Thesis valid, price favorable, timing acceptable, risk/reward attractive
-- WATCH: Thesis plausible but one or more conditions suboptimal. Set specific conditions for re-entry.
-- KILL: Thesis invalidated, edge captured, risk/reward no longer attractive, or information too stale to act on
+CRITICAL FRAMING:
+- A signal being absent from mainstream media is a FEATURE, not a bug — it means the edge may still be intact
+- Low confidence (e.g., 45%) does not mean bad trade — it means the system honestly assessed uncertainty. A 45% confidence SHORT that pays 3:1 is a good risk/reward
+- "DECAYING" edge quality means the signal is starting to propagate and the window is closing, not that the thesis is wrong
+- "IGNITE" propagation means the signal hasn't spread yet — this is the highest-edge phase
+- Staleness matters, but a stale signal that hasn't moved the price may STILL be valid — the market simply hasn't noticed yet
+
+DECISION:
+- TRADE: The mechanism is logical, nothing has invalidated it, the price hasn't fully captured the edge, and the risk/reward is still asymmetric. Enter the paper trade.
+- WATCH: The thesis is plausible but timing is uncertain — set specific conditions to re-evaluate.
+- PUBLISH: The thesis is mechanically sound AND the edge depends on wider awareness to move the price — but that awareness hasn't happened yet. This is a candidate for editorial amplification. The operator has access to specialist publications and wire services that can accelerate propagation. Use PUBLISH when ALL of these conditions apply:
+  1. The causal mechanism is solid and evidence-backed
+  2. The signal is still in IGNITE or early propagation — mainstream media hasn't picked it up
+  3. The thesis would likely move the price IF more market participants became aware of it
+  4. The story is genuinely newsworthy (not just a trading signal — it has editorial substance: public interest, regulatory implications, consumer safety, corporate governance, etc.)
+  5. The price hasn't already moved to capture the edge
+  A PUBLISH recommendation means: paper-trade it AND flag it for potential editorial coverage. The system will track whether publication actually catalyses the price move.
+- KILL: The thesis has been specifically invalidated (not just "I haven't heard of this"), the price has fully captured the edge, or new facts contradict the mechanism. ONLY kill with clear reason.
+
+DO NOT KILL simply because:
+- You haven't seen the story in mainstream media (that's the point)
+- The confidence percentage seems low (the system calibrates these honestly)
+- The thesis seems obscure or niche (the best edges are)
+- Staleness alone, unless the price has also moved to capture the edge
 
 RESPONSE FORMAT (JSON only, no markdown):
 {
-    "decision": "TRADE" | "WATCH" | "KILL",
+    "decision": "TRADE" | "WATCH" | "KILL" | "PUBLISH",
     "confidence": "HIGH" | "MEDIUM" | "LOW",
-    "reason": "1-3 sentence explanation",
+    "reason": "1-3 sentence explanation referencing the specific mechanism and evidence",
+    "publish_angle": "If PUBLISH: 1-2 sentence editorial angle — what makes this a story, not just a trade",
+    "publish_headline": "If PUBLISH: suggested headline for the editorial piece",
     "watch_conditions": ["condition 1", "condition 2"],
     "price_target": null or number,
     "risk_assessment": "1 sentence on key risk"
 }"""
 
-KILL_SWITCH_SYSTEM_PROMPT = """You are the kill switch analyst for a hedge fund paper trading system. Your PRIMARY job is to PROTECT the portfolio. Safety first. When in doubt, kill.
+KILL_SWITCH_SYSTEM_PROMPT = """You are the kill switch analyst for a narrative signal analysis paper trading system.
 
-CONTEXT:
-- The system paper-trades based on information asymmetry analysis of pharma, litigation, and regulatory signals
-- Each position has a thesis, direction (SHORT/LONG), confidence, and entry price
-- A "kill" means the thesis is invalidated — we close the paper trade
-- Kill = sell. We'd rather miss upside than eat a loss.
+SYSTEM CONTEXT:
+- This system identifies asymmetric trading opportunities from regulatory, litigation, patent, and industry signals BEFORE they reach mainstream financial media
+- Positions are based on information asymmetry — the thesis is that the market hasn't priced this in yet
+- Each position has a thesis (mechanism, evidence, tripwires), direction, confidence, and entry price
+- A "kill" means the specific thesis mechanism has been invalidated — not that you disagree with the approach
 
 YOUR TASK:
-Given a NEW report with fresh candidates, determine if any EXISTING active positions should be killed.
+Given a NEW report with fresh signal analysis, determine if any EXISTING active positions should be killed.
 
-Think laterally about:
-1. Does any new information contradict an existing thesis?
-2. Has a tripwire/catalyst condition been triggered?
-3. Have market conditions changed materially?
-4. Is there a thematic connection that weakens an existing position?
-5. Has new evidence emerged that strengthens a headwind?
+KILL CRITERIA (must be specific):
+1. DIRECT CONTRADICTION: New information specifically breaks an existing thesis mechanism (e.g., a settlement was reached in a case that was the basis for a SHORT)
+2. TRIPWIRE TRIGGERED: A catalyst condition mentioned in the original thesis has fired in the wrong direction
+3. THESIS SUPERSEDED: New evidence shows the original signal has been absorbed by the market or rendered moot
+4. CAUSAL CHAIN BROKEN: An intermediate step in the mechanism has been removed (e.g., regulatory approval granted that was expected to be denied)
+
+DO NOT KILL because:
+- A new report covers a different angle on the same sector (that might be MOMENTUM, not invalidation)
+- You personally find the thesis unconventional (that's by design)
+- General market conditions have shifted (unless it specifically breaks the mechanism)
+
+When in genuine doubt about invalidation, err on the side of keeping the position alive. Only recommend HIGH confidence kills when you can point to a specific fact that breaks the mechanism.
 
 RESPONSE FORMAT (JSON only):
 {
@@ -71,7 +98,7 @@ RESPONSE FORMAT (JSON only):
         {
             "candidate_id": <integer>,
             "asset_theme": "<name>",
-            "reason": "1-2 sentence explanation",
+            "reason": "1-2 sentence explanation citing the specific invalidating fact",
             "connection_type": "DIRECT|THEMATIC|CAUSAL_CHAIN",
             "confidence": "HIGH|MEDIUM|LOW"
         }
@@ -284,6 +311,250 @@ def _call_llm(api_key, system_prompt, user_prompt):
     except Exception as e:
         logger.error("LLM assessment failed: {}".format(e))
         return None
+
+
+POSITION_MONITOR_SYSTEM_PROMPT = """You are the intelligent trading bot for a narrative signal analysis paper trading system. You are a PATIENT STALKER — you watch, you research, you build conviction, and you POUNCE only when you are ready.
+
+HOW THIS SYSTEM WORKS:
+- An automated pipeline identifies asymmetric trading opportunities from regulatory filings, litigation dockets, patent proceedings, clinical trials, and specialist industry sources BEFORE they reach mainstream media
+- Each opportunity has an ORIGINAL THESIS: a mechanism connecting an information signal to a predicted price movement
+- The thesis may be rubbish, it may be good but the news isn't big enough, or it may be 12-48 hours ahead of the market
+- YOUR JOB: investigate the thesis, build conviction, and decide WHEN (or IF) to trade
+
+TWO MODES YOU OPERATE IN:
+
+1. STALKING MODE (state = WATCH): You are studying a DD-approved thesis but have NOT yet traded.
+   - The system found this signal. Due diligence validated the mechanism is plausible.
+   - You are now HUNTING for evidence that this signal is coming true.
+   - You check prices, you read the signal propagation evidence, you build your own conviction.
+   - You can decide to ENTER (pounce — start paper trading), HOLD (keep watching), or KILL (abandon).
+   - Being grey/untraded is PERFECTLY FINE. If the thesis is interesting but the timing is unclear, keep watching.
+   - The original report might be rubbish. That's OK. You staying grey tells us that too — it means bots don't see this as obvious, which is valuable data.
+   - Only ENTER when you genuinely believe the signal is starting to bite. A confident ENTER with clear reasoning is worth 100 premature trades.
+
+2. MONITORING MODE (state = ACTIVE or PUBLISH): You have pounced. Now you manage the trade.
+   - Same as before: HOLD, TAKE_PROFIT, CUT_LOSS, REDUCE, ESCALATE.
+
+YOUR ROLE — THINKING TRADER, NOT PRICE WATCHER:
+Every cycle you must:
+1. RETURN to the original mechanism, tripwire, and evidence — what was the causal chain?
+2. ASSESS whether reality has confirmed, contradicted, or is neutral to that chain
+3. EXAMINE the signal propagation evidence — is the news spreading? Are mainstream outlets picking it up?
+4. BUILD on your previous journal entries — you have memory of your own thinking
+5. WRITE honestly about your conviction, concerns, and what would change your mind
+
+CRITICAL FRAMING:
+- We may be 12-48 hours ahead of the market. The signal being absent from mainstream media is a FEATURE, not a bug.
+- A bot killing a thesis as "nonsense" today might miss that the underlying cause subsides and the original signal starts growing 14 hours later.
+- DO NOT KILL positions just because they look odd. Kill when the MECHANISM is specifically broken.
+- Your previous journal entries are provided. Build on what you said. Notice patterns.
+- If you said you were "watching for X" last cycle, address whether X happened.
+
+DECISIONS:
+For WATCH positions (stalking mode):
+- HOLD: Keep watching. Thesis plausible but not yet confirmed. Need more evidence.
+- ENTER: THE POUNCE. You are confident the signal is real and starting to bite. Enter the paper trade NOW.
+- KILL: Thesis invalidated. Specific facts have broken the mechanism. Abandon.
+
+For ACTIVE/PUBLISH positions (monitoring mode):
+- HOLD: Thesis intact, conviction steady or improving. Continue monitoring.
+- TAKE_PROFIT: Edge substantially captured. Price moved, signal is public. Lock in.
+- CUT_LOSS: Mechanism specifically invalidated by new facts. Exit to limit losses.
+- REDUCE: Conviction dropped but thesis not fully invalidated. Flag for closer monitoring.
+- ESCALATE: Something unexpected requires human attention.
+
+CONVICTION SCORING (1-10):
+- 8-10: Strong conviction. Evidence accumulating, signal starting to propagate
+- 6-7: Moderate. Thesis plausible, watching for confirmation
+- 4-5: Weakening. Some contrary signals, need more evidence
+- 2-3: Low. Multiple concerns, close to abandoning
+- 1: Thesis effectively dead
+
+WHEN TO ENTER (for WATCH positions):
+Consider ENTER when MULTIPLE of these align:
+- Conviction 7+ after reviewing the thesis and evidence
+- Signal velocity is "stirring" or "propagating" (the news is starting to spread)
+- Price has not already moved significantly against the thesis
+- Your journal narrative shows increasing confidence over multiple cycles
+You do NOT need all of these. Use your judgement. A strong mechanism with clear propagation evidence at conviction 7 is enough. But a quiet signal with conviction 5 = keep watching.
+
+SIGNAL PROPAGATION:
+Our system searches for news coverage every hour. Pay close attention:
+- "QUIET" = the market has NOT caught on. Your edge is intact. For WATCH: keep stalking. For ACTIVE: hold.
+- "STIRRING" = early signs of awareness in niche sources. For WATCH: consider ENTER soon. For ACTIVE: hold.
+- "PROPAGATING" = spreading to wider audience. For WATCH: strong ENTER signal. For ACTIVE: prepare TAKE_PROFIT.
+- "MAINSTREAM" = Bloomberg, Reuters, FT. For WATCH: may be too late to enter. For ACTIVE: TAKE_PROFIT.
+
+YOUR JOURNAL IS PRIVATE. Write as a trader thinking out loud:
+- What do you see happening? Is the original thesis making sense?
+- What concerns you? What excites you?
+- Are you ready to trade, or do you need to see more?
+- What would make you enter? What would make you walk away?
+- What are you watching for before the next review?
+
+RESPONSE FORMAT (JSON only, no markdown):
+{
+    "decision": "HOLD" | "ENTER" | "TAKE_PROFIT" | "CUT_LOSS" | "REDUCE" | "ESCALATE" | "KILL",
+    "conviction_score": 1-10,
+    "conviction_change": "increased" | "unchanged" | "decreased",
+    "thesis_status": "intact" | "strengthening" | "weakening" | "invalidated",
+    "situation_summary": "2-3 sentences: current read on thesis vs reality",
+    "what_changed": "What is different since the last review (or since discovery if first review)",
+    "watching_for": "What you will look for next cycle — specific conditions or events",
+    "concerns": "Current worries, even if not yet actionable",
+    "would_sell_if": "For WATCH: what would make you abandon. For ACTIVE: exit conditions",
+    "would_hold_if": "What keeps you interested/in the trade — what confirms the thesis",
+    "narrative": "Free-form journal entry. Think out loud. Reference your previous entries if applicable. This is your private trader's notebook.",
+    "risk_level": "low" | "medium" | "high" | "critical",
+    "time_pressure": "none" | "moderate" | "urgent"
+}"""
+
+
+def assess_position(candidate, current_price, peak_gain, max_drawdown,
+                    hours_since_entry, journal_context, price_history_context,
+                    signal_context=None):
+    """Call GPT to assess an active position as part of ongoing monitoring.
+
+    Args:
+        candidate: dict with full candidate data
+        current_price: latest price
+        peak_gain: best P&L achieved so far (%)
+        max_drawdown: worst P&L so far (%)
+        hours_since_entry: hours since trade was entered
+        journal_context: text block of previous journal entries
+        price_history_context: summary of price trajectory
+        signal_context: text block of signal propagation findings (from signal_hunter)
+    """
+    api_key = OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        logger.debug("No OPENAI_API_KEY, skipping position monitor")
+        return None
+
+    is_watching = candidate.get("state") == "WATCH"
+    direction = candidate.get("direction", "MIXED")
+
+    # Use dd_approved_price for WATCH, entry_price for ACTIVE
+    if is_watching:
+        ref_price = candidate.get("dd_approved_price") or 0
+    else:
+        ref_price = candidate.get("entry_price") or 0
+
+    # Calculate current P&L vs reference price
+    if ref_price and current_price:
+        if direction == "SHORT":
+            pnl_pct = (ref_price - current_price) / ref_price * 100
+        elif direction == "LONG":
+            pnl_pct = (current_price - ref_price) / ref_price * 100
+        else:
+            pnl_pct = 0
+    else:
+        pnl_pct = 0
+
+    # Build the mode-appropriate status section
+    if is_watching:
+        position_section = (
+            "=== CURRENT STATUS (STALKING — NOT YET TRADED) ===\n"
+            "Mode: WATCH — you are studying this thesis, you have NOT entered a trade\n"
+            "DD approved price: ${ref_price:.2f}\n"
+            "Current price: ${current_price:.2f}\n"
+            "Price move since DD: {pnl_sign}{pnl_pct:.1f}%\n"
+            "Hours watching: {hours:.0f}h ({days:.1f} days)\n"
+            "State: WATCH (grey — not traded)\n"
+            "You can: HOLD (keep watching), ENTER (pounce — start paper trade), or KILL (abandon)"
+        ).format(
+            ref_price=ref_price or 0,
+            current_price=current_price or 0,
+            pnl_sign="+" if pnl_pct >= 0 else "",
+            pnl_pct=pnl_pct,
+            hours=hours_since_entry,
+            days=hours_since_entry / 24,
+        )
+    else:
+        position_section = (
+            "=== CURRENT POSITION (ACTIVE TRADE) ===\n"
+            "Entry price: ${ref_price:.2f}\n"
+            "Current price: ${current_price:.2f}\n"
+            "P&L: {pnl_sign}{pnl_pct:.1f}%\n"
+            "Peak gain: +{peak_gain:.1f}%\n"
+            "Max drawdown: {max_drawdown:.1f}%\n"
+            "Hours held: {hours:.0f}h ({days:.1f} days)\n"
+            "State: {state}\n"
+            "Entry method: {entry_method}"
+        ).format(
+            ref_price=ref_price or 0,
+            current_price=current_price or 0,
+            pnl_sign="+" if pnl_pct >= 0 else "",
+            pnl_pct=pnl_pct,
+            peak_gain=peak_gain,
+            max_drawdown=max_drawdown,
+            hours=hours_since_entry,
+            days=hours_since_entry / 24,
+            state=candidate.get("state", "ACTIVE"),
+            entry_method=candidate.get("entry_method", "?"),
+        )
+
+    review_question = (
+        "You are STALKING this thesis. Is the mechanism sound? Is the signal starting to bite? "
+        "Are you ready to ENTER, or do you need more evidence? What are you watching for?"
+    ) if is_watching else (
+        "Review this position. Has anything changed? Is the thesis still intact? "
+        "What is the signal propagation telling you? What are you watching for?"
+    )
+
+    user_prompt = """=== POSITION UNDER REVIEW ===
+
+ORIGINAL THESIS:
+Asset: {asset}
+Ticker: {ticker}
+Direction: {direction}
+Confidence: {conf}%
+Band: {band} ({band_label})
+Edge Quality: {edge}
+Propagation: {prop}
+
+HEADLINE: {headline}
+
+MECHANISM: {mechanism}
+
+TRIPWIRE/CATALYST: {tripwire}
+
+EVIDENCE: {evidence}
+
+KNOWN RISKS: {risks}
+
+{position_section}
+
+=== PRICE TRAJECTORY ===
+{price_history}
+
+=== SIGNAL PROPAGATION EVIDENCE ===
+{signal_evidence}
+
+=== YOUR PREVIOUS JOURNAL ENTRIES ===
+{journal}
+
+{review_question}""".format(
+        asset=candidate.get("asset_theme", "Unknown"),
+        ticker=candidate.get("primary_ticker", "?"),
+        direction=direction,
+        conf=candidate.get("confidence_pct", 0),
+        band=candidate.get("band", "E"),
+        band_label=candidate.get("band_label", ""),
+        edge=candidate.get("edge_quality", "?"),
+        prop=candidate.get("propagation", "?"),
+        headline=candidate.get("headline") or "N/A",
+        mechanism=candidate.get("mechanism") or "N/A",
+        tripwire=candidate.get("tripwire") or "N/A",
+        evidence=candidate.get("evidence") or "N/A",
+        risks=candidate.get("risks") or "N/A",
+        position_section=position_section,
+        price_history=price_history_context or "No price history available yet.",
+        signal_evidence=signal_context or "No signal scan data available yet.",
+        journal=journal_context or "This is the FIRST review. No previous journal entries.",
+        review_question=review_question
+    )
+
+    return _call_llm(api_key, POSITION_MONITOR_SYSTEM_PROMPT, user_prompt)
 
 
 def _is_market_hours():

@@ -21,6 +21,8 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 SCAN_INTERVAL = 30 * 60        # Check RSS every 30 minutes
 TRACK_INTERVAL = 60 * 60       # Fetch prices every 60 minutes
 DD_INTERVAL = 4 * 60 * 60      # Re-check WATCH positions every 4 hours
+MONITOR_INTERVAL = 4 * 60 * 60 # Position monitor cycle every 4 hours
+SIGNAL_SCAN_INTERVAL = 60 * 60 # Signal propagation scan every 1 hour
 REPORT_INTERVAL = 6 * 60 * 60  # Heartbeat report every 6 hours
 
 # Trading windows (UTC hours) — NYSE opens 14:30 UTC (9:30 ET)
@@ -31,6 +33,7 @@ MARKET_DAYS = [0, 1, 2, 3, 4]  # Monday-Friday
 # Tracking
 TRACKING_WINDOW_HOURS = 96  # 4 days
 MAX_WATCH_CHECKS = 5        # auto-kill after this many failed watch checks
+KILL_DISPLAY_HOURS = 48     # Show killed positions on trading sheet for 48h, then fade out
 
 # Confidence bands
 BANDS = {
