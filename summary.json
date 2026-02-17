@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-17T16:04:06.253162+00:00",
+  "updated_at": "2026-02-17T16:35:13.813214+00:00",
   "total_positions": 25,
   "active_count": 0,
   "publish_count": 0,
@@ -33,7 +33,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I am looking for updates from Nicox regarding the NDA submission timeline, any c",
+      "watching_for": "Next cycle, I will look for any updates from Nicox on the NDA submission timelin",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -56,7 +56,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "weakening",
-      "watching_for": "Next cycle, I will specifically look for official documents or confirmations fro",
+      "watching_for": "Next cycle, I am looking for any official documentation or confirmation from reg",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -79,7 +79,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I am looking for clarity in the form of a coherent enforcement action or more fo",
+      "watching_for": "I will look for a cohesive enforcement action or a focused narrative connecting ",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
@@ -105,7 +105,7 @@
       "watching_for": "",
       "journal_count": 0,
       "signal_velocity": "propagating",
-      "signal_hits_24h": 3
+      "signal_hits_24h": 4
     },
     {
       "asset": "SGS: regulatory approval",
@@ -125,8 +125,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "Next cycle, I will look for direct confirmation of the regulatory approval from ",
-      "journal_count": 2,
+      "watching_for": "Next cycle, I will specifically look for any direct confirmation from SGS regard",
+      "journal_count": 3,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     },
@@ -169,10 +169,10 @@
       "publish_headline": "",
       "kill_reason": "",
       "state_reason": "DD approved \u2014 watching for signal confirmation",
-      "conviction": 6,
-      "thesis_status": "intact",
-      "watching_for": "Next, I will be looking for more substantial evidence that supports the mechanis",
-      "journal_count": 1,
+      "conviction": 7,
+      "thesis_status": "strengthening",
+      "watching_for": "I will be looking for more concrete evidence that supports the AI productivity n",
+      "journal_count": 2,
       "signal_velocity": "stirring",
       "signal_hits_24h": 2
     },
