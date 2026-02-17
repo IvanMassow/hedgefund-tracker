@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-17T19:06:52.593527+00:00",
+  "updated_at": "2026-02-17T19:34:52.337375+00:00",
   "total_positions": 25,
   "active_count": 0,
   "publish_count": 0,
@@ -33,7 +33,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will monitor for any updates from Nicox on the NDA submission, confirmations f",
+      "watching_for": "I am looking for any updates from Nicox about the NDA submission timeline, confi",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -56,7 +56,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "weakening",
-      "watching_for": "Next cycle, I'm looking for any official documentation or statements from regula",
+      "watching_for": "I will look for any official confirmations from regulatory bodies that clarify t",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -79,7 +79,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will continue to look for a concrete enforcement action or focused narrative t",
+      "watching_for": "I'm particularly focused on any developments that could provide clarity, especia",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
@@ -125,7 +125,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for any direct confirmation from SGS regarding the regulatory approv",
+      "watching_for": "I will continue to look for direct confirmation from SGS regarding the regulator",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
