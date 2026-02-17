@@ -152,7 +152,9 @@ body {
     width: 2.5rem;
 }
 .td-asset { max-width: 200px; }
-.td-asset .name { font-weight: 700; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-asset .name { font-weight: 700; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
+.td-asset .name .name-text { overflow: hidden; text-overflow: ellipsis; }
+.td-asset .name .notes-link { flex-shrink: 0; }
 .td-asset .ticker { font-size: 0.72rem; color: var(--ink-subtle); }
 .td-asset .thesis { font-size: 0.68rem; color: var(--ink-mid); font-style: italic; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px; }
 .td-dir {
@@ -374,7 +376,7 @@ body {
         <a href="#clusters">Clusters</a>
         <a href="#learning">Learning</a>
     </div>
-    <div class="meta">Hedge Fund &middot; Paper Trading &middot; 2026-02-17 00:22 UTC</div>
+    <div class="meta">Hedge Fund &middot; Paper Trading &middot; 2026-02-17 00:24 UTC</div>
 </div>
 
 <!-- Hero -->
@@ -440,7 +442,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">Nicox: regulatory approval <a href="positions/position_4.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Nicox: regulatory approval</span> <a href="positions/position_4.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">XBI <span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span></div>
         <div class="thesis">Nicox pre-NDA feedback puts a date on the next catalyst - su</div>
         
@@ -458,7 +460,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">SGS: regulatory approval <a href="positions/position_7.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">SGS: regulatory approval</span> <a href="positions/position_7.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">SPY <span class="thesis-badge" style="color:#92400e;background:#fef3c7">weakening</span></div>
         <div class="thesis">SGS 'approval' signal is contaminated by mismatch risk - bul</div>
         
@@ -476,7 +478,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">drug seizure and trafficking (pharmaceut <a href="positions/position_10.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">drug seizure and trafficking (pharmaceut</span> <a href="positions/position_10.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE <span class="thesis-badge" style="color:#166534;background:#dcfce7">intact</span></div>
         <div class="thesis">Counterfeit and seizure narratives are everywhere - the sign</div>
         
@@ -494,7 +496,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">ICICI Securities: growth and margin impr <a href="positions/position_21.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">ICICI Securities: growth and margin impr</span> <a href="positions/position_21.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">ICICISEC.NS</div>
         <div class="thesis"></div>
         
@@ -512,7 +514,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">SGS: regulatory approval <span style="opacity:0.2">&#128203;</span></div>
+        <div class="name"><span class="name-text">SGS: regulatory approval</span> <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">SGSOY</div>
         <div class="thesis">SGS Says Belgium Cleared Its Radiolabelled ADME Unit Again -</div>
         
@@ -530,7 +532,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Bernstein Liebhard LLP: legal action <span style="opacity:0.2">&#128203;</span></div>
+        <div class="name"><span class="name-text">Bernstein Liebhard LLP: legal action</span> <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">ORGN</div>
         <div class="thesis">Origin Materials' Class Action Moves Into Settlement Mechani</div>
         
@@ -548,7 +550,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Nicox: regulatory approval <span style="opacity:0.2">&#128203;</span></div>
+        <div class="name"><span class="name-text">Nicox: regulatory approval</span> <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">COX</div>
         <div class="thesis">Nicox Says the FDA Pre-NDA Readout Was Positive - The De-Ris</div>
         
@@ -566,7 +568,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Dr. Lonser: regulatory development <span style="opacity:0.2">&#128203;</span></div>
+        <div class="name"><span class="name-text">Dr. Lonser: regulatory development</span> <span style="opacity:0.2">&#128203;</span></div>
         <div class="ticker">SLDB</div>
         <div class="thesis">Solid Biosciences' FDA-Path Narrative Is Back in Circulation</div>
         
@@ -584,7 +586,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">12 Panel Now: regulation <a href="positions/position_1.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">12 Panel Now: regulation</span> <a href="positions/position_1.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">XBI</div>
         <div class="thesis">Drug-testing 'rule change' story looks like vendor marketing</div>
         
@@ -602,7 +604,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">William Panzera: drug trafficking and cr <a href="positions/position_2.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">William Panzera: drug trafficking and cr</span> <a href="positions/position_2.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">SPY</div>
         <div class="thesis">DOJ fentanyl case is real, but the tradeable read-through is</div>
         
@@ -620,7 +622,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">Allison Blonski: legal_action <a href="positions/position_3.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Allison Blonski: legal_action</span> <a href="positions/position_3.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis">Depo-Provera mass-tort narrative is scaling - even before ve</div>
         
@@ -638,7 +640,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#92400e">B</td>
     <td class="td-asset">
-        <div class="name">ICE: regulatory and legal developments <a href="positions/position_5.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">ICE: regulatory and legal developments</span> <a href="positions/position_5.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">ICE</div>
         <div class="thesis">ICE macro cluster is both crowded and polluted by name colli</div>
         
@@ -656,7 +658,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Tylenol: adverse drug events <a href="positions/position_6.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Tylenol: adverse drug events</span> <a href="positions/position_6.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis">Tylenol safety 'signal' fails the date test - the surfaced F</div>
         
@@ -674,7 +676,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">Eli Lilly: clinical studies <a href="positions/position_8.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Eli Lilly: clinical studies</span> <a href="positions/position_8.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">LLY</div>
         <div class="thesis">Lilly clinical-study chatter is bullish, but it is already c</div>
         
@@ -692,7 +694,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#6b5b00">C</td>
     <td class="td-asset">
-        <div class="name">clinical research (clinical research) <a href="positions/position_9.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">clinical research (clinical research)</span> <a href="positions/position_9.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">JNJ</div>
         <div class="thesis">Registry-driven JNJ research signal has already travelled - </div>
         
@@ -710,7 +712,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">medical debates (public health) <a href="positions/position_14.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">medical debates (public health)</span> <a href="positions/position_14.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">XBI</div>
         <div class="thesis"></div>
         
@@ -728,7 +730,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">Evolution Wealth Management Inc.: regula <a href="positions/position_16.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Evolution Wealth Management Inc.: regula</span> <a href="positions/position_16.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis"></div>
         
@@ -746,7 +748,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">Envestnet Asset Management Inc.: investm <a href="positions/position_17.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Envestnet Asset Management Inc.: investm</span> <a href="positions/position_17.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis"></div>
         
@@ -764,7 +766,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#7a5c99">D</td>
     <td class="td-asset">
-        <div class="name">Homeland Security Investigations: drug e <a href="positions/position_19.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Homeland Security Investigations: drug e</span> <a href="positions/position_19.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">SPY</div>
         <div class="thesis"></div>
         
@@ -782,7 +784,7 @@ body {
     <td class="td-discovered">2026-02-16</td>
     <td class="td-band" style="color:#73788a">E</td>
     <td class="td-asset">
-        <div class="name">Richard Pazdur: regulatory scrutiny <a href="positions/position_22.html" class="notes-link" title="View trader notes">&#128203;</a></div>
+        <div class="name"><span class="name-text">Richard Pazdur: regulatory scrutiny</span> <a href="positions/position_22.html" class="notes-link" title="View trader notes">&#128203;</a></div>
         <div class="ticker">IHE</div>
         <div class="thesis"></div>
         
@@ -915,7 +917,7 @@ body {
             <a href="https://ivanmassow.github.io/company-watch/" style="color:rgba(255,241,229,0.5);text-decoration:none">Company Watch</a>
         </p>
         <p style="margin-top: 0.8rem; font-size: 0.75rem;">
-            Report generated 2026-02-17 00:22 UTC.
+            Report generated 2026-02-17 00:24 UTC.
         </p>
         <div style="margin-top:1.2rem;max-width:560px;margin-left:auto;margin-right:auto;padding:0.8rem 1rem;border-top:1px solid rgba(255,241,229,0.12)">
             <p style="font-size:0.7rem;color:rgba(255,241,229,0.55);line-height:1.7;text-align:center;margin:0">
