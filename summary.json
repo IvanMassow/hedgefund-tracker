@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-16T23:23:32.467745+00:00",
+  "updated_at": "2026-02-17T00:22:13.181396+00:00",
   "total_positions": 20,
   "active_count": 0,
   "publish_count": 0,
@@ -33,8 +33,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for updates from Nicox about the NDA submission timeline, partner co",
-      "journal_count": 4,
+      "watching_for": "I will look for any new updates from Nicox regarding the NDA submission, confirm",
+      "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     },
@@ -56,8 +56,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "weakening",
-      "watching_for": "I will be looking for official documentation or confirmations from regulatory bo",
-      "journal_count": 4,
+      "watching_for": "Next cycle, I am looking for official documents from regulatory bodies confirmin",
+      "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     },
@@ -79,10 +79,10 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will be looking for a coherent enforcement action or a clearer narrative focus",
-      "journal_count": 2,
+      "watching_for": "I'm looking for a coherent enforcement action or clearer narratives that focus o",
+      "journal_count": 3,
       "signal_velocity": "stirring",
-      "signal_hits_24h": 2
+      "signal_hits_24h": 1
     },
     {
       "asset": "ICICI Securities: growth and margin improvement",
@@ -104,8 +104,8 @@
       "thesis_status": null,
       "watching_for": "",
       "journal_count": 0,
-      "signal_velocity": "mainstream",
-      "signal_hits_24h": 17
+      "signal_velocity": "stirring",
+      "signal_hits_24h": 1
     },
     {
       "asset": "SGS: regulatory approval",
