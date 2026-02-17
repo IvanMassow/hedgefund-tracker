@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-17T17:06:16.723083+00:00",
+  "updated_at": "2026-02-17T17:34:44.394707+00:00",
   "total_positions": 25,
   "active_count": 0,
   "publish_count": 0,
@@ -33,7 +33,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "Next cycle, I will look for any updates from Nicox on the NDA submission timelin",
+      "watching_for": "I'm looking for updates from Nicox regarding the NDA submission timeline, confir",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -56,7 +56,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "weakening",
-      "watching_for": "Next cycle, I am looking for any official documentation or confirmation from reg",
+      "watching_for": "I am looking for any official confirmation from regulatory bodies that clarifies",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -79,7 +79,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for a cohesive enforcement action or a focused narrative connecting ",
+      "watching_for": "I will look for a clear enforcement action or more focused narratives centering ",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
@@ -125,8 +125,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "Next cycle, I will specifically look for any direct confirmation from SGS regard",
-      "journal_count": 3,
+      "watching_for": "I will continue to look for any official confirmation from SGS regarding the app",
+      "journal_count": 4,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     },
@@ -171,8 +171,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 7,
       "thesis_status": "strengthening",
-      "watching_for": "I will be looking for more concrete evidence that supports the AI productivity n",
-      "journal_count": 2,
+      "watching_for": "For the next review, I will be looking for significant news such as press releas",
+      "journal_count": 3,
       "signal_velocity": "stirring",
       "signal_hits_24h": 2
     },
