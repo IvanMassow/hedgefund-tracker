@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-18T14:31:49.100755+00:00",
+  "updated_at": "2026-02-18T14:33:26.065476+00:00",
   "total_positions": 25,
   "active_count": 0,
   "publish_count": 0,
@@ -33,7 +33,7 @@
       "state_reason": "Stale (49h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "Next cycle, I will look for updates from Nicox regarding the NDA submission time",
+      "watching_for": "Next cycle, I will be looking for updates from Nicox about the NDA submission ti",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -56,7 +56,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for an official confirmation from SGS regarding the regulatory appro",
+      "watching_for": "I will continue to look for any direct confirmation from SGS regarding the appro",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -82,7 +82,7 @@
       "watching_for": "",
       "journal_count": 0,
       "signal_velocity": "propagating",
-      "signal_hits_24h": 4
+      "signal_hits_24h": 3
     },
     {
       "asset": "12 Panel Now: regulation",
