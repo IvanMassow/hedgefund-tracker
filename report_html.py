@@ -1,7 +1,8 @@
 """
 Hedge Fund Edge Tracker - HTML Report Generator
-Noah Pink design system with three-act structure:
-1. Trading Sheet  2. Confidence Clusters  3. Learning Dashboard
+Noah Pink design system with three-section trading sheet:
+1. Active Positions  2. Pipeline (Qualified Candidates)  3. Research Lab
+Plus backtest performance card, confidence clusters, and learning dashboard.
 """
 import os
 import logging
@@ -100,597 +101,33 @@ def _build_timeline_cells(m):
     return '<td class="td-timeline">{}</td>'.format(html)
 
 
-def generate_html_report():
-    """Generate the full HTML report with Noah Pink design."""
-    os.makedirs(REPORTS_DIR, exist_ok=True)
+# ---------------------------------------------------------------------------
+# Section builders for the three-part trading sheet
+# ---------------------------------------------------------------------------
 
-    data = generate_analytics()
-    s = data["summary"]
-    now = datetime.now(timezone.utc)
-    now_str = now.strftime("%Y-%m-%d %H:%M UTC")
+def _classify_candidates(candidates):
+    """Split candidates into three sections: active, pipeline, research.
 
-    # Build candidate rows for trading sheet
-    trading_rows = _build_trading_rows(data["candidates"])
-
-    # Build band cluster cards
-    band_cards = _build_band_cards(data["band_performance"])
-
-    # Build learning dashboard
-    learning = _build_learning_dashboard(data)
-
-    # Hero stats
-    pnl_sign = "+" if s["total_pnl"] >= 0 else ""
-    headline = _dynamic_headline(s)
-
-    html = """<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hedge Fund Edge Tracker</title>
-<!-- Open Graph / Social sharing preview -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="NOAH Hedge Fund Edge Tracker">
-<meta property="og:description" content="Information asymmetry intelligence. Paper trading hedge fund recommendations to learn which signals work.">
-<meta property="og:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
-<meta property="og:url" content="https://ivanmassow.github.io/hedgefund-tracker/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="NOAH Hedge Fund Edge Tracker">
-<meta name="twitter:description" content="Information asymmetry intelligence. Paper trading hedge fund recommendations to learn which signals work.">
-<meta name="twitter:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
-<style>
-:root {{
-    --ink: #262a33;
-    --ink-light: #3d424d;
-    --ink-mid: #5a5f6b;
-    --ink-subtle: #73788a;
-    --grey-100: #f3f4f6;
-    --grey-200: #e5e7eb;
-    --grey-300: #d1d5db;
-    --grey-400: #9ea2b0;
-    --paper: #FFF1E5;
-    --accent: #0d7680;
-    --accent-light: #0e8c97;
-    --blush: #ffe4d6;
-    --blush-dark: #ffd6c2;
-    --warm: #c9926b;
-    --green: #16a34a;
-    --orange: #f59e0b;
-    --red: #cc0000;
-    --purple: #7c3aed;
-    --purple-dark: #5b21b6;
-}}
-* {{ margin: 0; padding: 0; box-sizing: border-box; }}
-body {{
-    font-family: 'Lato', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-    padding-top: 56px;
-}}
-.container {{ max-width: 1120px; margin: 0 auto; padding: 0 2rem; }}
-
-/* Header */
-.header {{
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: var(--ink); height: 56px;
-    display: flex; align-items: center; padding: 0 2rem;
-}}
-.header .logo {{
-    font-family: 'Montserrat', sans-serif; font-weight: 700;
-    color: #fff; font-size: 1.3rem; letter-spacing: 0.08em;
-    text-transform: uppercase;
-}}
-.header .nav {{ display: flex; gap: 1.5rem; margin-left: 3rem; }}
-.header .nav a {{
-    color: var(--grey-400); text-decoration: none;
-    font-size: 0.82rem; letter-spacing: 0.04em;
-    transition: color 0.2s;
-}}
-.header .nav a:hover {{ color: #fff; }}
-.header .meta {{
-    margin-left: auto; color: var(--grey-400);
-    font-size: 0.78rem; letter-spacing: 0.02em;
-}}
-
-/* Hero */
-.hero {{
-    background: var(--ink); color: #fff;
-    padding: 3rem 0 2.5rem; margin-top: -56px; padding-top: calc(56px + 3rem);
-}}
-.hero h1 {{
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 700;
-    letter-spacing: -0.01em; margin-bottom: 0.5rem;
-}}
-.hero .subtitle {{
-    font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: #FFA089; margin-bottom: 1rem;
-}}
-.hero .headline {{
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem; font-weight: 400; font-style: italic;
-    color: var(--grey-300); max-width: 600px; margin-bottom: 1.5rem;
-}}
-.stat-grid {{
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 1.5rem; margin-top: 1rem;
-}}
-.stat-box .num {{
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
-}}
-.stat-box .label {{
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--grey-400);
-}}
-
-/* Sections */
-.section {{ padding: 3rem 0; scroll-margin-top: 72px; }}
-.section-label {{
-    font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 0.8rem;
-}}
-.section-title {{
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-    font-weight: 600; margin-bottom: 0.5rem;
-}}
-.section-intro {{
-    color: var(--ink-mid); font-size: 0.95rem;
-    max-width: 680px; margin-bottom: 2rem;
-}}
-
-/* Trading Sheet Table */
-.table-scroll {{
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}}
-.trading-table {{
-    width: 100%; border-collapse: collapse;
-    font-size: 0.85rem;
-}}
-.trading-table thead th {{
-    background: var(--paper); padding: 0.7rem 0.6rem;
-    text-align: left; font-weight: 700;
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--ink-subtle);
-    border-bottom: 2px solid var(--grey-200);
-    white-space: nowrap;
-}}
-.trading-table tbody tr {{
-    border-bottom: 1px solid var(--grey-100);
-    transition: background 0.15s;
-}}
-.trading-table tbody tr:hover {{ background: var(--blush); }}
-.trading-table td {{
-    padding: 0.55rem 0.6rem; vertical-align: middle;
-}}
-.td-discovered {{ font-size: 0.78rem; color: var(--ink-subtle); white-space: nowrap; }}
-.td-band {{
-    font-family: 'Playfair Display', serif;
-    font-weight: 700; font-size: 1rem; text-align: center;
-    width: 2.5rem;
-}}
-.td-asset {{ max-width: 220px; }}
-.td-asset .name {{ font-weight: 700; font-size: 0.88rem; }}
-.td-asset .ticker {{ font-size: 0.75rem; color: var(--ink-subtle); }}
-.td-asset .thesis {{ font-size: 0.72rem; color: var(--ink-mid); font-style: italic; margin-top: 2px; }}
-.td-dir {{
-    font-weight: 700; font-size: 0.72rem;
-    letter-spacing: 0.04em; text-align: center;
-    padding: 2px 8px; border-radius: 3px;
-    display: inline-block;
-}}
-.td-price {{ font-weight: 700; white-space: nowrap; }}
-.td-pnl {{ font-weight: 700; white-space: nowrap; text-align: right; }}
-.td-state {{
-    font-weight: 700; font-size: 0.72rem;
-    letter-spacing: 0.04em; text-align: center;
-    padding: 2px 8px; border-radius: 3px;
-    display: inline-block; white-space: nowrap;
-}}
-.td-timeline {{
-    font-size: 0.75rem; white-space: nowrap;
-    max-width: 300px; overflow-x: auto;
-}}
-.tl-point {{ display: inline-block; margin: 0 1px; }}
-.tl-point sup {{ font-size: 0.55rem; color: var(--ink-subtle); }}
-.tl-point sub {{ font-size: 0.6rem; }}
-.tl-arrow {{ color: var(--grey-300); margin: 0 2px; font-size: 0.7rem; }}
-.tl-empty {{ color: var(--grey-400); font-style: italic; }}
-.kill-marker {{
-    display: inline-block; background: var(--purple-dark);
-    color: #fff; font-weight: 700; font-size: 0.65rem;
-    width: 16px; height: 16px; line-height: 16px;
-    text-align: center; border-radius: 50%; margin: 0 2px;
-}}
-
-/* Journal / Conviction display */
-.conviction-gauge {{
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 0.75rem; font-weight: 700;
-}}
-.conviction-bar {{
-    display: inline-block; width: 50px; height: 6px;
-    background: var(--grey-200); border-radius: 3px;
-    overflow: hidden; vertical-align: middle;
-}}
-.conviction-fill {{
-    height: 100%; border-radius: 3px;
-    transition: width 0.3s;
-}}
-.thesis-badge {{
-    display: inline-block; font-size: 0.65rem; font-weight: 700;
-    letter-spacing: 0.03em; text-transform: uppercase;
-    padding: 1px 6px; border-radius: 3px;
-    margin-left: 4px;
-}}
-.journal-block {{
-    margin-top: 6px; padding: 6px 8px;
-    background: rgba(255,255,255,0.6); border-radius: 4px;
-    border-left: 3px solid var(--grey-300);
-    font-size: 0.72rem; color: var(--ink-mid);
-}}
-.journal-block .journal-watching {{
-    color: var(--accent); font-weight: 700; margin-bottom: 2px;
-}}
-.journal-block .journal-concerns {{
-    color: #b45309; font-style: italic; margin-bottom: 2px;
-}}
-.journal-block .journal-narrative {{
-    color: var(--ink-light); line-height: 1.4;
-}}
-.journal-block .journal-meta {{
-    font-size: 0.65rem; color: var(--grey-400); margin-top: 3px;
-}}
-.signal-badge {{
-    display: inline-block; font-size: 0.6rem; font-weight: 700;
-    letter-spacing: 0.04em; text-transform: uppercase;
-    padding: 1px 6px; border-radius: 3px; margin-left: 4px;
-    vertical-align: middle;
-}}
-.watch-marker {{
-    display: inline-block; background: var(--purple);
-    color: #fff; font-weight: 700; font-size: 0.65rem;
-    width: 16px; height: 16px; line-height: 16px;
-    text-align: center; border-radius: 50%; margin: 0 2px;
-}}
-
-/* State indicators: WATCH (grey/stalking) and ACTIVE (blue/trading) */
-.state-watch {{
-    opacity: 0.55;
-    filter: grayscale(40%);
-    transition: opacity 0.2s, filter 0.2s;
-}}
-.state-watch:hover {{
-    opacity: 0.85;
-    filter: grayscale(0%);
-}}
-.state-watch .td-band {{ opacity: 0.6; }}
-.state-watch .td-pnl {{ color: var(--grey-400) !important; }}
-.state-label {{
-    display: inline-block; font-size: 0.6rem; font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    padding: 1px 6px; border-radius: 3px; margin-left: 6px;
-    vertical-align: middle;
-}}
-.state-label-watching {{
-    color: #6b7280; background: #f3f4f6;
-    border: 1px solid #d1d5db;
-}}
-.state-label-trading {{
-    color: #2563eb; background: #dbeafe;
-    border: 1px solid #93c5fd;
-}}
-.trade-badge {{
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 20px; height: 20px; border-radius: 50%;
-    background: #2563eb; color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700; font-size: 0.65rem;
-    line-height: 1; margin-left: 4px;
-    vertical-align: middle;
-    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
-}}
-
-/* Killed/Watch rows */
-.killed-row {{ opacity: 0.7; }}
-.killed-row .td-asset .name {{ color: var(--purple-dark); }}
-.killed-row .td-discovered {{ color: var(--purple-dark); }}
-.watch-row {{
-    background: #fafafa;
-    border-left: 3px solid #d1d5db;
-}}
-.watch-row .td-asset .name {{ color: #6b7280; }}
-.watch-row .td-asset .ticker {{ color: #9ca3af; }}
-.watch-row .td-asset .thesis {{ color: #9ca3af; }}
-.active-row {{
-    border-left: 3px solid #2563eb;
-}}
-.active-row .td-asset .name {{ color: var(--ink); }}
-.publish-row {{ background: #fffbeb; border-left: 3px solid #d97706; }}
-.publish-row .td-asset .name {{ color: #92400e; }}
-.publish-row .td-state {{ font-weight: 700; }}
-
-/* Band cluster cards */
-.band-grid {{
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.2rem;
-}}
-.band-card {{
-    background: #fff; border: 1px solid var(--grey-200);
-    border-radius: 4px; padding: 1.5rem;
-    border-left: 5px solid;
-}}
-.band-card .band-letter {{
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem; font-weight: 700;
-}}
-.band-card .band-label {{
-    font-size: 0.72rem; letter-spacing: 0.08em;
-    text-transform: uppercase; margin-bottom: 0.8rem;
-}}
-.band-card .band-stats {{
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 0.4rem; font-size: 0.82rem; margin-bottom: 0.8rem;
-}}
-.band-card .band-stats .num {{ font-weight: 700; }}
-.band-card .members {{ font-size: 0.78rem; }}
-.band-card .members .member {{
-    display: flex; align-items: center; gap: 0.4rem;
-    padding: 2px 0; border-bottom: 1px solid var(--grey-100);
-}}
-
-/* Learning dashboard */
-.learn-grid {{
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-}}
-.learn-card {{
-    background: #fff; border: 1px solid var(--grey-200);
-    border-radius: 4px; padding: 1.5rem;
-}}
-.learn-card h3 {{
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem; font-weight: 600;
-    margin-bottom: 0.8rem;
-}}
-.learn-card table {{
-    width: 100%; font-size: 0.82rem;
-    border-collapse: collapse;
-}}
-.learn-card th {{
-    text-align: left; font-weight: 700;
-    font-size: 0.72rem; letter-spacing: 0.04em;
-    text-transform: uppercase; color: var(--ink-subtle);
-    padding: 0.3rem 0; border-bottom: 1px solid var(--grey-200);
-}}
-.learn-card td {{
-    padding: 0.3rem 0; border-bottom: 1px solid var(--grey-100);
-}}
-
-/* Footer */
-.footer {{
-    background: var(--ink); color: var(--grey-400);
-    padding: 2.5rem 0; margin-top: 3rem;
-    font-size: 0.82rem;
-}}
-.footer .logo {{
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700; color: #fff; font-size: 1.1rem;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    margin-bottom: 0.5rem;
-}}
-
-/* Responsive */
-@media (max-width: 768px) {{
-    .container {{ padding: 0 1rem; }}
-    .stat-grid {{ grid-template-columns: repeat(2, 1fr); }}
-    .trading-table {{ font-size: 0.78rem; }}
-    .band-grid {{ grid-template-columns: 1fr; }}
-    .learn-grid {{ grid-template-columns: 1fr; }}
-}}
-</style>
-</head>
-<body>
-
-<!-- Header -->
-<div class="header">
-    <a href="https://ivanmassow.github.io/noah-dashboard/" style="text-decoration:none"><div class="logo">NOAH</div></a>
-    <div class="nav">
-        <a href="https://ivanmassow.github.io/polyhunter/">Poly Market</a>
-        <a href="https://ivanmassow.github.io/hedgefund-tracker/" style="color:#fff">Hedge Fund</a>
-        <a href="https://ivanmassow.github.io/company-watch/">Company Watch</a>
-        <span style="color:rgba(255,255,255,0.15)">|</span>
-        <a href="#sheet">Sheet</a>
-        <a href="#clusters">Clusters</a>
-        <a href="#learning">Learning</a>
-    </div>
-    <div class="meta">Hedge Fund &middot; Paper Trading &middot; {now_str}</div>
-</div>
-
-<!-- Hero -->
-<div class="hero">
-    <div class="container">
-        <div class="subtitle">Hedge Fund Intelligence &middot; Paper Trading</div>
-        <h1>Edge Tracker</h1>
-        <div class="headline">{headline}</div>
-        <div class="stat-grid">
-            <div class="stat-box">
-                <div class="num">{total}</div>
-                <div class="label">Positions</div>
-            </div>
-            <div class="stat-box">
-                <div class="num">{active}</div>
-                <div class="label">Active</div>
-            </div>
-            <div class="stat-box">
-                <div class="num">{watch}</div>
-                <div class="label">Watching</div>
-            </div>
-            <div class="stat-box">
-                <div class="num">{pnl_sign}{total_pnl:.1f}%</div>
-                <div class="label">Total P&amp;L</div>
-            </div>
-            <div class="stat-box">
-                <div class="num">{win_rate:.0f}%</div>
-                <div class="label">Win Rate</div>
-            </div>
-            <div class="stat-box">
-                <div class="num">{killed}</div>
-                <div class="label">Killed</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Trading Sheet -->
-<div class="section" id="sheet">
-    <div class="container">
-        <div class="section-label">Act I</div>
-        <div class="section-title">Trading Sheet</div>
-        <div class="section-intro">All positions scored, ranked, and colour-coded. Blue <strong>B</strong> badges mark active trades; greyed-out rows are being stalked. Kills in purple. Scan in 10 seconds.</div>
-        <div class="table-scroll">
-            <table class="trading-table">
-                <thead>
-                    <tr>
-                        <th>Discovered</th>
-                        <th>Band</th>
-                        <th>Asset / Theme</th>
-                        <th>Dir</th>
-                        <th>Conf</th>
-                        <th>Entry</th>
-                        <th>Current</th>
-                        <th>P&amp;L</th>
-                        <th>Timeline</th>
-                        <th>State</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {trading_rows}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Confidence Clusters -->
-<div class="section" id="clusters">
-    <div class="container">
-        <div class="section-label">Act II</div>
-        <div class="section-title">Confidence Clusters</div>
-        <div class="section-intro">Performance by confidence band. Which probability tier produces the best results &mdash; the blue chips or the dark horses?</div>
-        <div class="band-grid">
-            {band_cards}
-        </div>
-    </div>
-</div>
-
-<!-- Learning Dashboard -->
-<div class="section" id="learning">
-    <div class="container">
-        <div class="section-label">Act III</div>
-        <div class="section-title">Learning Dashboard</div>
-        <div class="section-intro">What is the system learning? Edge quality, direction accuracy, kill validation, and optimal timing by confidence band.</div>
-        <div class="learn-grid">
-            {learning}
-        </div>
-    </div>
-</div>
-
-<!-- Footer -->
-<div class="footer">
-    <div class="container">
-        <a href="https://ivanmassow.github.io/noah-dashboard/" style="text-decoration:none"><div class="logo">NOAH</div></a>
-        <p>Information asymmetry intelligence &mdash; paper trading hedge fund recommendations to learn which signals work.</p>
-        <p style="margin-top: 0.8rem; font-size: 0.72rem; color: rgba(255,241,229,0.5);">
-            <a href="https://ivanmassow.github.io/polyhunter/" style="color:rgba(255,241,229,0.5);text-decoration:none">Poly Market</a> &middot;
-            <a href="https://ivanmassow.github.io/hedgefund-tracker/" style="color:rgba(255,241,229,0.5);text-decoration:none">Hedge Fund</a> &middot;
-            <a href="https://ivanmassow.github.io/company-watch/" style="color:rgba(255,241,229,0.5);text-decoration:none">Company Watch</a>
-        </p>
-        <p style="margin-top: 0.8rem; font-size: 0.75rem;">
-            Report generated {now_str}.
-        </p>
-        <div style="margin-top:1.2rem;max-width:560px;margin-left:auto;margin-right:auto;padding:0.8rem 1rem;border-top:1px solid rgba(255,241,229,0.12)">
-            <p style="font-size:0.7rem;color:rgba(255,241,229,0.55);line-height:1.7;text-align:center;margin:0">
-                <strong style="color:rgba(255,241,229,0.7);letter-spacing:0.08em;text-transform:uppercase;font-size:0.65rem">Disclaimer</strong><br>
-                You are welcome to view these pages. The trading algorithms and analysis presented here are experimental and under active development. Nothing on this site constitutes financial advice. We accept no responsibility for any losses incurred from acting on information found here. These pages are intended for internal research purposes. You are strongly advised to conduct your own due diligence before making any investment decisions.
-            </p>
-        </div>
-    </div>
-</div>
-
-</body>
-</html>""".format(
-        now_str=now_str,
-        headline=headline,
-        total=s["total_candidates"],
-        active=s["active_count"],
-        watch=s["watch_count"],
-        killed=s["killed_count"],
-        pnl_sign=pnl_sign,
-        total_pnl=s["total_pnl"],
-        win_rate=s["win_rate"],
-        trading_rows=trading_rows,
-        band_cards=band_cards,
-        learning=learning,
-    )
-
-    # Save
-    latest_path = os.path.join(REPORTS_DIR, "latest.html")
-    with open(latest_path, "w") as f:
-        f.write(html)
-
-    # Also save timestamped version
-    ts_name = "hedgefund_report_{}.html".format(now.strftime("%Y-%m-%d_%H%M"))
-    ts_path = os.path.join(REPORTS_DIR, ts_name)
-    with open(ts_path, "w") as f:
-        f.write(html)
-
-    logger.info("Report generated: {}".format(latest_path))
-    return latest_path
-
-
-def _dynamic_headline(s):
-    """Generate dynamic headline based on portfolio performance."""
-    if s["total_candidates"] == 0:
-        return "No positions yet. Awaiting first report."
-    if s["active_count"] == 0 and s["pending_count"] > 0:
-        return "New recommendations pending due diligence. The trader is assessing."
-    if s["win_rate"] >= 70:
-        return "Strong performance. {}% win rate across {} traded positions.".format(
-            s["win_rate"], s["active_count"] + s["killed_count"]
-        )
-    if s["total_pnl"] > 0:
-        return "Portfolio in the green. {} active positions, {} under watch.".format(
-            s["active_count"], s["watch_count"]
-        )
-    if s["watch_count"] > s["active_count"]:
-        return "Cautious posture. More positions under watch than active. The trader is waiting for better entries."
-    return "Tracking {} positions across {} confidence bands.".format(
-        s["total_candidates"], len([b for b in ["A","B","C","D","E"]
-                                    if any(m.get("band") == b for m in [])])  # simplified
-    )
-
-
-def _build_trading_rows(candidates):
-    """Build HTML table rows for the trading sheet.
-    Killed positions older than KILL_DISPLAY_HOURS are hidden from the sheet
-    but still counted in analytics/learning.
+    Active: state in (ACTIVE, PUBLISH)
+    Pipeline (qualified): state == WATCH AND direction == LONG AND band in (A, B, C)
+    Research Lab: everything else that is visible (recent kills, non-qualifying WATCH)
     """
-    if not candidates:
-        return '<tr><td colspan="10" style="text-align:center;color:var(--grey-400);padding:2rem;font-style:italic;">No positions yet. Awaiting reports.</td></tr>'
-
-    # Filter out old kills
     now = datetime.now(timezone.utc)
-    visible = []
+
+    active_list = []
+    pipeline_list = []
+    research_list = []
     hidden_kills = 0
+
     for m in candidates:
-        if m["state"] == "KILLED" and m.get("killed_at"):
+        # Skip deactivated positions (no ticker)
+        if not m.get("is_active", 1):
+            continue
+
+        state = m["state"]
+
+        # Filter old kills
+        if state == "KILLED" and m.get("killed_at"):
             try:
                 kill_time = datetime.fromisoformat(m["killed_at"])
                 if kill_time.tzinfo is None:
@@ -701,215 +138,505 @@ def _build_trading_rows(candidates):
                     continue
             except (ValueError, TypeError):
                 pass
-        visible.append(m)
 
-    # Sort: PUBLISH first, then ACTIVE, then WATCH, then PENDING, then KILLED
-    state_order = {"PUBLISH": 0, "ACTIVE": 1, "WATCH": 2, "PENDING": 3, "KILLED": 4, "EXPIRED": 5}
-    sorted_c = sorted(visible, key=lambda m: (
-        state_order.get(m["state"], 6), -(m.get("confidence_pct") or 0)
+        if state in ("ACTIVE", "PUBLISH"):
+            active_list.append(m)
+        elif state == "WATCH" and m.get("direction") == "LONG" and m.get("band") in ("A", "B", "C"):
+            pipeline_list.append(m)
+        else:
+            research_list.append(m)
+
+    # Sort each section
+    active_list.sort(key=lambda m: -(m.get("confidence_pct") or 0))
+    pipeline_list.sort(key=lambda m: -(m.get("confidence_pct") or 0))
+    state_order = {"WATCH": 0, "PENDING": 1, "KILLED": 2, "EXPIRED": 3}
+    research_list.sort(key=lambda m: (
+        state_order.get(m["state"], 9), -(m.get("confidence_pct") or 0)
     ))
 
+    return active_list, pipeline_list, research_list, hidden_kills
+
+
+def _build_active_section(active_list):
+    """Build HTML for Active Positions section."""
+    count = len(active_list)
+    header = (
+        '<div class="section-bar section-bar-active">'
+        '<span class="section-bar-icon">&#9679;</span> '
+        'Active Positions'
+        '<span class="section-bar-count">{} position{}</span>'
+        '</div>'
+    ).format(count, "s" if count != 1 else "")
+
+    if not active_list:
+        return header + '<div class="section-empty">No active positions. The trader is waiting for the right entry.</div>'
+
     rows = []
-    for m in sorted_c:
-        row_class = ""
-        if m["state"] == "KILLED":
-            row_class = ' class="killed-row"'
-        elif m["state"] == "WATCH":
-            row_class = ' class="watch-row state-watch"'
-        elif m["state"] == "ACTIVE":
-            row_class = ' class="active-row"'
-        elif m["state"] == "PUBLISH":
-            row_class = ' class="publish-row active-row"'
+    for m in active_list:
+        rows.append(_build_active_row(m))
 
-        # Discovered
-        disc = m.get("discovered_at", "")[:10]
+    table = """<div class="table-scroll">
+<table class="trading-table">
+<thead><tr>
+    <th>Ticker</th><th>Band</th><th>Asset / Thesis</th><th>Dir</th>
+    <th>Conf</th><th>Entry</th><th>Current</th><th>Trade P&amp;L</th>
+    <th>Report P&amp;L</th><th>Timeline</th>
+</tr></thead>
+<tbody>{rows}</tbody>
+</table></div>""".format(rows="\n".join(rows))
 
-        # Band
-        band = m.get("band", "E")
-        bc = _band_color(band)
+    return header + table
 
-        # Asset name + thesis
-        asset = m.get("asset_theme", "Unknown")[:50]
-        ticker_raw = m.get("primary_ticker", "")
-        thesis = (m.get("headline") or m.get("mechanism") or "")[:80]
-        state_reason = m.get("state_reason", "")
 
-        # Build ticker display with state indicator badges
-        state = m["state"]
-        if state in ("ACTIVE", "PUBLISH"):
-            ticker = '{}<span class="trade-badge">B</span><span class="state-label state-label-trading">TRADING</span>'.format(ticker_raw)
-        elif state == "WATCH":
-            ticker = '{}<span class="state-label state-label-watching">WATCHING</span>'.format(ticker_raw)
-        else:
-            ticker = ticker_raw
+def _build_active_row(m):
+    """Build a single row for an active/publish position."""
+    ticker_raw = m.get("primary_ticker", "?")
+    band = m.get("band", "E")
+    bc = _band_color(band)
+    asset = (m.get("asset_theme") or "Unknown")[:45]
+    thesis = (m.get("headline") or m.get("mechanism") or "")[:70]
+    direction = m.get("direction", "MIXED")
+    dc = _direction_color(direction)
+    db = _direction_bg(direction)
+    conf = m.get("confidence_pct", 0)
 
-        # Direction badge
-        direction = m.get("direction", "MIXED")
-        dc = _direction_color(direction)
-        db = _direction_bg(direction)
+    entry = m.get("entry_price")
+    current = m.get("current_price")
+    pnl = m.get("current_pnl")
+    report_pnl = m.get("report_pnl")
 
-        # Confidence
-        conf = m.get("confidence_pct", 0)
+    entry_str = "${:.2f}".format(entry) if entry else "---"
+    current_str = "${:.2f}".format(current) if current else "---"
 
-        # Prices
-        entry = m.get("entry_price")
-        current = m.get("current_price")
-        pnl = m.get("current_pnl")
+    # Trade P&L
+    if pnl is not None:
+        tpnl_sign = "+" if pnl >= 0 else ""
+        tpnl_color = "#16a34a" if pnl >= 0 else "#cc0000"
+        trade_pnl_str = '<span style="color:{};font-weight:700;font-size:1rem">{}{:.1f}%</span>'.format(
+            tpnl_color, tpnl_sign, pnl)
+    else:
+        trade_pnl_str = '<span style="color:var(--grey-400)">---</span>'
 
-        entry_str = "${:.2f}".format(entry) if entry else "---"
-        current_str = "${:.2f}".format(current) if current else "---"
-        if pnl is not None:
-            pnl_sign = "+" if pnl >= 0 else ""
-            pnl_color = "#16a34a" if pnl >= 0 else "#cc0000"
-            pnl_str = '<span style="color:{}">{}{:.1f}%</span>'.format(pnl_color, pnl_sign, pnl)
-        else:
-            pnl_str = "---"
+    # Report P&L
+    if report_pnl is not None:
+        rpnl_sign = "+" if report_pnl >= 0 else ""
+        report_pnl_str = '<span style="color:#7c3aed;font-weight:700">{}{:.1f}%</span>'.format(
+            rpnl_sign, report_pnl)
+    else:
+        report_pnl_str = '<span style="color:var(--grey-400)">---</span>'
 
-        # Timeline
-        timeline_html = _build_timeline_cells(m)
+    # Thesis badge
+    thesis_st = m.get("latest_thesis_status", "")
+    thesis_colors = {
+        "intact": ("#166534", "#dcfce7"),
+        "strengthening": ("#065f46", "#d1fae5"),
+        "weakening": ("#92400e", "#fef3c7"),
+        "invalidated": ("#991b1b", "#fef2f2"),
+    }
+    tc, tbg = thesis_colors.get(thesis_st, ("", ""))
+    thesis_micro = ""
+    if thesis_st and tc:
+        thesis_micro = ' <span class="thesis-badge" style="color:{};background:{}">{}</span>'.format(
+            tc, tbg, thesis_st)
 
-        # State badge
-        state = m["state"]
-        sc = _state_color(state)
-        sb = _state_bg(state)
+    # Notes icon
+    cid = m.get("id", 0)
+    has_notes = bool(m.get("latest_conviction") or m.get("latest_watching_for")
+                     or m.get("latest_narrative_entries") or m.get("dd_entries"))
+    if has_notes:
+        notes_icon = '<a href="positions/position_{}.html" class="notes-link" title="View trader notes">&#128203;</a>'.format(cid)
+    else:
+        notes_icon = ''
 
-        # State-specific note
-        note = ""
-        if state == "PUBLISH":
-            pub_headline = m.get("publish_headline") or ""
-            pub_angle = m.get("publish_angle") or ""
-            pub_text = pub_headline or pub_angle
-            if pub_text:
-                note = '<div style="font-size:0.7rem;color:#d97706;font-weight:700;margin-top:2px;">&#9998; {}</div>'.format(
-                    pub_text[:80]
-                )
-            else:
-                note = '<div style="font-size:0.7rem;color:#d97706;font-weight:700;margin-top:2px;">&#9998; Editorial candidate</div>'
-        elif state == "KILLED" and m.get("kill_reason"):
-            note = '<div style="font-size:0.7rem;color:var(--purple-dark);font-style:italic;opacity:0.85;margin-top:2px;">{}</div>'.format(
-                m["kill_reason"][:60]
-            )
-        elif state == "WATCH" and state_reason:
-            note = '<div style="font-size:0.7rem;color:#6b7280;font-style:italic;margin-top:2px;">{}</div>'.format(
-                state_reason[:60]
-            )
+    timeline_html = _build_timeline_cells(m)
 
-        # Journal / conviction display for active and watched positions
-        journal_html = ""
-        if state in ("ACTIVE", "PUBLISH", "WATCH") and m.get("latest_conviction"):
-            conv = m["latest_conviction"]
-            conv_pct = min(conv * 10, 100)
-            if conv >= 7:
-                conv_color = "#16a34a"
-            elif conv >= 5:
-                conv_color = "#f59e0b"
-            elif conv >= 3:
-                conv_color = "#ea580c"
-            else:
-                conv_color = "#cc0000"
-
-            thesis_st = m.get("latest_thesis_status", "")
-            thesis_colors = {
-                "intact": ("#166534", "#dcfce7"),
-                "strengthening": ("#065f46", "#d1fae5"),
-                "weakening": ("#92400e", "#fef3c7"),
-                "invalidated": ("#991b1b", "#fef2f2"),
-            }
-            tc, tbg = thesis_colors.get(thesis_st, ("#73788a", "#f1f5f9"))
-            thesis_badge = ""
-            if thesis_st:
-                thesis_badge = '<span class="thesis-badge" style="color:{};background:{}">{}</span>'.format(
-                    tc, tbg, thesis_st
-                )
-
-            # Signal velocity badge
-            sig_velocity = m.get("signal_velocity", "quiet")
-            sig_hits = m.get("signal_hits_24h", 0)
-            sig_colors = {
-                "quiet": ("#166534", "#dcfce7", "&#128263;"),
-                "stirring": ("#92400e", "#fef3c7", "&#128264;"),
-                "propagating": ("#b45309", "#ffedd5", "&#128266;"),
-                "mainstream": ("#991b1b", "#fef2f2", "&#128680;"),
-            }
-            sig_c, sig_bg, sig_icon = sig_colors.get(sig_velocity, ("#73788a", "#f1f5f9", ""))
-            signal_badge = ""
-            if sig_velocity != "quiet" or sig_hits > 0:
-                signal_badge = '<span class="signal-badge" style="color:{};background:{}">{} {} ({})</span>'.format(
-                    sig_c, sig_bg, sig_icon, sig_velocity, sig_hits)
-
-            journal_html = '<div style="margin-top:4px;">'
-            journal_html += '<span class="conviction-gauge">'
-            journal_html += '<span class="conviction-bar"><span class="conviction-fill" style="width:{}%;background:{}"></span></span>'.format(
-                conv_pct, conv_color)
-            journal_html += ' <span style="color:{}">{}/10</span>'.format(conv_color, conv)
-            journal_html += '</span>'
-            journal_html += thesis_badge
-            journal_html += signal_badge
-            journal_html += '</div>'
-
-            # Journal details block
-            watching = m.get("latest_watching_for", "")
-            concerns = m.get("latest_concerns", "")
-            narratives = m.get("latest_narrative_entries", [])
-
-            if watching or concerns or narratives:
-                journal_html += '<div class="journal-block">'
-                if watching:
-                    journal_html += '<div class="journal-watching">&#128269; {}</div>'.format(
-                        watching[:120])
-                if concerns:
-                    journal_html += '<div class="journal-concerns">&#9888; {}</div>'.format(
-                        concerns[:120])
-                if narratives:
-                    latest = narratives[0]
-                    journal_html += '<div class="journal-narrative">{}</div>'.format(
-                        latest["narrative"][:200])
-                    journal_html += '<div class="journal-meta">Cycle {} &middot; {}</div>'.format(
-                        latest["cycle"], latest["timestamp"])
-                journal_html += '</div>'
-
-        rows.append("""<tr{row_class}>
-    <td class="td-discovered">{disc}</td>
+    return """<tr class="active-row">
+    <td class="td-ticker-active"><span class="ticker-name">{ticker}</span><span class="trade-badge">B</span>{thesis_micro} {notes_icon}</td>
     <td class="td-band" style="color:{bc}">{band}</td>
-    <td class="td-asset">
-        <div class="name">{asset}</div>
-        <div class="ticker">{ticker}</div>
-        <div class="thesis">{thesis}</div>
-        {note}
-        {journal_html}
-    </td>
+    <td class="td-asset"><div class="name">{asset}</div><div class="thesis">{thesis}</div></td>
     <td><span class="td-dir" style="color:{dc};background:{db}">{direction}</span></td>
     <td style="text-align:center;font-weight:700">{conf:.0f}%</td>
     <td class="td-price">{entry_str}</td>
     <td class="td-price">{current_str}</td>
-    <td class="td-pnl">{pnl_str}</td>
+    <td class="td-pnl">{trade_pnl_str}</td>
+    <td class="td-pnl">{report_pnl_str}</td>
     {timeline_html}
-    <td><span class="td-state" style="color:{sc};background:{sb}">{state}</span></td>
 </tr>""".format(
-            row_class=row_class, disc=disc, bc=bc, band=band,
-            asset=asset, ticker=ticker, thesis=thesis, note=note,
-            journal_html=journal_html,
-            dc=dc, db=db, direction=direction, conf=conf,
-            entry_str=entry_str, current_str=current_str,
-            pnl_str=pnl_str, timeline_html=timeline_html,
-            sc=sc, sb=sb, state=state
-        ))
+        ticker=ticker_raw, thesis_micro=thesis_micro, notes_icon=notes_icon,
+        bc=bc, band=band, asset=asset, thesis=thesis,
+        dc=dc, db=db, direction=direction, conf=conf,
+        entry_str=entry_str, current_str=current_str,
+        trade_pnl_str=trade_pnl_str, report_pnl_str=report_pnl_str,
+        timeline_html=timeline_html)
 
-    # Add a note about hidden kills if any
+
+def _build_pipeline_section(pipeline_list):
+    """Build HTML for Pipeline -- Qualified Candidates section."""
+    count = len(pipeline_list)
+    header = (
+        '<div class="section-bar section-bar-pipeline">'
+        '<span class="section-bar-icon">&#9670;</span> '
+        'Pipeline &mdash; Qualified Candidates'
+        '<span class="section-bar-count">{} candidate{} awaiting entry</span>'
+        '</div>'
+    ).format(count, "s" if count != 1 else "")
+
+    if not pipeline_list:
+        return header + '<div class="section-empty">No qualified candidates in the pipeline. Scanning for Band A/B/C LONG signals.</div>'
+
+    rows = []
+    for m in pipeline_list:
+        rows.append(_build_pipeline_row(m))
+
+    table = """<div class="table-scroll">
+<table class="trading-table pipeline-table">
+<thead><tr>
+    <th>Ticker</th><th>Band</th><th>Asset / Thesis</th><th>Dir</th>
+    <th>Conf</th><th>Report Price</th><th>Current</th><th>Report P&amp;L</th>
+    <th>Signal</th><th>Thesis</th>
+</tr></thead>
+<tbody>{rows}</tbody>
+</table></div>""".format(rows="\n".join(rows))
+
+    return header + table
+
+
+def _build_pipeline_row(m):
+    """Build a single row for a pipeline (qualified WATCH) candidate."""
+    ticker_raw = m.get("primary_ticker", "?")
+    band = m.get("band", "E")
+    bc = _band_color(band)
+    asset = (m.get("asset_theme") or "Unknown")[:45]
+    thesis = (m.get("headline") or m.get("mechanism") or "")[:70]
+    direction = m.get("direction", "MIXED")
+    dc = _direction_color(direction)
+    db = _direction_bg(direction)
+    conf = m.get("confidence_pct", 0)
+
+    dd_price = m.get("dd_approved_price")
+    report_price = m.get("report_price", 0)
+    ref_price = dd_price or report_price
+    current = m.get("current_price")
+    report_pnl = m.get("report_pnl")
+
+    ref_str = "${:.2f}".format(ref_price) if ref_price else "---"
+    current_str = "${:.2f}".format(current) if current else "---"
+
+    # Report P&L
+    if report_pnl is not None:
+        rpnl_sign = "+" if report_pnl >= 0 else ""
+        rpnl_color = "#7c3aed"
+        report_pnl_str = '<span style="color:{};font-weight:700">{}{:.1f}%</span>'.format(
+            rpnl_color, rpnl_sign, report_pnl)
+    else:
+        report_pnl_str = '<span style="color:var(--grey-400)">---</span>'
+
+    # Signal velocity
+    sig_velocity = m.get("signal_velocity", "quiet")
+    sig_hits = m.get("signal_hits_24h", 0)
+    sig_icons = {"quiet": "&#128263;", "stirring": "&#128264;",
+                 "propagating": "&#128266;", "mainstream": "&#128680;"}
+    sig_icon = sig_icons.get(sig_velocity, "")
+    signal_str = '<span style="font-size:0.78rem">{} {}</span>'.format(sig_icon, sig_velocity)
+
+    # Thesis status
+    thesis_st = m.get("latest_thesis_status", "")
+    thesis_colors = {
+        "intact": ("#166534", "#dcfce7"),
+        "strengthening": ("#065f46", "#d1fae5"),
+        "weakening": ("#92400e", "#fef3c7"),
+        "invalidated": ("#991b1b", "#fef2f2"),
+    }
+    tc, tbg = thesis_colors.get(thesis_st, ("#73788a", "#f1f5f9"))
+    if thesis_st:
+        thesis_badge = '<span class="thesis-badge" style="color:{};background:{}">{}</span>'.format(
+            tc, tbg, thesis_st)
+    else:
+        thesis_badge = '<span style="color:var(--grey-400);font-size:0.72rem">pending</span>'
+
+    # Notes
+    cid = m.get("id", 0)
+    has_notes = bool(m.get("latest_conviction") or m.get("latest_watching_for")
+                     or m.get("latest_narrative_entries") or m.get("dd_entries"))
+    if has_notes:
+        notes_icon = '<a href="positions/position_{}.html" class="notes-link" title="View trader notes">&#128203;</a>'.format(cid)
+    else:
+        notes_icon = ''
+
+    return """<tr class="pipeline-row">
+    <td class="td-ticker-pipeline"><span class="ticker-name">{ticker}</span> {notes_icon}</td>
+    <td class="td-band" style="color:{bc}">{band}</td>
+    <td class="td-asset"><div class="name">{asset}</div><div class="thesis">{thesis}</div></td>
+    <td><span class="td-dir" style="color:{dc};background:{db}">{direction}</span></td>
+    <td style="text-align:center;font-weight:700">{conf:.0f}%</td>
+    <td class="td-price">{ref_str}</td>
+    <td class="td-price">{current_str}</td>
+    <td class="td-pnl">{report_pnl_str}</td>
+    <td>{signal_str}</td>
+    <td>{thesis_badge}</td>
+</tr>""".format(
+        ticker=ticker_raw, notes_icon=notes_icon,
+        bc=bc, band=band, asset=asset, thesis=thesis,
+        dc=dc, db=db, direction=direction, conf=conf,
+        ref_str=ref_str, current_str=current_str,
+        report_pnl_str=report_pnl_str,
+        signal_str=signal_str, thesis_badge=thesis_badge)
+
+
+def _build_research_section(research_list, hidden_kills):
+    """Build HTML for Research Lab -- Experimental & Dismissed section."""
+    count = len(research_list)
+    killed_in_list = len([m for m in research_list if m["state"] == "KILLED"])
+    watch_in_list = count - killed_in_list
+
+    header = (
+        '<div class="section-bar section-bar-research">'
+        '<span class="section-bar-icon">&#9881;</span> '
+        'Research Lab &mdash; Experimental &amp; Dismissed'
+        '<span class="section-bar-count">{killed} killed, {watch} non-qualifying watch</span>'
+        '</div>'
+    ).format(killed=killed_in_list, watch=watch_in_list)
+
+    if not research_list and hidden_kills == 0:
+        return header + '<div class="section-empty">No dismissed positions yet.</div>'
+
+    rows = []
+    for m in research_list:
+        rows.append(_build_research_row(m))
+
+    hidden_note = ""
     if hidden_kills > 0:
-        rows.append(
-            '<tr><td colspan="10" style="text-align:center;color:var(--grey-400);'
-            'padding:0.8rem;font-size:0.78rem;font-style:italic;border:none;">'
+        hidden_note = (
+            '<div class="research-hidden-note">'
             '{} killed position{} older than {}h removed from view '
-            '&mdash; still counted in learning analytics</td></tr>'.format(
-                hidden_kills,
-                "s" if hidden_kills != 1 else "",
-                int(KILL_DISPLAY_HOURS)
-            )
-        )
+            '&mdash; still counted in learning analytics</div>'
+        ).format(hidden_kills, "s" if hidden_kills != 1 else "", int(KILL_DISPLAY_HOURS))
 
-    return "\n".join(rows)
+    table = """<div class="table-scroll">
+<table class="trading-table research-table">
+<thead><tr>
+    <th>Ticker</th><th>Band</th><th>Asset</th><th>Dir</th>
+    <th>Conf</th><th>Report P&amp;L</th><th>State</th><th>Reason</th>
+</tr></thead>
+<tbody>{rows}</tbody>
+</table></div>{hidden_note}""".format(rows="\n".join(rows), hidden_note=hidden_note)
 
+    return header + table
+
+
+def _build_research_row(m):
+    """Build a single row for the research lab (killed + non-qualifying watch)."""
+    ticker_raw = m.get("primary_ticker", "?")
+    band = m.get("band", "E")
+    bc = _band_color(band)
+    asset = (m.get("asset_theme") or "Unknown")[:35]
+    direction = m.get("direction", "MIXED")
+    dc = _direction_color(direction)
+    db = _direction_bg(direction)
+    conf = m.get("confidence_pct", 0)
+    report_pnl = m.get("report_pnl")
+
+    if report_pnl is not None:
+        rpnl_sign = "+" if report_pnl >= 0 else ""
+        report_pnl_str = '<span style="color:#7c3aed">{}{:.1f}%</span>'.format(rpnl_sign, report_pnl)
+    else:
+        report_pnl_str = '---'
+
+    state = m["state"]
+    sc = _state_color(state)
+    sb = _state_bg(state)
+
+    reason = m.get("state_reason") or m.get("kill_reason") or ""
+    if not reason and state == "WATCH":
+        # Explain why it is not qualified
+        if m.get("direction") != "LONG":
+            reason = "Non-LONG direction"
+        elif m.get("band") not in ("A", "B", "C"):
+            reason = "Band {} (below threshold)".format(m.get("band", "?"))
+        else:
+            reason = "Does not meet qualification criteria"
+    reason = reason[:80]
+
+    row_class = "killed-row" if state == "KILLED" else "research-watch-row"
+
+    # Notes
+    cid = m.get("id", 0)
+    has_notes = bool(m.get("latest_conviction") or m.get("latest_watching_for")
+                     or m.get("latest_narrative_entries") or m.get("dd_entries"))
+    if has_notes:
+        notes_icon = ' <a href="positions/position_{}.html" class="notes-link" title="View notes">&#128203;</a>'.format(cid)
+    else:
+        notes_icon = ''
+
+    return """<tr class="{row_class}">
+    <td class="td-ticker-research">{ticker}{notes_icon}</td>
+    <td class="td-band" style="color:{bc}">{band}</td>
+    <td class="td-asset-compact">{asset}</td>
+    <td><span class="td-dir" style="color:{dc};background:{db}">{direction}</span></td>
+    <td style="text-align:center">{conf:.0f}%</td>
+    <td class="td-pnl">{report_pnl_str}</td>
+    <td><span class="td-state" style="color:{sc};background:{sb}">{state}</span></td>
+    <td class="td-reason">{reason}</td>
+</tr>""".format(
+        row_class=row_class, ticker=ticker_raw, notes_icon=notes_icon,
+        bc=bc, band=band, asset=asset,
+        dc=dc, db=db, direction=direction, conf=conf,
+        report_pnl_str=report_pnl_str,
+        sc=sc, sb=sb, state=state, reason=reason)
+
+
+# ---------------------------------------------------------------------------
+# Backtest Performance Card
+# ---------------------------------------------------------------------------
+
+def _build_backtest_card(s):
+    """Build the backtest performance summary card."""
+    return """<div class="backtest-card">
+    <div class="backtest-header">
+        <span class="backtest-icon">&#9889;</span>
+        Backtest Performance &mdash; Qualified Signals
+    </div>
+    <div class="backtest-stats">
+        <div class="backtest-stat">
+            <div class="backtest-num">{trades}</div>
+            <div class="backtest-label">Trades</div>
+        </div>
+        <div class="backtest-stat">
+            <div class="backtest-num">{win_rate:.0f}%</div>
+            <div class="backtest-label">Win Rate</div>
+        </div>
+        <div class="backtest-stat">
+            <div class="backtest-num" style="color:#16a34a">+{total_pnl:.0f}%</div>
+            <div class="backtest-label">Total P&amp;L</div>
+        </div>
+        <div class="backtest-stat">
+            <div class="backtest-num" style="color:#16a34a">+{avg_pnl:.1f}%</div>
+            <div class="backtest-label">Avg per Trade</div>
+        </div>
+        <div class="backtest-stat">
+            <div class="backtest-num" style="color:var(--accent)">{profit_factor:.2f}&times;</div>
+            <div class="backtest-label">Profit Factor</div>
+        </div>
+    </div>
+    <div class="backtest-rules">
+        <span class="rules-label">Rules:</span>
+        Band A/B/C LONG auto-enter &middot; +15% take profit &middot; -8% stop loss &middot; 96h max hold
+    </div>
+</div>""".format(
+        trades=s["backtest_trades"],
+        win_rate=s["backtest_win_rate"],
+        total_pnl=s["backtest_total_pnl"],
+        avg_pnl=s["backtest_avg_pnl"],
+        profit_factor=s["backtest_profit_factor"])
+
+
+# ---------------------------------------------------------------------------
+# Exit Timing Analysis
+# ---------------------------------------------------------------------------
+
+def _build_exit_timing_card(data):
+    """Build exit timing analysis card similar to PolyHunter."""
+    ta = data.get("timing_analysis", {})
+    if not ta:
+        return ""
+
+    # Collect average P&L across all bands for each window
+    windows = ["0-6h", "6-12h", "12-24h", "24-48h", "48h+"]
+    window_labels = ["6H", "12H", "24H", "48H", "96H+"]
+    window_totals = {}
+    window_counts = {}
+
+    for w in windows:
+        window_totals[w] = 0
+        window_counts[w] = 0
+
+    for band_key in ["A", "B", "C", "D", "E"]:
+        bt = ta.get(band_key, {})
+        for w in windows:
+            wd = bt.get("windows", {}).get(w, {})
+            dp = wd.get("data_points", 0)
+            if dp > 0:
+                window_totals[w] += wd.get("avg_pnl", 0) * dp
+                window_counts[w] += dp
+
+    # Find best window
+    best_window = None
+    best_avg = -9999
+    for w in windows:
+        if window_counts[w] > 0:
+            avg = window_totals[w] / window_counts[w]
+            if avg > best_avg:
+                best_avg = avg
+                best_window = w
+
+    # Build header cells
+    header_cells = []
+    for i, w in enumerate(windows):
+        label = window_labels[i]
+        cls = ' class="timing-best"' if w == best_window else ''
+        header_cells.append("<th{}>{}</th>".format(cls, label))
+
+    # Build band rows
+    band_rows = []
+    for band_key in ["A", "B", "C", "D", "E"]:
+        bt = ta.get(band_key, {})
+        if not bt.get("windows"):
+            continue
+        bc = _band_color(band_key)
+        cells = '<td style="color:{};font-weight:700">Band {}</td>'.format(bc, band_key)
+        for w in windows:
+            wd = bt.get("windows", {}).get(w, {})
+            avg_pnl = wd.get("avg_pnl", 0)
+            dp = wd.get("data_points", 0)
+            if dp > 0:
+                pnl_sign = "+" if avg_pnl >= 0 else ""
+                pnl_color = "#16a34a" if avg_pnl >= 0 else "#cc0000"
+                is_best = (w == best_window)
+                cls = ' class="timing-best"' if is_best else ''
+                cells += '<td{}><span style="color:{};font-weight:700">{}{:.1f}%</span><br><span style="font-size:0.65rem;color:var(--grey-400)">n={}</span></td>'.format(
+                    cls, pnl_color, pnl_sign, avg_pnl, dp)
+            else:
+                cells += '<td style="color:var(--grey-400)">---</td>'
+        band_rows.append("<tr>{}</tr>".format(cells))
+
+    # Aggregate row
+    agg_cells = '<td style="font-weight:700">All Bands</td>'
+    for w in windows:
+        if window_counts[w] > 0:
+            avg = window_totals[w] / window_counts[w]
+            pnl_sign = "+" if avg >= 0 else ""
+            pnl_color = "#16a34a" if avg >= 0 else "#cc0000"
+            is_best = (w == best_window)
+            cls = ' class="timing-best"' if is_best else ''
+            agg_cells += '<td{}><span style="color:{};font-weight:700">{}{:.1f}%</span></td>'.format(
+                cls, pnl_color, pnl_sign, avg)
+        else:
+            agg_cells += '<td style="color:var(--grey-400)">---</td>'
+
+    if not band_rows:
+        return ""
+
+    return """<div class="learn-card learn-card-wide">
+    <h3>Exit Timing Analysis</h3>
+    <p style="font-size:0.82rem;color:var(--ink-mid);margin-bottom:0.8rem">
+        Average P&amp;L by holding period. <span style="background:#e0f5f5;padding:1px 6px;border-radius:3px;font-weight:700;color:var(--accent)">Teal</span> highlights the optimal window.
+    </p>
+    <table style="width:100%">
+        <thead><tr><th>Band</th>{headers}</tr></thead>
+        <tbody>
+            {band_rows}
+            <tr style="border-top:2px solid var(--grey-200)">{agg_cells}</tr>
+        </tbody>
+    </table>
+</div>""".format(
+        headers="".join(header_cells),
+        band_rows="\n".join(band_rows),
+        agg_cells=agg_cells)
+
+
+# ---------------------------------------------------------------------------
+# Keep existing functions unchanged
+# ---------------------------------------------------------------------------
 
 def _build_band_cards(band_perf):
     """Build confidence band cluster cards."""
@@ -1076,6 +803,934 @@ def _build_learning_dashboard(data):
         return '<div class="learn-card"><h3>Learning</h3><p style="color:var(--grey-400);font-style:italic;">Insufficient data. The system will learn as more positions are tracked.</p></div>'
 
     return "\n".join(cards)
+
+
+# ---------------------------------------------------------------------------
+# Dynamic Headline
+# ---------------------------------------------------------------------------
+
+def _dynamic_headline(s):
+    """Generate dynamic headline based on portfolio performance."""
+    parts = []
+    if s["active_count"] > 0:
+        parts.append("{} Active Trade{}".format(s["active_count"], "s" if s["active_count"] != 1 else ""))
+    if s["qualified_count"] > 0:
+        parts.append("{} Qualified Signals".format(s["qualified_count"]))
+    if s["backtest_profit_factor"] > 1:
+        parts.append("{:.2f}x Profit Factor".format(s["backtest_profit_factor"]))
+    if parts:
+        return ", ".join(parts)
+
+    if s["total_candidates"] == 0:
+        return "No positions yet. Awaiting first report."
+    if s["pipeline_count"] > 0:
+        return "{} candidates in pipeline, awaiting optimal entry.".format(s["pipeline_count"])
+    return "Tracking {} positions across confidence bands.".format(s["total_candidates"])
+
+
+# ---------------------------------------------------------------------------
+# Position detail pages (unchanged)
+# ---------------------------------------------------------------------------
+
+def _generate_position_pages(candidates):
+    """Generate individual HTML detail pages for each position.
+
+    Each page is a human-readable log of everything the bot has thought and decided
+    about this position. Linked from the trading sheet via a clipboard icon.
+    Pages live in reports/positions/position_N.html
+    """
+    positions_dir = os.path.join(REPORTS_DIR, "positions")
+    os.makedirs(positions_dir, exist_ok=True)
+
+    now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+    for m in candidates:
+        if not m.get("is_active", 1):
+            continue
+
+        cid = m.get("id", 0)
+        ticker = m.get("primary_ticker") or "?"
+        asset = (m.get("asset_theme") or "?")[:80]
+        state = m["state"]
+        direction = m.get("direction", "?")
+        conf = m.get("confidence_pct", 0)
+        band = m.get("band", "E")
+        band_label = m.get("band_label", "")
+
+        # State styling
+        if state == "WATCH":
+            state_color, state_bg = "#6b7280", "#f1f5f9"
+            state_label = "WATCHING"
+        elif state in ("ACTIVE", "PUBLISH"):
+            state_color, state_bg = "#2563eb", "#dbeafe"
+            state_label = "TRADING"
+        elif state == "KILLED":
+            state_color, state_bg = "#7c3aed", "#f3e8ff"
+            state_label = "KILLED"
+        else:
+            state_color, state_bg = "#73788a", "#f1f5f9"
+            state_label = state
+
+        # Conviction
+        conv = m.get("latest_conviction")
+        conv_html = ""
+        if conv:
+            conv_pct = min(conv * 10, 100)
+            if conv >= 7: conv_color = "#16a34a"
+            elif conv >= 5: conv_color = "#f59e0b"
+            elif conv >= 3: conv_color = "#ea580c"
+            else: conv_color = "#cc0000"
+            conv_html = """<div style="margin:1rem 0">
+                <div style="font-size:0.75rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Conviction</div>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <div style="flex:1;max-width:200px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden">
+                        <div style="width:{pct}%;height:100%;background:{color};border-radius:4px"></div>
+                    </div>
+                    <span style="color:{color};font-weight:700;font-size:1.1rem">{conv}/10</span>
+                </div>
+            </div>""".format(pct=conv_pct, color=conv_color, conv=conv)
+
+        # Thesis status
+        thesis_st = m.get("latest_thesis_status", "")
+        thesis_html = ""
+        if thesis_st:
+            thesis_colors = {"intact": ("#166534", "#dcfce7"), "strengthening": ("#065f46", "#d1fae5"),
+                "weakening": ("#92400e", "#fef3c7"), "invalidated": ("#991b1b", "#fef2f2")}
+            tc, tbg = thesis_colors.get(thesis_st, ("#73788a", "#f1f5f9"))
+            thesis_html = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.75rem;font-weight:700;color:{};background:{}">{}</span>'.format(tc, tbg, thesis_st.upper())
+
+        # Signal velocity
+        sig_velocity = m.get("signal_velocity", "quiet")
+        sig_hits = m.get("signal_hits_24h", 0)
+        sig_colors = {"quiet": ("#166534", "#dcfce7", "&#128263;"), "stirring": ("#92400e", "#fef3c7", "&#128264;"),
+            "propagating": ("#b45309", "#ffedd5", "&#128266;"), "mainstream": ("#991b1b", "#fef2f2", "&#128680;")}
+        sig_c, sig_bg, sig_icon = sig_colors.get(sig_velocity, ("#73788a", "#f1f5f9", ""))
+        signal_html = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.75rem;font-weight:700;color:{};background:{}">{} {} ({})</span>'.format(
+            sig_c, sig_bg, sig_icon, sig_velocity, sig_hits)
+
+        # Prices section
+        entry_price = m.get("entry_price")
+        dd_price = m.get("dd_approved_price")
+        current_price = m.get("current_price")
+        report_pnl = m.get("report_pnl")
+        current_pnl = m.get("current_pnl")
+
+        prices_html = '<div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin:1rem 0">'
+        if dd_price:
+            prices_html += '<div><div style="font-size:0.7rem;color:#6b7280;text-transform:uppercase">DD Price</div><div style="font-weight:700;font-size:1.1rem">${:.2f}</div></div>'.format(dd_price)
+        if entry_price:
+            prices_html += '<div><div style="font-size:0.7rem;color:#6b7280;text-transform:uppercase">Entry Price</div><div style="font-weight:700;font-size:1.1rem">${:.2f}</div></div>'.format(entry_price)
+        if current_price:
+            prices_html += '<div><div style="font-size:0.7rem;color:#6b7280;text-transform:uppercase">Current</div><div style="font-weight:700;font-size:1.1rem">${:.2f}</div></div>'.format(current_price)
+        if report_pnl is not None:
+            rp_sign = "+" if report_pnl >= 0 else ""
+            prices_html += '<div><div style="font-size:0.7rem;color:#7c3aed;text-transform:uppercase">Report P&amp;L</div><div style="font-weight:700;font-size:1.1rem;color:#7c3aed">{}{:.1f}%</div></div>'.format(rp_sign, report_pnl)
+        if current_pnl is not None:
+            tp_sign = "+" if current_pnl >= 0 else ""
+            tp_color = "#16a34a" if current_pnl >= 0 else "#cc0000"
+            prices_html += '<div><div style="font-size:0.7rem;color:{};text-transform:uppercase">Trade P&amp;L</div><div style="font-weight:700;font-size:1.1rem;color:{}">{}{:.1f}%</div></div>'.format(tp_color, tp_color, tp_sign, current_pnl)
+        prices_html += '</div>'
+
+        # State reason
+        reason = m.get("state_reason") or m.get("kill_reason") or ""
+        reason_html = ""
+        if reason:
+            reason_html = '<div style="background:#f9fafb;border-radius:6px;padding:0.8rem 1rem;margin:0.8rem 0;font-size:0.85rem;color:#374151;border-left:3px solid {}"><strong>Status:</strong> {}</div>'.format(
+                state_color, reason[:300])
+
+        # Report thesis/mechanism
+        mechanism = m.get("mechanism") or m.get("headline") or ""
+        tripwire = m.get("tripwire") or ""
+        evidence = m.get("evidence") or ""
+        risks = m.get("risks") or ""
+        thesis_block = ""
+        if mechanism or tripwire or evidence:
+            thesis_block = '<div style="margin:1rem 0;padding:1rem;background:#fefce8;border-radius:6px;border-left:3px solid #eab308">'
+            thesis_block += '<div style="font-size:0.75rem;color:#92400e;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Original Report Thesis</div>'
+            if mechanism:
+                thesis_block += '<div style="font-size:0.85rem;color:#374151;margin-bottom:6px"><strong>Mechanism:</strong> {}</div>'.format(mechanism[:400])
+            if tripwire:
+                thesis_block += '<div style="font-size:0.85rem;color:#374151;margin-bottom:6px"><strong>Tripwire:</strong> {}</div>'.format(tripwire[:300])
+            if evidence:
+                thesis_block += '<div style="font-size:0.85rem;color:#374151;margin-bottom:6px"><strong>Evidence:</strong> {}</div>'.format(evidence[:400])
+            if risks:
+                thesis_block += '<div style="font-size:0.85rem;color:#b45309"><strong>Risks:</strong> {}</div>'.format(risks[:300])
+            thesis_block += '</div>'
+
+        # Watching for
+        watching = m.get("latest_watching_for", "")
+        watching_html = ""
+        if watching:
+            watching_html = '<div style="background:#f0fdf4;border-radius:6px;padding:0.8rem 1rem;margin:0.8rem 0;font-size:0.85rem;border-left:3px solid #22c55e"><strong>&#128269; Watching For:</strong> {}</div>'.format(watching[:400])
+
+        # Concerns
+        concerns = m.get("latest_concerns", "")
+        concerns_html = ""
+        if concerns:
+            concerns_html = '<div style="background:#fff7ed;border-radius:6px;padding:0.8rem 1rem;margin:0.8rem 0;font-size:0.85rem;border-left:3px solid #f97316"><strong>&#9888; Concerns:</strong> {}</div>'.format(concerns[:400])
+
+        # Narrative entries (ALL of them)
+        narrative_html = ""
+        narratives = m.get("latest_narrative_entries", [])
+        if narratives:
+            narrative_html = '<div style="margin:1.5rem 0">'
+            narrative_html += '<div style="font-size:0.8rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.8rem;padding-bottom:4px;border-bottom:1px solid #e5e7eb">Private Narrative Log</div>'
+            for entry in narratives:
+                narrative_html += '<div style="margin-bottom:1rem;padding:0.8rem 1rem;background:white;border-radius:6px;border-left:3px solid #d1d5db;box-shadow:0 1px 2px rgba(0,0,0,0.04)">'
+                narrative_html += '<div style="font-size:0.85rem;color:#374151;line-height:1.6">{}</div>'.format(entry.get("narrative", "")[:600])
+                narrative_html += '<div style="font-size:0.7rem;color:#9ca3af;margin-top:4px">Cycle {} &middot; {}</div>'.format(
+                    entry.get("cycle", "?"), entry.get("timestamp", "?"))
+                narrative_html += '</div>'
+            narrative_html += '</div>'
+
+        # DD log (ALL entries)
+        dd_html = ""
+        dd_entries = m.get("dd_entries", [])
+        if dd_entries:
+            dd_html = '<div style="margin:1.5rem 0">'
+            dd_html += '<div style="font-size:0.8rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.8rem;padding-bottom:4px;border-bottom:1px solid #e5e7eb">Due Diligence Log</div>'
+            for dd in dd_entries:
+                dd_decision = dd.get("decision", "?")
+                dd_reason = dd.get("decision_reason", "")[:400]
+                dd_time = (dd.get("checked_at") or "")[:16]
+                dd_type = dd.get("dd_type", "")
+                dd_stale = dd.get("staleness_hours", 0)
+                dd_price_check = dd.get("price_at_check")
+                dd_move = dd.get("price_move_since_report", 0)
+                dd_color = "#16a34a" if dd_decision in ("TRADE", "PUBLISH") else "#cc0000" if dd_decision == "KILL" else "#f59e0b"
+                dd_html += '<div style="margin-bottom:0.8rem;padding:0.6rem 1rem;background:#f9fafb;border-radius:6px;border-left:3px solid {}">' .format(dd_color)
+                dd_html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
+                dd_html += '<span style="font-weight:700;color:{}">{}</span>'.format(dd_color, dd_decision)
+                dd_html += '<span style="font-size:0.7rem;color:#9ca3af">{} &middot; {}</span>'.format(dd_type, dd_time)
+                dd_html += '</div>'
+                dd_html += '<div style="font-size:0.82rem;color:#374151">{}</div>'.format(dd_reason)
+                if dd_price_check:
+                    dd_html += '<div style="font-size:0.72rem;color:#6b7280;margin-top:3px">Price: ${:.2f} | Move: {:.1f}% | Staleness: {:.0f}h</div>'.format(dd_price_check, dd_move, dd_stale)
+                dd_html += '</div>'
+            dd_html += '</div>'
+
+        # Timeline
+        timeline_html = ""
+        timeline = m.get("timeline", [])
+        if timeline:
+            timeline_html = '<div style="margin:1.5rem 0">'
+            timeline_html += '<div style="font-size:0.8rem;color:#6b7280;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.8rem;padding-bottom:4px;border-bottom:1px solid #e5e7eb">Price History</div>'
+            timeline_html += '<div style="display:flex;flex-wrap:wrap;gap:6px">'
+            for pt in timeline:
+                pnl = pt.get("pnl_pct")
+                status = pt.get("status", "grey")
+                color_map = {"green": "#16a34a", "red": "#cc0000", "orange": "#f59e0b", "purple": "#7c3aed", "grey": "#9ca3af"}
+                pt_color = color_map.get(status, "#9ca3af")
+                pnl_str = "{:+.1f}%".format(pnl) if pnl is not None else ""
+                timeline_html += '<span style="font-size:0.7rem;color:{};padding:2px 6px;background:#f9fafb;border-radius:4px">{} ${:.2f} {}</span>'.format(
+                    pt_color, pt.get("time", "")[-5:], pt.get("price", 0), pnl_str)
+            timeline_html += '</div></div>'
+
+        # Build the full page
+        page_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{ticker} &mdash; {asset} | Trader Notes</title>
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{ font-family: 'Lato', -apple-system, sans-serif; background: #FFF1E5; color: #1a1a2e; line-height: 1.6; }}
+        .container {{ max-width: 760px; margin: 0 auto; padding: 1.5rem; }}
+        a {{ color: #0d7680; }}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div style="margin-bottom:1rem">
+        <a href="../" style="font-size:0.8rem;color:#6b7280;text-decoration:none">&larr; Back to Trading Sheet</a>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.5rem;flex-wrap:wrap">
+        <span style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700">{ticker}</span>
+        <span style="font-size:0.8rem;padding:4px 12px;border-radius:12px;color:{state_color};background:{state_bg};font-weight:700">{state_label}</span>
+        <span style="font-size:0.85rem;color:#6b7280">{direction} {conf:.0f}% &middot; Band {band}</span>
+    </div>
+    <div style="font-size:1rem;color:#4b5563;margin-bottom:0.5rem">{asset}</div>
+
+    {prices_html}
+    <div style="margin:0.5rem 0">{thesis_html} {signal_html}</div>
+    {conv_html}
+    {reason_html}
+    {thesis_block}
+    {watching_html}
+    {concerns_html}
+    {narrative_html}
+    {dd_html}
+    {timeline_html}
+
+    <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid #e5e7eb;font-size:0.72rem;color:#9ca3af;text-align:center">
+        Position #{cid} &middot; Updated {now_str} &middot; <a href="../" style="color:#9ca3af">Back to Trading Sheet</a>
+    </div>
+</div>
+</body>
+</html>""".format(
+            ticker=ticker, asset=asset, state_color=state_color,
+            state_bg=state_bg, state_label=state_label,
+            direction=direction, conf=conf, band=band,
+            prices_html=prices_html, thesis_html=thesis_html,
+            signal_html=signal_html, conv_html=conv_html,
+            reason_html=reason_html, thesis_block=thesis_block,
+            watching_html=watching_html, concerns_html=concerns_html,
+            narrative_html=narrative_html, dd_html=dd_html,
+            timeline_html=timeline_html, cid=cid, now_str=now_str
+        )
+
+        # Write the page
+        page_path = os.path.join(positions_dir, "position_{}.html".format(cid))
+        with open(page_path, "w") as f:
+            f.write(page_html)
+
+
+# ---------------------------------------------------------------------------
+# Main report generator
+# ---------------------------------------------------------------------------
+
+def generate_html_report():
+    """Generate the full HTML report with Noah Pink design."""
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+
+    data = generate_analytics()
+    s = data["summary"]
+    now = datetime.now(timezone.utc)
+    now_str = now.strftime("%Y-%m-%d %H:%M UTC")
+
+    # Classify candidates into three sections
+    active_list, pipeline_list, research_list, hidden_kills = _classify_candidates(data["candidates"])
+
+    # Build three trading sheet sections
+    active_section = _build_active_section(active_list)
+    pipeline_section = _build_pipeline_section(pipeline_list)
+    research_section = _build_research_section(research_list, hidden_kills)
+
+    # Build backtest card
+    backtest_card = _build_backtest_card(s)
+
+    # Build band cluster cards
+    band_cards = _build_band_cards(data["band_performance"])
+
+    # Build exit timing card
+    exit_timing = _build_exit_timing_card(data)
+
+    # Build learning dashboard
+    learning = _build_learning_dashboard(data)
+
+    # Generate individual position detail pages
+    _generate_position_pages(data["candidates"])
+
+    # Hero stats
+    headline = _dynamic_headline(s)
+
+    html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hedge Fund Edge Tracker</title>
+<!-- Open Graph / Social sharing preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="NOAH Hedge Fund Edge Tracker">
+<meta property="og:description" content="Information asymmetry intelligence. {backtest_trades} backtest trades, {backtest_win_rate:.0f}% win rate, +{backtest_total_pnl:.0f}% total P&amp;L.">
+<meta property="og:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
+<meta property="og:url" content="https://ivanmassow.github.io/hedgefund-tracker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NOAH Hedge Fund Edge Tracker">
+<meta name="twitter:description" content="Information asymmetry intelligence. {backtest_trades} backtest trades, +{backtest_total_pnl:.0f}% total P&amp;L.">
+<meta name="twitter:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {{
+    --ink: #262a33;
+    --ink-light: #3d424d;
+    --ink-mid: #5a5f6b;
+    --ink-subtle: #73788a;
+    --grey-100: #f3f4f6;
+    --grey-200: #e5e7eb;
+    --grey-300: #d1d5db;
+    --grey-400: #9ea2b0;
+    --paper: #FFF1E5;
+    --accent: #0d7680;
+    --accent-light: #0e8c97;
+    --blush: #ffe4d6;
+    --blush-dark: #ffd6c2;
+    --warm: #c9926b;
+    --green: #16a34a;
+    --orange: #f59e0b;
+    --red: #cc0000;
+    --purple: #7c3aed;
+    --purple-dark: #5b21b6;
+}}
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
+body {{
+    font-family: 'Lato', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    padding-top: 56px;
+}}
+.container {{ max-width: 1120px; margin: 0 auto; padding: 0 2rem; }}
+
+/* Header */
+.header {{
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--ink); height: 56px;
+    display: flex; align-items: center; padding: 0 2rem;
+}}
+.header .logo {{
+    font-family: 'Montserrat', sans-serif; font-weight: 700;
+    color: #fff; font-size: 1.3rem; letter-spacing: 0.08em;
+    text-transform: uppercase;
+}}
+.header .nav {{ display: flex; gap: 1.5rem; margin-left: 3rem; }}
+.header .nav a {{
+    color: var(--grey-400); text-decoration: none;
+    font-size: 0.82rem; letter-spacing: 0.04em;
+    transition: color 0.2s;
+}}
+.header .nav a:hover {{ color: #fff; }}
+.header .meta {{
+    margin-left: auto; color: var(--grey-400);
+    font-size: 0.78rem; letter-spacing: 0.02em;
+}}
+
+/* Hero */
+.hero {{
+    background: var(--ink); color: #fff;
+    padding: 3rem 0 2.5rem; margin-top: -56px; padding-top: calc(56px + 3rem);
+}}
+.hero h1 {{
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 700;
+    letter-spacing: -0.01em; margin-bottom: 0.5rem;
+}}
+.hero .subtitle {{
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #FFA089; margin-bottom: 1rem;
+}}
+.hero .headline {{
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 400; font-style: italic;
+    color: var(--grey-300); max-width: 700px; margin-bottom: 1.5rem;
+}}
+.stat-grid {{
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1.5rem; margin-top: 1rem;
+}}
+.stat-box .num {{
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700;
+}}
+.stat-box .label {{
+    font-size: 0.72rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--grey-400);
+}}
+.stat-box .num.green {{ color: #4ade80; }}
+.stat-box .num.accent {{ color: #2dd4bf; }}
+
+/* Backtest Card */
+.backtest-card {{
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    color: #fff;
+}}
+.backtest-header {{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #fbbf24;
+    margin-bottom: 1rem;
+}}
+.backtest-icon {{
+    margin-right: 6px;
+}}
+.backtest-stats {{
+    display: flex; flex-wrap: wrap; gap: 2rem;
+    margin-bottom: 1rem;
+}}
+.backtest-stat {{
+    text-align: center;
+}}
+.backtest-num {{
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700;
+    color: #fff;
+}}
+.backtest-label {{
+    font-size: 0.68rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+}}
+.backtest-rules {{
+    font-size: 0.75rem; color: rgba(255,255,255,0.45);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 0.8rem;
+}}
+.backtest-rules .rules-label {{
+    font-weight: 700; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 0.68rem;
+}}
+
+/* Sections */
+.section {{ padding: 2.5rem 0; scroll-margin-top: 72px; }}
+.section-label {{
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+}}
+.section-title {{
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 600; margin-bottom: 0.5rem;
+}}
+.section-intro {{
+    color: var(--ink-mid); font-size: 0.95rem;
+    max-width: 680px; margin-bottom: 2rem;
+}}
+
+/* Section Bars (separators between Active / Pipeline / Research) */
+.section-bar {{
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    margin-top: 2rem;
+}}
+.section-bar:first-child {{ margin-top: 0; }}
+.section-bar-icon {{ font-size: 0.9rem; }}
+.section-bar-count {{
+    margin-left: auto;
+    font-size: 0.7rem; font-weight: 400;
+    letter-spacing: 0.02em; text-transform: none;
+    opacity: 0.7;
+}}
+.section-bar-active {{
+    background: #dbeafe; color: #1d4ed8;
+    border-left: 4px solid #2563eb;
+}}
+.section-bar-pipeline {{
+    background: #e0f5f5; color: #0d7680;
+    border-left: 4px solid #0d7680;
+}}
+.section-bar-research {{
+    background: #f3f4f6; color: #6b7280;
+    border-left: 4px solid #d1d5db;
+}}
+.section-empty {{
+    padding: 1.5rem; text-align: center;
+    color: var(--grey-400); font-style: italic;
+    font-size: 0.88rem;
+}}
+
+/* Trading Sheet Tables */
+.table-scroll {{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}}
+.trading-table {{
+    width: 100%; border-collapse: collapse;
+    font-size: 0.85rem;
+}}
+.trading-table thead th {{
+    background: var(--paper); padding: 0.6rem 0.5rem;
+    text-align: left; font-weight: 700;
+    font-size: 0.7rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-subtle);
+    border-bottom: 2px solid var(--grey-200);
+    white-space: nowrap;
+}}
+.trading-table tbody tr {{
+    border-bottom: 1px solid var(--grey-100);
+    transition: background 0.15s;
+}}
+.trading-table tbody tr:hover {{ background: var(--blush); }}
+.trading-table td {{
+    padding: 0.5rem 0.5rem; vertical-align: middle;
+}}
+
+/* Active rows */
+.active-row {{
+    border-left: 3px solid #2563eb;
+    background: #fafbff;
+}}
+.active-row:hover {{ background: #eef2ff !important; }}
+.td-ticker-active {{
+    font-weight: 700; font-size: 0.95rem;
+    white-space: nowrap;
+}}
+.ticker-name {{
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.04em;
+}}
+.trade-badge {{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #2563eb; color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 0.65rem;
+    line-height: 1; margin-left: 4px;
+    vertical-align: middle;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+}}
+
+/* Pipeline rows */
+.pipeline-row {{
+    border-left: 3px solid #0d7680;
+    background: #fafffe;
+}}
+.pipeline-row:hover {{ background: #e8faf9 !important; }}
+.td-ticker-pipeline {{
+    font-weight: 700; font-size: 0.9rem;
+    white-space: nowrap;
+}}
+
+/* Research rows */
+.research-table {{
+    opacity: 0.75;
+    font-size: 0.8rem;
+}}
+.research-table:hover {{
+    opacity: 1;
+}}
+.killed-row {{ opacity: 0.7; }}
+.killed-row .td-ticker-research {{ color: var(--purple-dark); }}
+.research-watch-row {{ }}
+.td-ticker-research {{
+    font-weight: 700; font-size: 0.82rem;
+    white-space: nowrap;
+}}
+.td-asset-compact {{
+    max-width: 180px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+    font-size: 0.82rem;
+}}
+.td-reason {{
+    font-size: 0.72rem; color: var(--ink-subtle);
+    max-width: 200px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+}}
+.research-hidden-note {{
+    text-align: center; color: var(--grey-400);
+    padding: 0.8rem; font-size: 0.75rem;
+    font-style: italic;
+}}
+
+/* Shared cell styles */
+.td-band {{
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 1rem; text-align: center;
+    width: 2.5rem;
+}}
+.td-asset {{ max-width: 220px; }}
+.td-asset .name {{ font-weight: 700; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+.td-asset .thesis {{ font-size: 0.68rem; color: var(--ink-mid); font-style: italic; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 210px; }}
+.td-dir {{
+    font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 0.04em; text-align: center;
+    padding: 2px 8px; border-radius: 3px;
+    display: inline-block;
+}}
+.td-price {{ font-weight: 700; white-space: nowrap; }}
+.td-pnl {{ font-weight: 700; white-space: nowrap; text-align: right; }}
+.td-state {{
+    font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 0.04em; text-align: center;
+    padding: 2px 8px; border-radius: 3px;
+    display: inline-block; white-space: nowrap;
+}}
+.td-timeline {{
+    font-size: 0.75rem; white-space: nowrap;
+    max-width: 300px; overflow-x: auto;
+}}
+.tl-point {{ display: inline-block; margin: 0 1px; }}
+.tl-point sup {{ font-size: 0.55rem; color: var(--ink-subtle); }}
+.tl-point sub {{ font-size: 0.6rem; }}
+.tl-arrow {{ color: var(--grey-300); margin: 0 2px; font-size: 0.7rem; }}
+.tl-empty {{ color: var(--grey-400); font-style: italic; }}
+.kill-marker {{
+    display: inline-block; background: var(--purple-dark);
+    color: #fff; font-weight: 700; font-size: 0.65rem;
+    width: 16px; height: 16px; line-height: 16px;
+    text-align: center; border-radius: 50%; margin: 0 2px;
+}}
+
+/* Thesis badges */
+.thesis-badge {{
+    display: inline-block; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.03em; text-transform: uppercase;
+    padding: 1px 6px; border-radius: 3px;
+    margin-left: 4px;
+}}
+.notes-link {{
+    text-decoration: none; font-size: 0.95rem; opacity: 0.6;
+    transition: opacity 0.2s; cursor: pointer; margin-left: 6px;
+    vertical-align: middle;
+}}
+.notes-link:hover {{ opacity: 1; }}
+
+/* Band cluster cards */
+.band-grid {{
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+}}
+.band-card {{
+    background: #fff; border: 1px solid var(--grey-200);
+    border-radius: 4px; padding: 1.5rem;
+    border-left: 5px solid;
+}}
+.band-card .band-letter {{
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700;
+}}
+.band-card .band-label {{
+    font-size: 0.72rem; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 0.8rem;
+}}
+.band-card .band-stats {{
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.4rem; font-size: 0.82rem; margin-bottom: 0.8rem;
+}}
+.band-card .band-stats .num {{ font-weight: 700; }}
+.band-card .members {{ font-size: 0.78rem; }}
+.band-card .members .member {{
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 2px 0; border-bottom: 1px solid var(--grey-100);
+}}
+
+/* Learning dashboard */
+.learn-grid {{
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}}
+.learn-card {{
+    background: #fff; border: 1px solid var(--grey-200);
+    border-radius: 4px; padding: 1.5rem;
+}}
+.learn-card-wide {{
+    grid-column: 1 / -1;
+}}
+.learn-card h3 {{
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 600;
+    margin-bottom: 0.8rem;
+}}
+.learn-card table {{
+    width: 100%; font-size: 0.82rem;
+    border-collapse: collapse;
+}}
+.learn-card th {{
+    text-align: left; font-weight: 700;
+    font-size: 0.72rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--ink-subtle);
+    padding: 0.3rem 0.4rem; border-bottom: 1px solid var(--grey-200);
+}}
+.learn-card td {{
+    padding: 0.3rem 0.4rem; border-bottom: 1px solid var(--grey-100);
+}}
+.timing-best {{
+    background: #e0f5f5 !important;
+}}
+
+/* Footer */
+.footer {{
+    background: var(--ink); color: var(--grey-400);
+    padding: 2.5rem 0; margin-top: 3rem;
+    font-size: 0.82rem;
+}}
+.footer .logo {{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; color: #fff; font-size: 1.1rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}}
+
+/* Responsive */
+@media (max-width: 768px) {{
+    .container {{ padding: 0 1rem; }}
+    .stat-grid {{ grid-template-columns: repeat(2, 1fr); }}
+    .trading-table {{ font-size: 0.78rem; }}
+    .band-grid {{ grid-template-columns: 1fr; }}
+    .learn-grid {{ grid-template-columns: 1fr; }}
+    .backtest-stats {{ gap: 1rem; }}
+    .backtest-num {{ font-size: 1.4rem; }}
+}}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <a href="https://ivanmassow.github.io/noah-dashboard/" style="text-decoration:none"><div class="logo">NOAH</div></a>
+    <div class="nav">
+        <a href="https://ivanmassow.github.io/polyhunter/">Poly Market</a>
+        <a href="https://ivanmassow.github.io/hedgefund-tracker/" style="color:#fff">Hedge Fund</a>
+        <a href="https://ivanmassow.github.io/company-watch/">Company Watch</a>
+        <span style="color:rgba(255,255,255,0.15)">|</span>
+        <a href="#sheet">Sheet</a>
+        <a href="#clusters">Clusters</a>
+        <a href="#learning">Learning</a>
+    </div>
+    <div class="meta">Hedge Fund &middot; Paper Trading &middot; {now_str}</div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="container">
+        <div class="subtitle">Hedge Fund Intelligence &middot; Paper Trading</div>
+        <h1>Edge Tracker</h1>
+        <div class="headline">{headline}</div>
+        <div class="stat-grid">
+            <div class="stat-box">
+                <div class="num accent">{qualified}</div>
+                <div class="label">Qualified Signals</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">{active}</div>
+                <div class="label">Active Trade{active_s}</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">{pipeline}</div>
+                <div class="label">Pipeline</div>
+            </div>
+            <div class="stat-box">
+                <div class="num green">+{backtest_total_pnl:.0f}%</div>
+                <div class="label">Backtest P&amp;L</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">{backtest_win_rate:.0f}%</div>
+                <div class="label">Backtest Win Rate</div>
+            </div>
+            <div class="stat-box">
+                <div class="num accent">{backtest_profit_factor:.2f}&times;</div>
+                <div class="label">Profit Factor</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Backtest Performance Card -->
+<div class="section" style="padding-bottom:0">
+    <div class="container">
+        {backtest_card}
+    </div>
+</div>
+
+<!-- Trading Sheet -->
+<div class="section" id="sheet">
+    <div class="container">
+        <div class="section-label">Act I</div>
+        <div class="section-title">Trading Sheet</div>
+        <div class="section-intro">
+            Three-tier view: <strong style="color:#2563eb">Active trades</strong> at the top,
+            <strong style="color:#0d7680">qualified pipeline</strong> candidates next,
+            and the <strong style="color:#6b7280">research lab</strong> below.
+            Blue <strong>B</strong> badges mark live trades.
+            <span style="color:#7c3aed;font-weight:700">Report P&amp;L</span> (purple) shows movement since the report price.
+            <span style="color:#16a34a;font-weight:700">Trade P&amp;L</span> shows performance from actual entry.
+        </div>
+
+        {active_section}
+        {pipeline_section}
+        {research_section}
+    </div>
+</div>
+
+<!-- Confidence Clusters -->
+<div class="section" id="clusters">
+    <div class="container">
+        <div class="section-label">Act II</div>
+        <div class="section-title">Confidence Clusters</div>
+        <div class="section-intro">Performance by confidence band. Which probability tier produces the best results &mdash; the blue chips or the dark horses?</div>
+        <div class="band-grid">
+            {band_cards}
+        </div>
+    </div>
+</div>
+
+<!-- Learning Dashboard -->
+<div class="section" id="learning">
+    <div class="container">
+        <div class="section-label">Act III</div>
+        <div class="section-title">Learning Dashboard</div>
+        <div class="section-intro">What is the system learning? Edge quality, direction accuracy, kill validation, optimal timing, and exit analysis by confidence band.</div>
+        <div class="learn-grid">
+            {exit_timing}
+            {learning}
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <div class="container">
+        <a href="https://ivanmassow.github.io/noah-dashboard/" style="text-decoration:none"><div class="logo">NOAH</div></a>
+        <p>Information asymmetry intelligence &mdash; paper trading hedge fund recommendations to learn which signals work.</p>
+        <p style="margin-top: 0.8rem; font-size: 0.72rem; color: rgba(255,241,229,0.5);">
+            <a href="https://ivanmassow.github.io/polyhunter/" style="color:rgba(255,241,229,0.5);text-decoration:none">Poly Market</a> &middot;
+            <a href="https://ivanmassow.github.io/hedgefund-tracker/" style="color:rgba(255,241,229,0.5);text-decoration:none">Hedge Fund</a> &middot;
+            <a href="https://ivanmassow.github.io/company-watch/" style="color:rgba(255,241,229,0.5);text-decoration:none">Company Watch</a>
+        </p>
+        <p style="margin-top: 0.8rem; font-size: 0.75rem;">
+            Report generated {now_str}. Tracking {total} positions ({active} active, {pipeline} pipeline, {killed} killed).
+        </p>
+        <div style="margin-top:1.2rem;max-width:560px;margin-left:auto;margin-right:auto;padding:0.8rem 1rem;border-top:1px solid rgba(255,241,229,0.12)">
+            <p style="font-size:0.7rem;color:rgba(255,241,229,0.55);line-height:1.7;text-align:center;margin:0">
+                <strong style="color:rgba(255,241,229,0.7);letter-spacing:0.08em;text-transform:uppercase;font-size:0.65rem">Disclaimer</strong><br>
+                You are welcome to view these pages. The trading algorithms and analysis presented here are experimental and under active development. Nothing on this site constitutes financial advice. We accept no responsibility for any losses incurred from acting on information found here. These pages are intended for internal research purposes. You are strongly advised to conduct your own due diligence before making any investment decisions.
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>""".format(
+        now_str=now_str,
+        headline=headline,
+        qualified=s["qualified_count"],
+        active=s["active_count"],
+        active_s="s" if s["active_count"] != 1 else "",
+        pipeline=s["pipeline_count"],
+        backtest_total_pnl=s["backtest_total_pnl"],
+        backtest_win_rate=s["backtest_win_rate"],
+        backtest_profit_factor=s["backtest_profit_factor"],
+        backtest_trades=s["backtest_trades"],
+        backtest_card=backtest_card,
+        active_section=active_section,
+        pipeline_section=pipeline_section,
+        research_section=research_section,
+        band_cards=band_cards,
+        exit_timing=exit_timing,
+        learning=learning,
+        total=s["total_candidates"],
+        killed=s["killed_count"],
+    )
+
+    # Save
+    latest_path = os.path.join(REPORTS_DIR, "latest.html")
+    with open(latest_path, "w") as f:
+        f.write(html)
+
+    # Also save timestamped version
+    ts_name = "hedgefund_report_{}.html".format(now.strftime("%Y-%m-%d_%H%M"))
+    ts_path = os.path.join(REPORTS_DIR, ts_name)
+    with open(ts_path, "w") as f:
+        f.write(html)
+
+    logger.info("Report generated: {}".format(latest_path))
+    return latest_path
 
 
 if __name__ == "__main__":

@@ -15,6 +15,10 @@ import requests
 
 from db import get_conn, init_db
 from config import RSS_URL, REPORT_TITLE_PREFIX, BANDS, TRACKING_WINDOW_HOURS
+try:
+    from config import RSS_FEEDS
+except ImportError:
+    RSS_FEEDS = [RSS_URL]
 
 logger = logging.getLogger("hedgefund.scanner")
 
@@ -49,9 +53,10 @@ def assign_band(confidence_pct):
     return "E", BANDS["E"]["label"]
 
 
-def fetch_rss():
-    """Fetch and parse the RSS feed. Returns list of items."""
-    resp = requests.get(RSS_URL, timeout=30)
+def fetch_rss(feed_url=None):
+    """Fetch and parse a single RSS feed. Returns list of items."""
+    url = feed_url or RSS_URL
+    resp = requests.get(url, timeout=30)
     resp.raise_for_status()
     root = ET.fromstring(resp.content)
     items = []
@@ -66,8 +71,23 @@ def fetch_rss():
             "description": item.findtext("description", ""),
             "guid": item.findtext("guid", ""),
             "pubDate": item.findtext("pubDate", ""),
+            "_feed_url": url,
         })
     return items
+
+
+def fetch_all_rss():
+    """Fetch and parse ALL configured RSS feeds. Returns combined list of items."""
+    all_items = []
+    for feed_url in RSS_FEEDS:
+        try:
+            items = fetch_rss(feed_url)
+            all_items.extend(items)
+            logger.info("Feed {}: {} Information Asymmetry reports".format(
+                feed_url.split("//")[1].split("/")[0], len(items)))
+        except Exception as e:
+            logger.error("RSS fetch failed for {}: {}".format(feed_url, e))
+    return all_items
 
 
 def extract_cycle_id(title):
@@ -655,13 +675,16 @@ def ingest_report(item):
             ))
 
         # Determine initial state
-        # PHILOSOPHY: Keep everything alive. Only kill if truly uninvestable (no ticker).
-        # FADE direction, low confidence, etc. — let the bot decide after investigation.
+        # PHILOSOPHY: Keep everything alive. Let the bot decide after investigation.
+        # No-ticker positions are silently deactivated (is_active=0) so they don't
+        # clutter the trading sheet but are still in the DB for learning.
         initial_state = "PENDING"
         state_reason = "Awaiting due diligence"
+        is_active = 1
         if not tc.get("primary_ticker") or tc["primary_ticker"] in ("", "-", "\u2013"):
             initial_state = "KILLED"
             state_reason = "No investable instrument (no ticker)"
+            is_active = 0  # Hidden from trading sheet entirely
 
         conn.execute("""
             INSERT INTO candidates (
@@ -672,8 +695,8 @@ def ingest_report(item):
                 headline, mechanism, tripwire, evidence, risks,
                 band, band_label,
                 state, state_reason, state_changed_at,
-                discovered_at, tracking_until
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                discovered_at, tracking_until, is_active
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             report_id, rank,
             tc.get("asset_theme"), tc.get("tickers"), tc.get("primary_ticker"),
@@ -687,7 +710,7 @@ def ingest_report(item):
             details.get("risks"),
             band, band_label,
             initial_state, state_reason, now.isoformat(),
-            now.isoformat(), tracking_until
+            now.isoformat(), tracking_until, is_active
         ))
         inserted += 1
         logger.info("  #{}: {} ({}) {} {}% [{}] → {}".format(
@@ -703,17 +726,17 @@ def ingest_report(item):
 
 
 def scan():
-    """Main scan function. Polls RSS and ingests new reports.
+    """Main scan function. Polls all RSS feeds and ingests new reports.
     Returns total number of new reports found.
     """
-    logger.info("Scanning RSS feed...")
+    logger.info("Scanning {} RSS feed(s)...".format(len(RSS_FEEDS)))
     try:
-        items = fetch_rss()
+        items = fetch_all_rss()
     except Exception as e:
         logger.error("RSS fetch failed: {}".format(e))
         return 0
 
-    logger.info("Found {} Information Asymmetry reports in feed".format(len(items)))
+    logger.info("Found {} Information Asymmetry reports across all feeds".format(len(items)))
 
     new_reports = 0
     for item in items:

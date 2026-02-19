@@ -120,6 +120,10 @@ def _compute_candidate_metrics(c, conn):
     peak_gain = 0
     max_drawdown = 0
 
+    # Reference price for WATCH positions (dd_approved or report price)
+    dd_approved_price = c.get("dd_approved_price")
+    watch_ref_price = dd_approved_price or report_price
+
     # Build timeline
     timeline = []
     for snap in snapshots:
@@ -130,8 +134,8 @@ def _compute_candidate_metrics(c, conn):
             "pnl_pct": snap.get("pnl_pct"),
         }
 
-        # Status color
-        if entry_price and snap["price"]:
+        # Status color — ACTIVE/PUBLISH use entry_price, WATCH uses dd_approved/report price
+        if entry_price and snap["price"] and c["state"] in ("ACTIVE", "PUBLISH"):
             pnl = _calc_pnl(entry_price, snap["price"], direction)
             pt["pnl_pct"] = pnl
             if pnl > 0:
@@ -141,6 +145,24 @@ def _compute_candidate_metrics(c, conn):
             else:
                 pt["status"] = "red"
 
+            peak_gain = max(peak_gain, pnl)
+            max_drawdown = min(max_drawdown, pnl)
+        elif c["state"] == "WATCH" and watch_ref_price and snap["price"]:
+            # WATCH positions: purple P&L from dd_approved/report price
+            pnl = _calc_pnl(watch_ref_price, snap["price"], direction)
+            pt["pnl_pct"] = pnl
+            pt["status"] = "purple"  # Always purple for watching
+            pt["watched"] = True
+        elif entry_price and snap["price"]:
+            # Killed positions with entry price
+            pnl = _calc_pnl(entry_price, snap["price"], direction)
+            pt["pnl_pct"] = pnl
+            if pnl > 0:
+                pt["status"] = "green"
+            elif pnl > -2:
+                pt["status"] = "orange"
+            else:
+                pt["status"] = "red"
             peak_gain = max(peak_gain, pnl)
             max_drawdown = min(max_drawdown, pnl)
         else:
@@ -159,13 +181,19 @@ def _compute_candidate_metrics(c, conn):
 
         if c.get("state") == "WATCH":
             pt["watched"] = True
-            if pt["status"] == "grey":
-                pt["status"] = "purple"
 
         timeline.append(pt)
 
     if snapshots and entry_price:
         current_pnl = _calc_pnl(entry_price, snapshots[-1]["price"], direction)
+
+    # Report P&L — movement since dd_approved_price (or report_price as fallback)
+    # This shows how the stock has moved since we first looked, regardless of trade entry
+    report_pnl = None
+    dd_approved_price = c.get("dd_approved_price")
+    ref_price = dd_approved_price or report_price  # DD price preferred, report price fallback
+    if snapshots and ref_price and ref_price > 0:
+        report_pnl = _calc_pnl(ref_price, snapshots[-1]["price"], direction)
 
     # Status determination
     status = "grey"
@@ -225,6 +253,8 @@ def _compute_candidate_metrics(c, conn):
         "timeline": timeline,
         "current_price": current_price,
         "current_pnl": current_pnl,
+        "report_pnl": round(report_pnl, 2) if report_pnl is not None else None,
+        "dd_approved_price": dd_approved_price,
         "peak_gain": round(peak_gain, 2),
         "max_drawdown": round(max_drawdown, 2),
         "report_price": report_price,
@@ -257,22 +287,38 @@ def _calc_pnl(entry, current, direction):
 
 
 def _compute_portfolio_summary(metrics):
-    """Compute overall portfolio summary."""
-    active = [m for m in metrics if m["state"] in ("ACTIVE", "PUBLISH")]
-    killed = [m for m in metrics if m["state"] == "KILLED"]
-    watched = [m for m in metrics if m["state"] == "WATCH"]
-    pending = [m for m in metrics if m["state"] == "PENDING"]
-    published = [m for m in metrics if m["state"] == "PUBLISH"]
+    """Compute overall portfolio summary.
+    Only count is_active positions for display metrics.
+    """
+    # Filter to active (tradeable) positions for summary counts
+    tradeable = [m for m in metrics if m.get("is_active", 1)]
+    active = [m for m in tradeable if m["state"] in ("ACTIVE", "PUBLISH")]
+    killed = [m for m in tradeable if m["state"] == "KILLED"]
+    watched = [m for m in tradeable if m["state"] == "WATCH"]
+    pending = [m for m in tradeable if m["state"] == "PENDING"]
+    published = [m for m in tradeable if m["state"] == "PUBLISH"]
 
     active_pnls = [m["current_pnl"] for m in active if m["current_pnl"] is not None]
-    all_pnls = [m["current_pnl"] for m in metrics
+    all_pnls = [m["current_pnl"] for m in tradeable
                 if m["current_pnl"] is not None and m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
 
     winners = [p for p in all_pnls if p > 0]
     losers = [p for p in all_pnls if p <= 0]
 
+    # Qualified positions: Band A/B/C LONGs (the ones that would actually trade)
+    qualified = [m for m in tradeable
+                 if m.get("direction") == "LONG" and m.get("band") in ("A", "B", "C")]
+    pipeline = [m for m in qualified if m["state"] == "WATCH"]
+
+    # Backtest constants (from our analysis of 28 qualified Band A/B LONG trades)
+    backtest_trades = 28
+    backtest_win_rate = 50.0
+    backtest_total_pnl = 459.0
+    backtest_avg_pnl = 16.40
+    backtest_profit_factor = 7.85
+
     return {
-        "total_candidates": len(metrics),
+        "total_candidates": len(tradeable),
         "active_count": len(active),
         "publish_count": len(published),
         "killed_count": len(killed),
@@ -288,6 +334,13 @@ def _compute_portfolio_summary(metrics):
         ),
         "short_count": len([m for m in metrics if m["direction"] == "SHORT"]),
         "long_count": len([m for m in metrics if m["direction"] == "LONG"]),
+        "qualified_count": len(qualified),
+        "pipeline_count": len(pipeline),
+        "backtest_trades": backtest_trades,
+        "backtest_win_rate": backtest_win_rate,
+        "backtest_total_pnl": backtest_total_pnl,
+        "backtest_avg_pnl": backtest_avg_pnl,
+        "backtest_profit_factor": backtest_profit_factor,
     }
 
 

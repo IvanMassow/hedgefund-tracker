@@ -3,8 +3,14 @@ Hedge Fund Edge Tracker - Configuration
 """
 import os
 
-# RSS feed for pharma risk reports
-RSS_URL = "https://pharmarisk.makes.news/gb/en/section/697b9f8fd35a8f8b7090b851/rss.xml"
+# RSS feeds for Information Asymmetry reports
+# Add new feeds here as new publications come online
+RSS_FEEDS = [
+    "https://pharmarisk.makes.news/gb/en/section/697b9f8fd35a8f8b7090b851/rss.xml",
+    "https://semiconductors.makes.news/rss.xml",
+]
+# Legacy single-URL (kept for backwards compatibility)
+RSS_URL = RSS_FEEDS[0]
 
 # Only process reports whose title starts with this prefix
 REPORT_TITLE_PREFIX = "Information Asymmetry"
@@ -20,8 +26,8 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 # Intervals (seconds)
 SCAN_INTERVAL = 30 * 60        # Check RSS every 30 minutes
 TRACK_INTERVAL = 60 * 60       # Fetch prices every 60 minutes
-DD_INTERVAL = 4 * 60 * 60      # Re-check WATCH positions every 4 hours
-MONITOR_INTERVAL = 4 * 60 * 60 # Position monitor cycle every 4 hours
+DD_INTERVAL = 2 * 60 * 60      # Re-check WATCH positions + process PENDING every 2 hours
+MONITOR_INTERVAL = 60 * 60     # Position monitor reviews every 1 hour (think like a trader)
 SIGNAL_SCAN_INTERVAL = 60 * 60 # Signal propagation scan every 1 hour
 REPORT_INTERVAL = 6 * 60 * 60  # Heartbeat report every 6 hours
 
