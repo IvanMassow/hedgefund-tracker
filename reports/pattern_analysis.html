@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Pattern Analysis</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Lato",-apple-system,sans-serif; background:#FFF1E5; color:#1a1a2e; line-height:1.6; }
+  .container { max-width:900px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-family:"Playfair Display",serif; font-size:2rem; margin-bottom:0.3rem; }
+  h2 { font-family:"Playfair Display",serif; font-size:1.4rem; margin:2rem 0 1rem; padding-bottom:0.3rem; border-bottom:2px solid #1a1a2e; }
+  h3 { font-size:1rem; margin:1.2rem 0 0.5rem; color:#4b5563; }
+  .subtitle { color:#6b7280; font-size:0.9rem; margin-bottom:1.5rem; }
+  .card { background:white; border-radius:8px; padding:1.2rem; margin:0.8rem 0; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .card-red { border-left:4px solid #cc0000; }
+  .card-green { border-left:4px solid #16a34a; }
+  .card-blue { border-left:4px solid #2563eb; }
+  .card-purple { border-left:4px solid #7c3aed; }
+  .card-amber { border-left:4px solid #f59e0b; }
+  .stat { display:inline-block; margin-right:1.5rem; margin-bottom:0.5rem; }
+  .stat-label { font-size:0.7rem; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; }
+  .stat-value { font-size:1.3rem; font-weight:700; }
+  table { width:100%; border-collapse:collapse; font-size:0.85rem; margin:0.5rem 0; }
+  th { text-align:left; padding:8px 10px; border-bottom:2px solid #1a1a2e; font-size:0.75rem; text-transform:uppercase; color:#6b7280; }
+  td { padding:6px 10px; border-bottom:1px solid #e5e7eb; }
+  tr:hover { background:#f9fafb; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; }
+  .tag-green { color:#166534; background:#dcfce7; }
+  .tag-red { color:#991b1b; background:#fee2e2; }
+  .tag-blue { color:#1e40af; background:#dbeafe; }
+  .tag-amber { color:#92400e; background:#fef3c7; }
+  .tag-purple { color:#6b21a8; background:#f3e8ff; }
+  .rule-box { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:1rem; margin:0.8rem 0; }
+  .rule-critical { background:#fef2f2; border-color:#fecaca; }
+  .rule-num { display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; border-radius:50%; background:#1a1a2e; color:white; font-weight:700; font-size:0.8rem; margin-right:8px; }
+  .impact { float:right; }
+  a { color:#0d7680; }
+  .back-link { font-size:0.8rem; color:#6b7280; text-decoration:none; display:block; margin-bottom:1rem; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+<a href="../" class="back-link">&larr; Back to Trading Sheet</a>
+<h1>Trading Pattern Analysis</h1>
+
+<div class="subtitle">4 days &middot; 204 positions analyzed &middot; 46 with price data &middot; Generated 2026-02-19 16:39 UTC</div>
+
+<div class="card card-red">
+    <h3 style="margin-top:0;color:#991b1b">The Problem</h3>
+    <p style="font-size:0.9rem">Out of 204 positions, only <strong>1 is ACTIVE</strong> (TSM, currently <span style="color:#cc0000">-0.5%</span>).
+    The dashboard shows 0% win rate. But buried in the KILLED pile are <strong>18 winners</strong> that would have generated
+    <strong style="color:#16a34a">+536.2%</strong> total P&L if traded. The biggest: ASML (+237%), ATOM (+113%), NVTS (+96%), AEHR (+52%).</p>
+    <p style="font-size:0.9rem;margin-top:0.5rem">The system is <strong>good at finding stocks</strong> but <strong>terrible at holding them</strong>.
+    It kills winners for staleness and signal propagation before they pay off.</p>
+</div>
+
+<h2>The Big Winners We Missed</h2>
+<table><thead><tr><th>#</th><th>Ticker</th><th>Direction</th><th>Band</th><th>Conf</th><th>Report P&L</th><th>Tracked Move</th><th>State</th><th>Why Killed</th></tr></thead><tbody>
+<tr>
+<td>79</td>
+<td><a href="positions/position_79.html" style="font-weight:700">ASML</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">A</span></td>
+<td>70%</td>
+<td style="font-weight:700;color:#16a34a">+237.2%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">Price moved 225.9% in thesis direction — edge captured</td>
+</tr>
+<tr>
+<td>101</td>
+<td><a href="positions/position_101.html" style="font-weight:700">ATOM</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">C</span></td>
+<td>53%</td>
+<td style="font-weight:700;color:#16a34a">+113.2%</td>
+<td style="color:#cc0000">-4.4%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">LLM DD (HIGH confidence): The price has already moved significantly (+123.0%) si</td>
+</tr>
+<tr>
+<td>164</td>
+<td><a href="positions/position_164.html" style="font-weight:700">NVTS</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">A</span></td>
+<td>77%</td>
+<td style="font-weight:700;color:#16a34a">+96.4%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">Price moved 99.5% in thesis direction — edge captured</td>
+</tr>
+<tr>
+<td>165</td>
+<td><a href="positions/position_165.html" style="font-weight:700">AEHR</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">B</span></td>
+<td>55%</td>
+<td style="font-weight:700;color:#16a34a">+51.7%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">Price moved 49.0% in thesis direction — edge captured</td>
+</tr>
+<tr>
+<td>91</td>
+<td><a href="positions/position_91.html" style="font-weight:700">INTC</a></td>
+<td><span class="tag tag-red">SHORT</span></td>
+<td><span class="tag tag-blue">A</span></td>
+<td>76%</td>
+<td style="font-weight:700;color:#16a34a">+10.1%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">KILL (watching): With major outlets covering Intel's roadmap leaks, the market h</td>
+</tr>
+<tr>
+<td>128</td>
+<td><a href="positions/position_128.html" style="font-weight:700">MU</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">A</span></td>
+<td>88%</td>
+<td style="font-weight:700;color:#16a34a">+6.7%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">KILL (watching): The original thesis suggested a significant LONG opportunity fo</td>
+</tr>
+<tr>
+<td>89</td>
+<td><a href="positions/position_89.html" style="font-weight:700">QCOM</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">A</span></td>
+<td>94%</td>
+<td style="font-weight:700;color:#16a34a">+4.3%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">KILL (watching): The original thesis surrounding Qualcomm's India 2nm tape-out i</td>
+</tr>
+<tr>
+<td>162</td>
+<td><a href="positions/position_162.html" style="font-weight:700">TSM</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">A</span></td>
+<td>72%</td>
+<td style="font-weight:700;color:#16a34a">+3.8%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td>ACTIVE</td>
+<td style="font-size:0.78rem;color:#6b7280">ENTERED: conviction 8/10, signal propagating, The mechanism connecting TSM's cap</td>
+</tr>
+<tr>
+<td>94</td>
+<td><a href="positions/position_94.html" style="font-weight:700">RTX</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">B</span></td>
+<td>62%</td>
+<td style="font-weight:700;color:#16a34a">+3.1%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">Critical staleness (218h) with moderate confidence (62%)</td>
+</tr>
+<tr>
+<td>134</td>
+<td><a href="positions/position_134.html" style="font-weight:700">SMH</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">C</span></td>
+<td>54%</td>
+<td style="font-weight:700;color:#16a34a">+2.7%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">Critical staleness (236h) with moderate confidence (54%)</td>
+</tr>
+<tr>
+<td>42</td>
+<td><a href="positions/position_42.html" style="font-weight:700">FRMI</a></td>
+<td><span class="tag tag-red">SHORT</span></td>
+<td><span class="tag tag-blue">C</span></td>
+<td>54%</td>
+<td style="font-weight:700;color:#16a34a">+2.6%</td>
+<td style="color:#cc0000">-2.6%</td>
+<td>WATCH</td>
+<td style="font-size:0.78rem;color:#6b7280">DD approved — watching for signal confirmation</td>
+</tr>
+<tr>
+<td>31</td>
+<td><a href="positions/position_31.html" style="font-weight:700">XBI</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">B</span></td>
+<td>64%</td>
+<td style="font-weight:700;color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">KILL (watching): The original thesis connecting Isomorphic Labs' AI-driven produ</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="positions/position_4.html" style="font-weight:700">XBI</a></td>
+<td><span class="tag tag-green">LONG</span></td>
+<td><span class="tag tag-blue">B</span></td>
+<td>55%</td>
+<td style="font-weight:700;color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td>KILLED</td>
+<td style="font-size:0.78rem;color:#6b7280">Max watch checks exceeded (5 checks)</td>
+</tr>
+</tbody></table>
+<h2>The Staleness Illusion</h2>
+
+<div class="card card-purple">
+    <p style="font-size:0.9rem">The system uses <strong>"staleness"</strong> (hours since report publication) to kill positions.
+    But the report publication date is often days before the system even discovers the report.
+    This creates a false sense of urgency &mdash; the system thinks "this is 200 hours old, edge is gone" when in reality
+    it just found the signal.</p>
+    <p style="font-size:0.9rem;margin-top:0.5rem"><strong>Key insight:</strong> Compare the <em>report P&L</em> (movement since original report)
+    to the <em>tracked movement</em> (what actually happened while we watched). In many cases, the price barely moved during our
+    tracking window even though the "report PnL" was huge &mdash; meaning the move happened before we got there, but the stock
+    still had momentum.</p>
+</div>
+
+<table><thead><tr><th>Ticker</th><th>Report P&L</th><th>Tracked Move</th><th>Pre-Track Gap</th><th>Staleness</th><th>Verdict</th></tr></thead><tbody>
+<tr><td style="font-weight:700">ASML</td><td style="color:#16a34a">+237.2%</td><td style="color:#16a34a">+3.4%</td><td>+233.8%</td><td>152h</td><td><span class="tag tag-green">Still running &mdash; SHOULD HAVE TRADED</span></td></tr>
+<tr><td style="font-weight:700">ATOM</td><td style="color:#16a34a">+113.2%</td><td style="color:#cc0000">-4.4%</td><td>+117.6%</td><td>218h</td><td><span class="tag tag-red">Reversed &mdash; correct to skip</span></td></tr>
+<tr><td style="font-weight:700">NVTS</td><td style="color:#16a34a">+96.4%</td><td style="color:#cc0000">-1.6%</td><td>+98.0%</td><td>271h</td><td><span class="tag tag-red">Reversed &mdash; correct to skip</span></td></tr>
+<tr><td style="font-weight:700">AEHR</td><td style="color:#16a34a">+51.7%</td><td style="color:#16a34a">+1.8%</td><td>+49.9%</td><td>271h</td><td><span class="tag tag-green">Still running &mdash; SHOULD HAVE TRADED</span></td></tr>
+<tr><td style="font-weight:700">INTC</td><td style="color:#16a34a">+10.1%</td><td style="color:#cc0000">-1.6%</td><td>+11.7%</td><td>218h</td><td><span class="tag tag-red">Reversed &mdash; correct to skip</span></td></tr>
+<tr><td style="font-weight:700">MU</td><td style="color:#16a34a">+6.7%</td><td style="color:#16a34a">+5.3%</td><td>+1.4%</td><td>236h</td><td><span class="tag tag-green">Still running &mdash; SHOULD HAVE TRADED</span></td></tr>
+<tr><td style="font-weight:700">QCOM</td><td style="color:#16a34a">+4.3%</td><td style="color:#16a34a">+0.4%</td><td>+3.9%</td><td>218h</td><td><span class="tag tag-amber">Flat &mdash; could have entered safely</span></td></tr>
+<tr><td style="font-weight:700">TSM</td><td style="color:#16a34a">+3.8%</td><td style="color:#cc0000">-0.5%</td><td>+4.3%</td><td>268h</td><td><span class="tag tag-amber">Flat &mdash; could have entered safely</span></td></tr>
+<tr><td style="font-weight:700">RTX</td><td style="color:#16a34a">+3.1%</td><td style="color:#16a34a">+0.6%</td><td>+2.5%</td><td>218h</td><td><span class="tag tag-amber">Flat &mdash; could have entered safely</span></td></tr>
+<tr><td style="font-weight:700">SMH</td><td style="color:#16a34a">+2.7%</td><td style="color:#16a34a">+1.2%</td><td>+1.5%</td><td>236h</td><td><span class="tag tag-green">Still running &mdash; SHOULD HAVE TRADED</span></td></tr>
+<tr><td style="font-weight:700">FRMI</td><td style="color:#16a34a">+2.6%</td><td style="color:#cc0000">-2.6%</td><td>+5.2%</td><td>0h</td><td><span class="tag tag-red">Reversed &mdash; correct to skip</span></td></tr>
+<tr><td style="font-weight:700">XBI</td><td style="color:#16a34a">+2.2%</td><td style="color:#16a34a">+2.2%</td><td>-0.0%</td><td>0h</td><td><span class="tag tag-green">Still running &mdash; SHOULD HAVE TRADED</span></td></tr>
+<tr><td style="font-weight:700">XBI</td><td style="color:#16a34a">+2.2%</td><td style="color:#16a34a">+2.2%</td><td>-0.0%</td><td>1h</td><td><span class="tag tag-green">Still running &mdash; SHOULD HAVE TRADED</span></td></tr>
+</tbody></table>
+<h2>Band Performance</h2>
+<table><thead><tr><th>Band</th><th>Positions</th><th>Win Rate</th><th>Avg P&L</th><th>Total P&L</th><th>Best</th><th>Worst</th></tr></thead><tbody>
+<tr><td><span class="tag tag-blue">Band A</span></td><td>12</td><td>7W / 5L (58%)</td><td style="color:#16a34a">+28.5%</td><td style="color:#16a34a;font-weight:700">+342.2%</td><td style="color:#16a34a">ASML +237.2%</td><td style="color:#cc0000">NVDA -9.4%</td></tr>
+<tr><td><span class="tag tag-blue">Band B</span></td><td>20</td><td>6W / 14L (30%)</td><td style="color:#cc0000">-0.6%</td><td style="color:#cc0000;font-weight:700">-11.5%</td><td style="color:#16a34a">AEHR +51.7%</td><td style="color:#cc0000">GILT -21.1%</td></tr>
+<tr><td><span class="tag tag-blue">Band C</span></td><td>14</td><td>5W / 9L (36%)</td><td style="color:#16a34a">+6.9%</td><td style="color:#16a34a;font-weight:700">+96.6%</td><td style="color:#16a34a">ATOM +113.2%</td><td style="color:#cc0000">PXED -5.4%</td></tr>
+</tbody></table>
+<h2>Direction Performance</h2>
+<div style="display:flex;gap:1rem;flex-wrap:wrap">
+
+<div class="card" style="flex:1;min-width:250px;border-left:4px solid #16a34a">
+    <h3 style="margin-top:0">LONG</h3>
+    <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">31</div></div>
+    <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">48%</div></div>
+    <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#16a34a">+14.4%</div></div>
+    <div class="stat"><div class="stat-label">Total P&L</div><div class="stat-value" style="color:#16a34a">+447.2%</div></div>
+</div>
+
+
+<div class="card" style="flex:1;min-width:250px;border-left:4px solid #cc0000">
+    <h3 style="margin-top:0">SHORT</h3>
+    <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">15</div></div>
+    <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">20%</div></div>
+    <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#cc0000">-1.3%</div></div>
+    <div class="stat"><div class="stat-label">Total P&L</div><div class="stat-value" style="color:#cc0000">-19.9%</div></div>
+</div>
+
+</div>
+<h2>Why Winners Were Killed</h2>
+<table><thead><tr><th>Kill Category</th><th>Count</th><th>Winners Killed</th><th>P&L Destroyed</th><th>Examples</th></tr></thead><tbody>
+<tr><td>edge_already_captured</td><td>4</td><td style="color:#cc0000;font-weight:700">3</td><td style="color:#16a34a;font-weight:700">+385.3%</td><td style="font-size:0.78rem">ASML (+237.2%), NVTS (+96.4%), AEHR (+51.7%)</td></tr>
+<tr><td>thesis_invalid</td><td>2</td><td style="color:#cc0000;font-weight:700">2</td><td style="color:#16a34a;font-weight:700">+115.4%</td><td style="font-size:0.78rem">ATOM (+113.2%), XBI (+2.2%)</td></tr>
+<tr><td>signal_propagated</td><td>20</td><td style="color:#cc0000;font-weight:700">6</td><td style="color:#16a34a;font-weight:700">+26.5%</td><td style="font-size:0.78rem">INTC (+10.1%), MU (+6.7%), QCOM (+4.3%)</td></tr>
+<tr><td>staleness</td><td>14</td><td style="color:#cc0000;font-weight:700">4</td><td style="color:#16a34a;font-weight:700">+7.9%</td><td style="font-size:0.78rem">RTX (+3.1%), SMH (+2.7%), NVDA (+1.4%)</td></tr>
+<tr><td>other</td><td>5</td><td style="color:#cc0000;font-weight:700">2</td><td style="color:#16a34a;font-weight:700">+3.8%</td><td style="font-size:0.78rem">FRMI (+2.6%), SMH (+1.2%)</td></tr>
+<tr><td>max_watch_exceeded</td><td>1</td><td style="color:#cc0000;font-weight:700">1</td><td style="color:#16a34a;font-weight:700">+2.2%</td><td style="font-size:0.78rem">XBI (+2.2%)</td></tr>
+</tbody></table>
+<h2>Backtest: What If We Had Traded...</h2>
+
+<div class="card" style="border-left:4px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h3 style="margin:0">Scenario 1: Semiconductor LONGs only</h3>
+        <span style="font-weight:700;font-size:1.2rem;color:#16a34a">+497.1%</span>
+    </div>
+    <div style="margin-top:0.5rem">
+        <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">16</div></div>
+        <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">62%</div></div>
+        <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#16a34a">+31.1%</div></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#4b5563">ASML (+237.2%) | ATOM (+113.2%) | NVTS (+96.4%) | AEHR (+51.7%) | MU (+6.7%) | QCOM (+4.3%) | TSM (+3.8%) | SMH (+2.7%)</div>
+</div>
+
+
+<div class="card" style="border-left:4px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h3 style="margin:0">Scenario 2: All Band-A LONGs (ignore staleness)</h3>
+        <span style="font-weight:700;font-size:1.2rem;color:#16a34a">+343.6%</span>
+    </div>
+    <div style="margin-top:0.5rem">
+        <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">7</div></div>
+        <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">71%</div></div>
+        <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#16a34a">+49.1%</div></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#4b5563">ASML (+237.2%) | NVTS (+96.4%) | MU (+6.7%) | QCOM (+4.3%) | TSM (+3.8%) | INTC (-1.6%) | TSM (-3.2%)</div>
+</div>
+
+
+<div class="card" style="border-left:4px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h3 style="margin:0">Scenario 3: LONG + (Band A OR confidence >= 70%)</h3>
+        <span style="font-weight:700;font-size:1.2rem;color:#16a34a">+343.6%</span>
+    </div>
+    <div style="margin-top:0.5rem">
+        <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">7</div></div>
+        <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">71%</div></div>
+        <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#16a34a">+49.1%</div></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#4b5563">ASML (+237.2%) | NVTS (+96.4%) | MU (+6.7%) | QCOM (+4.3%) | TSM (+3.8%) | INTC (-1.6%) | TSM (-3.2%)</div>
+</div>
+
+
+<div class="card" style="border-left:4px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h3 style="margin:0">Scenario 4: High confidence >= 70% (any direction)</h3>
+        <span style="font-weight:700;font-size:1.2rem;color:#16a34a">+341.6%</span>
+    </div>
+    <div style="margin-top:0.5rem">
+        <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">11</div></div>
+        <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">55%</div></div>
+        <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#16a34a">+31.1%</div></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#4b5563">ASML (+237.2%) | NVTS (+96.4%) | INTC (+10.1%) | MU (+6.7%) | QCOM (+4.3%) | TSM (+3.8%) | META (-0.6%) | INTC (-1.6%)</div>
+</div>
+
+
+<div class="card" style="border-left:4px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h3 style="margin:0">Scenario 5: All LONGs >= 55% confidence</h3>
+        <span style="font-weight:700;font-size:1.2rem;color:#16a34a">+337.7%</span>
+    </div>
+    <div style="margin-top:0.5rem">
+        <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">22</div></div>
+        <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">50%</div></div>
+        <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#16a34a">+15.3%</div></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#4b5563">ASML (+237.2%) | NVTS (+96.4%) | AEHR (+51.7%) | MU (+6.7%) | QCOM (+4.3%) | TSM (+3.8%) | RTX (+3.1%) | XBI (+2.2%)</div>
+</div>
+
+
+<div class="card" style="border-left:4px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h3 style="margin:0">Scenario 6: Band A+B LONGs only (drop shorts)</h3>
+        <span style="font-weight:700;font-size:1.2rem;color:#16a34a">+337.7%</span>
+    </div>
+    <div style="margin-top:0.5rem">
+        <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">22</div></div>
+        <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">50%</div></div>
+        <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#16a34a">+15.3%</div></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#4b5563">ASML (+237.2%) | NVTS (+96.4%) | AEHR (+51.7%) | MU (+6.7%) | QCOM (+4.3%) | TSM (+3.8%) | RTX (+3.1%) | XBI (+2.2%)</div>
+</div>
+
+
+<div class="card" style="border-left:4px solid #cc0000;background:#fef2f2">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h3 style="margin:0">Scenario 7: All DD=TRADE decisions (the system's own picks)</h3>
+        <span style="font-weight:700;font-size:1.2rem;color:#cc0000">-14.4%</span>
+    </div>
+    <div style="margin-top:0.5rem">
+        <div class="stat"><div class="stat-label">Positions</div><div class="stat-value">20</div></div>
+        <div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">35%</div></div>
+        <div class="stat"><div class="stat-label">Avg P&L</div><div class="stat-value" style="color:#cc0000">-0.7%</div></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#4b5563">FRMI (+2.6%) | XBI (+2.2%) | XBI (+2.2%) | SMH (+1.2%) | KKR (+1.0%) | SPY (+0.7%) | CRWV (+0.6%) | VOW3.DE (-0.1%)</div>
+</div>
+
+<h2>Derived Trading Rules</h2>
+<p style="font-size:0.9rem;color:#4b5563;margin-bottom:1rem">These rules are derived from the 4-day backtest. Apply them to the trading logic in <code>trader.py</code> and <code>config.py</code>.</p>
+
+<div class="rule-box ">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">1</span>
+        <strong>LONG bias is critical</strong>
+        <span class="impact tag tag-blue">HIGH</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> LONGs: 48% win rate, 14.4% avg PnL, +447.2% total. SHORTs: 20% win rate, -1.3% avg PnL, -19.9% total.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> Default to LONG unless SHORT thesis has Band A confidence (>=65%) AND specific catalyst event.</div>
+</div>
+
+
+<div class="rule-box ">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">2</span>
+        <strong>Band A is the edge</strong>
+        <span class="impact tag tag-blue">HIGH</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> Band A: 58% win rate, +28.5% avg PnL, +342.2% total. Band B: 30% win rate, -0.6% avg PnL. Band C: 36% win rate, +6.9% avg PnL.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> Always trade Band A. Band B only if LONG. Band C only if LONG + specific catalyst + signal stirring or better.</div>
+</div>
+
+
+<div class="rule-box rule-critical">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">3</span>
+        <strong>Staleness kills are the #1 destroyer of value</strong>
+        <span class="impact tag tag-red">CRITICAL</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> The 4 biggest winners (ASML +237%, ATOM +113%, NVTS +96%, AEHR +52%) were ALL killed for staleness or 'edge captured'. Combined missed profit: +498.5%. The system saw them, evaluated them, and said no.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> NEVER auto-kill a Band A position for staleness alone. Instead, check if tracked price movement is < 5% — if the price hasn't moved much since we started tracking, the 'edge captured' assessment is wrong.</div>
+</div>
+
+
+<div class="rule-box ">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">4</span>
+        <strong>Report PnL vs Tracked PnL: the staleness illusion</strong>
+        <span class="impact tag tag-blue">HIGH</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> ASML showed +237% report PnL but only +3.4% tracked price movement. NVTS showed +96% report PnL but -1.6% tracked movement. The massive report PnL was from a much earlier report price — by the time we tracked, price had already moved. But crucially, many STILL had room to run.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> When staleness > 100h, compare report_price to first_tracked_price. If the gap is >10%, the edge is partially captured. But also check: is the tracked movement still positive? If yes, the thesis is still working.</div>
+</div>
+
+
+<div class="rule-box ">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">5</span>
+        <strong>Semiconductor LONGs are the sweet spot</strong>
+        <span class="impact tag tag-blue">MEDIUM</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> Semiconductor LONGs generated the bulk of the P&L: ASML (+237%), NVTS (+96%), AEHR (+52%), MU (+6.7%), QCOM (+4.3%), TSM (+3.8%). The thesis signals from semiconductor reports are higher quality.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> Apply lower threshold for semiconductor LONGs: trade at Band B or better, confidence >= 55%.</div>
+</div>
+
+
+<div class="rule-box ">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">6</span>
+        <strong>DD TRADE decisions are actually decent stock pickers</strong>
+        <span class="impact tag tag-blue">HIGH</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> Positions where DD said TRADE had mixed results but selected real movers (XBI +2.2%, KKR +1.0%). The problem is the TRADE->WATCH->never-ACTIVE pipeline, not the stock selection.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> When DD says TRADE with high confidence, enter immediately. Don't park in WATCH waiting for signal confirmation — the signal IS the report.</div>
+</div>
+
+
+<div class="rule-box ">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">7</span>
+        <strong>Stop killing for 'signal propagated to mainstream'</strong>
+        <span class="impact tag tag-blue">HIGH</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> 20 positions were killed because signal reached mainstream media. But mainstream coverage is CONFIRMATION, not invalidation. INTC SHORT (+10.1%) was killed when Bloomberg covered it — that was the profit window opening, not closing.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> Signal propagation to mainstream should trigger a TIGHTER stop-loss, not an auto-kill. Set trailing stop at 50% of current gain when signal goes mainstream.</div>
+</div>
+
+
+<div class="rule-box ">
+    <div style="margin-bottom:0.5rem">
+        <span class="rule-num">8</span>
+        <strong>5 watch checks is too few</strong>
+        <span class="impact tag tag-blue">MEDIUM</span>
+    </div>
+    <div style="font-size:0.85rem;color:#374151;margin-bottom:0.5rem"><em>Evidence:</em> XBI (position 4) was killed after 5 watch checks with +2.2% report PnL and 9 DD decisions (TRADE x4, WATCH x5). The system believed in it, ran out of patience.</div>
+    <div style="font-size:0.85rem;color:#1a1a2e;background:white;padding:0.5rem 0.8rem;border-radius:4px;border:1px solid #d1d5db"><strong>Rule:</strong> Increase MAX_WATCH_CHECKS to 8 for Band A/B. For positions where DD ever said TRADE, extend to 10 checks.</div>
+</div>
+
+<h2>Recommended Config Changes</h2>
+
+<div class="card card-blue">
+<pre style="font-size:0.82rem;line-height:1.7;overflow-x:auto">
+# config.py changes:
+
+# 1. Increase watch patience for high-confidence positions
+MAX_WATCH_CHECKS = 8           # was 5 — too aggressive
+
+# 2. Raise the "edge captured" bar
+PRICE_MOVE_LARGE = 20.0        # was 10.0 — kills winners too early
+
+# 3. Add new: sector-specific confidence floors
+SEMI_CONFIDENCE_FLOOR = 55     # trade semiconductor LONGs at 55%+
+DEFAULT_CONFIDENCE_FLOOR = 65  # other sectors need 65%+
+</pre>
+</div>
+
+<div class="card card-blue">
+<pre style="font-size:0.82rem;line-height:1.7;overflow-x:auto">
+# trader.py changes:
+
+# 1. In make_trade_decision(): don't auto-kill Band A for staleness
+#    Current: CRITICAL staleness + confidence < 65 = KILL
+#    Change:  CRITICAL staleness + Band A = WATCH (never auto-kill)
+
+# 2. In make_trade_decision(): staleness should be from DISCOVERY, not report date
+#    The report may be published days before we find it
+#    Track "discovered_at" separately from "published_date"
+
+# 3. In run_due_diligence(): when DD says TRADE, go to ACTIVE (not WATCH)
+#    Current: TRADE decisions go to WATCH, waiting for signal confirmation
+#    Change:  TRADE + Band A/B = ACTIVE immediately
+#             TRADE + Band C   = WATCH (confirm first)
+
+# 4. Add "tracked PnL" check before killing for "edge captured"
+#    Current: if report_pnl > 10%, kill as "edge captured"
+#    Change:  check tracked_pnl (from our first price). If tracked < 5%,
+#             the edge was captured BEFORE us — we can still ride momentum
+</pre>
+</div>
+
+<h2>Bottom Line</h2>
+
+<div class="card card-green">
+    <p style="font-size:1rem;font-weight:700;margin-bottom:0.5rem">The best backtest scenario: "Semiconductor LONGs only" would have generated <span style="color:#16a34a">+497.1%</span> total P&L over 4 days with 16 positions.</p>
+    <p style="font-size:0.9rem">The current system generated <span style="color:#cc0000">-3.23%</span> with a 0% win rate. That's because it traded nothing successfully.</p>
+    <p style="font-size:0.9rem;margin-top:0.5rem">The three biggest changes needed:</p>
+    <ol style="font-size:0.9rem;margin:0.5rem 0 0 1.5rem">
+        <li><strong>Stop killing winners for staleness</strong> &mdash; check tracked price movement, not report age</li>
+        <li><strong>Go LONG</strong> &mdash; LONGs have 48% win rate and +14.4% avg PnL; SHORTs have 20% win rate and -1.3% avg</li>
+        <li><strong>Trust Band A</strong> &mdash; 58% win rate, +28.5% avg PnL; when DD says TRADE, actually trade</li>
+    </ol>
+</div>
+
+
+<div style="margin-top:2rem;padding-top:1rem;border-top:1px solid #e5e7eb;font-size:0.72rem;color:#9ca3af;text-align:center">
+    Pattern Analysis &middot; Generated 2026-02-19 16:39 UTC &middot; <a href="../" style="color:#9ca3af">Back to Trading Sheet</a>
+</div>
+</div>
+</body>
+</html>

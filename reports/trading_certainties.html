@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Certainties</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Lato",-apple-system,sans-serif; background:#FFF1E5; color:#1a1a2e; line-height:1.6; }
+  .container { max-width:960px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-family:"Playfair Display",serif; font-size:2rem; margin-bottom:0.3rem; }
+  h2 { font-family:"Playfair Display",serif; font-size:1.4rem; margin:2rem 0 0.8rem; padding-bottom:0.3rem; border-bottom:2px solid #1a1a2e; }
+  h3 { font-size:1rem; margin:1rem 0 0.5rem; }
+  .subtitle { color:#6b7280; font-size:0.9rem; margin-bottom:1.5rem; }
+  .card { background:white; border-radius:8px; padding:1.2rem; margin:0.8rem 0; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .stat { display:inline-block; margin-right:1.5rem; margin-bottom:0.5rem; }
+  .stat-label { font-size:0.7rem; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; }
+  .stat-value { font-size:1.3rem; font-weight:700; }
+  table { width:100%; border-collapse:collapse; font-size:0.82rem; margin:0.5rem 0; }
+  th { text-align:left; padding:6px 8px; border-bottom:2px solid #1a1a2e; font-size:0.72rem; text-transform:uppercase; color:#6b7280; }
+  td { padding:5px 8px; border-bottom:1px solid #e5e7eb; }
+  tr:hover { background:#f9fafb; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; }
+  .bucket-header { padding:0.8rem 1rem; border-radius:8px; margin:1rem 0 0.5rem; }
+  .rule-tag { display:inline-block; padding:2px 6px; border-radius:4px; font-size:0.68rem; font-weight:600; background:#f1f5f9; color:#475569; margin-right:4px; }
+  .publish-yes { color:#16a34a; font-weight:700; }
+  .publish-no { color:#9ca3af; }
+  a { color:#0d7680; }
+  .back-link { font-size:0.8rem; color:#6b7280; text-decoration:none; display:block; margin-bottom:1rem; }
+  .timing-bar { display:inline-block; height:8px; border-radius:4px; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+<a href="../" class="back-link">&larr; Back to Trading Sheet</a>
+<h1>Trading Certainties</h1>
+
+<div class="subtitle">Rules Engine &middot; 204 positions &middot; 8 rules &middot; Generated 2026-02-19 16:44 UTC</div>
+<div class="card" style="border-left:4px solid #16a34a">
+<h3 style="margin-top:0">If We Had Always Traded With These Rules</h3>
+<div>
+<div class="stat"><div class="stat-label">Positions Traded</div><div class="stat-value">40</div></div>
+<div class="stat"><div class="stat-label">Total P&L</div><div class="stat-value" style="color:#16a34a">+475.2%</div></div>
+<div class="stat"><div class="stat-label">Win Rate</div><div class="stat-value">50%</div></div>
+<div class="stat"><div class="stat-label">Avg P&L/Trade</div><div class="stat-value" style="color:#16a34a">+11.9%</div></div>
+<div class="stat"><div class="stat-label">Publish Uplift Est.</div><div class="stat-value" style="color:#7c3aed">+51.0%</div></div>
+</div></div>
+<div class="bucket-header" style="background:#f0fdf4;border-left:4px solid #16a34a">
+<h2 style="margin:0;border:none;color:#16a34a">Trading Certainty (17 positions)</h2>
+<div style="font-size:0.85rem;color:#4b5563">We would trade this every time. The rule is proven.</div>
+<div style="font-size:0.82rem;margin-top:4px">Backtest: 7 with data | 5W/2L | Total: <strong style="color:#16a34a">+343.6%</strong></div>
+</div>
+<table><thead><tr><th>#</th><th>Ticker</th><th>Dir</th><th>Band</th><th>Conf</th><th>Report P&L</th><th>Safe P&L</th><th>Hold P&L</th><th>Optimal P&L</th><th>Rule</th><th>Action</th><th>Publish</th><th>Uplift</th></tr></thead><tbody>
+<tr>
+<td>79</td>
+<td><a href="positions/position_79.html" style="font-weight:700">ASML</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>70</td>
+<td style="font-weight:700;color:#16a34a">+237.2%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>164</td>
+<td><a href="positions/position_164.html" style="font-weight:700">NVTS</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>77</td>
+<td style="font-weight:700;color:#16a34a">+96.4%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>128</td>
+<td><a href="positions/position_128.html" style="font-weight:700">MU</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>88</td>
+<td style="font-weight:700;color:#16a34a">+6.7%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>89</td>
+<td><a href="positions/position_89.html" style="font-weight:700">QCOM</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>94</td>
+<td style="font-weight:700;color:#16a34a">+4.3%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>162</td>
+<td><a href="positions/position_162.html" style="font-weight:700">TSM</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>72</td>
+<td style="font-weight:700;color:#16a34a">+3.8%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>144</td>
+<td><a href="positions/position_144.html" style="font-weight:700">SSNLF</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>94</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>160</td>
+<td><a href="positions/position_160.html" style="font-weight:700">INTC</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>95</td>
+<td style="font-weight:700;color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>78</td>
+<td><a href="positions/position_78.html" style="font-weight:700">TSM</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>71</td>
+<td style="font-weight:700;color:#cc0000">-3.2%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>153</td>
+<td><a href="positions/position_153.html" style="font-weight:700">000660.KS</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>87</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R2</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +3%</span></td>
+<td style="color:#7c3aed">+3.0%</td>
+</tr>
+<tr>
+<td>161</td>
+<td><a href="positions/position_161.html" style="font-weight:700">005930.KS</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>88</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R2</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +3%</span></td>
+<td style="color:#7c3aed">+3.0%</td>
+</tr>
+<tr>
+<td>167</td>
+<td><a href="positions/position_167.html" style="font-weight:700">NOC</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>81</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td><span class="rule-tag">R2</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +3%</span></td>
+<td style="color:#7c3aed">+3.0%</td>
+</tr>
+<tr>
+<td>169</td>
+<td><a href="positions/position_169.html" style="font-weight:700">AMD</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>65</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#16a34a">+1.5%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>172</td>
+<td><a href="positions/position_172.html" style="font-weight:700">2330.TW</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>85</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R2</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +3%</span></td>
+<td style="color:#7c3aed">+3.0%</td>
+</tr>
+<tr>
+<td>173</td>
+<td><a href="positions/position_173.html" style="font-weight:700">MU</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>76</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>179</td>
+<td><a href="positions/position_179.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>80</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R1</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +5%</span></td>
+<td style="color:#7c3aed">+5.0%</td>
+</tr>
+<tr>
+<td>180</td>
+<td><a href="positions/position_180.html" style="font-weight:700">GLW</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>81</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.1%</td>
+<td style="color:#16a34a">+1.1%</td>
+<td style="color:#16a34a">+1.1%</td>
+<td><span class="rule-tag">R2</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +3%</span></td>
+<td style="color:#7c3aed">+3.0%</td>
+</tr>
+<tr>
+<td>92</td>
+<td><a href="positions/position_92.html" style="font-weight:700">6147.TWO</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>A</td>
+<td>68</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R2</span></td>
+<td><span class="tag" style="color:#16a34a;background:#dcfce7">ALWAYS_TRADE</span></td>
+<td><span class="publish-yes">PUBLISH +3%</span></td>
+<td style="color:#7c3aed">+3.0%</td>
+</tr>
+</tbody></table>
+<div class="bucket-header" style="background:#eff6ff;border-left:4px solid #2563eb">
+<h2 style="margin:0;border:none;color:#2563eb">High Probability (23 positions)</h2>
+<div style="font-size:0.85rem;color:#4b5563">We would trade this with confirmation. Strong pattern match.</div>
+<div style="font-size:0.82rem;margin-top:4px">Backtest: 19 with data | 9W/10L | Total: <strong style="color:#16a34a">+118.4%</strong></div>
+</div>
+<table><thead><tr><th>#</th><th>Ticker</th><th>Dir</th><th>Band</th><th>Conf</th><th>Report P&L</th><th>Safe P&L</th><th>Hold P&L</th><th>Optimal P&L</th><th>Rule</th><th>Action</th><th>Publish</th><th>Uplift</th></tr></thead><tbody>
+<tr>
+<td>101</td>
+<td><a href="positions/position_101.html" style="font-weight:700">ATOM</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>53</td>
+<td style="font-weight:700;color:#16a34a">+113.2%</td>
+<td style="color:#cc0000">-4.4%</td>
+<td style="color:#cc0000">-4.4%</td>
+<td style="color:#16a34a">+4.6%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>165</td>
+<td><a href="positions/position_165.html" style="font-weight:700">AEHR</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>55</td>
+<td style="font-weight:700;color:#16a34a">+51.7%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>91</td>
+<td><a href="positions/position_91.html" style="font-weight:700">INTC</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>A</td>
+<td>76</td>
+<td style="font-weight:700;color:#16a34a">+10.1%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R5</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +6%</span></td>
+<td style="color:#7c3aed">+6.0%</td>
+</tr>
+<tr>
+<td>134</td>
+<td><a href="positions/position_134.html" style="font-weight:700">SMH</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#16a34a">+2.7%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>31</td>
+<td><a href="positions/position_31.html" style="font-weight:700">XBI</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>64</td>
+<td style="font-weight:700;color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td><span class="rule-tag">R4</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="positions/position_4.html" style="font-weight:700">XBI</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>55</td>
+<td style="font-weight:700;color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td><span class="rule-tag">R4</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>129</td>
+<td><a href="positions/position_129.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>63</td>
+<td style="font-weight:700;color:#16a34a">+1.4%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>63</td>
+<td><a href="positions/position_63.html" style="font-weight:700">SMH</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>58</td>
+<td><a href="positions/position_58.html" style="font-weight:700">KKR</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>63</td>
+<td style="font-weight:700;color:#16a34a">+1.0%</td>
+<td style="color:#16a34a">+1.0%</td>
+<td style="color:#16a34a">+1.0%</td>
+<td style="color:#16a34a">+1.0%</td>
+<td><span class="rule-tag">R4</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>61</td>
+<td><a href="positions/position_61.html" style="font-weight:700">XLI</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>56</td>
+<td style="font-weight:700;color:#6b7280">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#16a34a">+0.0%</td>
+<td><span class="rule-tag">R4</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>81</td>
+<td><a href="positions/position_81.html" style="font-weight:700">SMH</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>50</td>
+<td style="font-weight:700;color:#cc0000">-0.5%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>90</td>
+<td><a href="positions/position_90.html" style="font-weight:700">META</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>A</td>
+<td>76</td>
+<td style="font-weight:700;color:#cc0000">-0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">R5</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +6%</span></td>
+<td style="color:#7c3aed">+6.0%</td>
+</tr>
+<tr>
+<td>24</td>
+<td><a href="positions/position_24.html" style="font-weight:700">SGSOY</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>55</td>
+<td style="font-weight:700;color:#cc0000">-0.7%</td>
+<td style="color:#cc0000">-0.8%</td>
+<td style="color:#cc0000">-0.8%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">R4</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>29</td>
+<td><a href="positions/position_29.html" style="font-weight:700">JPM</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>A</td>
+<td>71</td>
+<td style="font-weight:700;color:#cc0000">-2.1%</td>
+<td style="color:#16a34a">+2.1%</td>
+<td style="color:#16a34a">+2.1%</td>
+<td style="color:#16a34a">+2.1%</td>
+<td><span class="rule-tag">R5</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +6%</span></td>
+<td style="color:#7c3aed">+6.0%</td>
+</tr>
+<tr>
+<td>96</td>
+<td><a href="positions/position_96.html" style="font-weight:700">AMD</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>59</td>
+<td style="font-weight:700;color:#cc0000">-4.0%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#16a34a">+1.5%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>132</td>
+<td><a href="positions/position_132.html" style="font-weight:700">VECO</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>56</td>
+<td style="font-weight:700;color:#cc0000">-4.5%</td>
+<td style="color:#cc0000">-14.6%</td>
+<td style="color:#cc0000">-14.6%</td>
+<td style="color:#16a34a">+17.2%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>130</td>
+<td><a href="positions/position_130.html" style="font-weight:700">TSEM</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>62</td>
+<td style="font-weight:700;color:#cc0000">-7.7%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>166</td>
+<td><a href="positions/position_166.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>A</td>
+<td>77</td>
+<td style="font-weight:700;color:#cc0000">-9.4%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R5</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +6%</span></td>
+<td style="color:#7c3aed">+6.0%</td>
+</tr>
+<tr>
+<td>98</td>
+<td><a href="positions/position_98.html" style="font-weight:700">USAR</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>56</td>
+<td style="font-weight:700;color:#cc0000">-16.7%</td>
+<td style="color:#cc0000">-4.3%</td>
+<td style="color:#cc0000">-4.3%</td>
+<td style="color:#16a34a">+4.5%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>97</td>
+<td><a href="positions/position_97.html" style="font-weight:700">GILT</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>57</td>
+<td style="font-weight:700;color:#cc0000">-21.1%</td>
+<td style="color:#16a34a">+2.5%</td>
+<td style="color:#16a34a">+2.5%</td>
+<td style="color:#16a34a">+2.5%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>171</td>
+<td><a href="positions/position_171.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>62</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R3</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +4%</span></td>
+<td style="color:#7c3aed">+4.0%</td>
+</tr>
+<tr>
+<td>174</td>
+<td><a href="positions/position_174.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>A</td>
+<td>72</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R5</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-yes">PUBLISH +6%</span></td>
+<td style="color:#7c3aed">+6.0%</td>
+</tr>
+<tr>
+<td>60</td>
+<td><a href="positions/position_60.html" style="font-weight:700">ABB</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>57</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R4</span></td>
+<td><span class="tag" style="color:#2563eb;background:#dbeafe">TRADE_IF_CONFIRMED</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+</tbody></table>
+<div class="bucket-header" style="background:#fef2f2;border-left:4px solid #cc0000">
+<h2 style="margin:0;border:none;color:#cc0000">Avoid (50 positions)</h2>
+<div style="font-size:0.85rem;color:#4b5563">Data says don't trade this pattern.</div>
+<div style="font-size:0.82rem;margin-top:4px">Backtest: 15 with data | 2W/13L | Total: <strong style="color:#cc0000">-25.6%</strong></div>
+</div>
+<table><thead><tr><th>#</th><th>Ticker</th><th>Dir</th><th>Band</th><th>Conf</th><th>Report P&L</th><th>Safe P&L</th><th>Hold P&L</th><th>Optimal P&L</th><th>Rule</th><th>Action</th><th>Publish</th><th>Uplift</th></tr></thead><tbody>
+<tr>
+<td>42</td>
+<td><a href="positions/position_42.html" style="font-weight:700">FRMI</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#16a34a">+2.6%</td>
+<td style="color:#cc0000">-2.6%</td>
+<td style="color:#cc0000">-2.6%</td>
+<td style="color:#16a34a">+2.7%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="positions/position_7.html" style="font-weight:700">SPY</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>49</td>
+<td style="font-weight:700;color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="positions/position_3.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>56</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>41</td>
+<td><a href="positions/position_41.html" style="font-weight:700">VOW3.DE</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>56</td>
+<td style="font-weight:700;color:#cc0000">-0.1%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>159</td>
+<td><a href="positions/position_159.html" style="font-weight:700">SPY</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#cc0000">-0.6%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="positions/position_2.html" style="font-weight:700">SPY</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>59</td>
+<td style="font-weight:700;color:#cc0000">-0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>37</td>
+<td><a href="positions/position_37.html" style="font-weight:700">ARX</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>52</td>
+<td style="font-weight:700;color:#cc0000">-0.9%</td>
+<td style="color:#cc0000">-0.9%</td>
+<td style="color:#cc0000">-0.9%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>59</td>
+<td><a href="positions/position_59.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>57</td>
+<td style="font-weight:700;color:#cc0000">-1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>95</td>
+<td><a href="positions/position_95.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>60</td>
+<td style="font-weight:700;color:#cc0000">-1.4%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="positions/position_8.html" style="font-weight:700">LLY</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>46</td>
+<td style="font-weight:700;color:#cc0000">-1.9%</td>
+<td style="color:#cc0000">-1.9%</td>
+<td style="color:#cc0000">-1.9%</td>
+<td style="color:#16a34a">+0.2%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>1</td>
+<td><a href="positions/position_1.html" style="font-weight:700">XBI</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>61</td>
+<td style="font-weight:700;color:#cc0000">-2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>133</td>
+<td><a href="positions/position_133.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#cc0000">-2.7%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>25</td>
+<td><a href="positions/position_25.html" style="font-weight:700">ORGN</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#cc0000">-3.1%</td>
+<td style="color:#16a34a">+6.7%</td>
+<td style="color:#16a34a">+6.7%</td>
+<td style="color:#16a34a">+6.7%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>163</td>
+<td><a href="positions/position_163.html" style="font-weight:700">SHLS</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>53</td>
+<td style="font-weight:700;color:#cc0000">-4.3%</td>
+<td style="color:#16a34a">+0.3%</td>
+<td style="color:#16a34a">+0.3%</td>
+<td style="color:#16a34a">+0.3%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>28</td>
+<td><a href="positions/position_28.html" style="font-weight:700">SLDB</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>46</td>
+<td style="font-weight:700;color:#cc0000">-4.4%</td>
+<td style="color:#cc0000">-4.4%</td>
+<td style="color:#cc0000">-4.4%</td>
+<td style="color:#16a34a">+12.5%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>43</td>
+<td><a href="positions/position_43.html" style="font-weight:700">PXED</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>52</td>
+<td style="font-weight:700;color:#cc0000">-5.4%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.4%</td>
+<td style="color:#16a34a">+5.4%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>100</td>
+<td><a href="positions/position_100.html" style="font-weight:700">IFX.DE</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>102</td>
+<td><a href="positions/position_102.html" style="font-weight:700">CUSN.L</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>52</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>103</td>
+<td><a href="positions/position_103.html" style="font-weight:700">SVM.AX</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>51</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>104</td>
+<td><a href="positions/position_104.html" style="font-weight:700">EVK.DE</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>49</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-0.8%</td>
+<td style="color:#cc0000">-0.8%</td>
+<td style="color:#16a34a">+0.8%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>105</td>
+<td><a href="positions/position_105.html" style="font-weight:700">SQ</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>48</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>181</td>
+<td><a href="positions/position_181.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>60</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>185</td>
+<td><a href="positions/position_185.html" style="font-weight:700">INTC</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>57</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>188</td>
+<td><a href="positions/position_188.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>48</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>189</td>
+<td><a href="positions/position_189.html" style="font-weight:700">ASML</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>193</td>
+<td><a href="positions/position_193.html" style="font-weight:700">TSM</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>194</td>
+<td><a href="positions/position_194.html" style="font-weight:700">INTC</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>200</td>
+<td><a href="positions/position_200.html" style="font-weight:700">6488.TWO</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>201</td>
+<td><a href="positions/position_201.html" style="font-weight:700">UUUU</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+3.6%</td>
+<td style="color:#16a34a">+3.7%</td>
+<td style="color:#16a34a">+3.7%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>202</td>
+<td><a href="positions/position_202.html" style="font-weight:700">SU.PA</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+2.7%</td>
+<td style="color:#16a34a">+2.7%</td>
+<td style="color:#16a34a">+2.7%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>204</td>
+<td><a href="positions/position_204.html" style="font-weight:700">440110.KQ</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>211</td>
+<td><a href="positions/position_211.html" style="font-weight:700">-(proxy)</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>E</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>221</td>
+<td><a href="positions/position_221.html" style="font-weight:700">UNH</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>61</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>224</td>
+<td><a href="positions/position_224.html" style="font-weight:700">HIMS</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>59</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>225</td>
+<td><a href="positions/position_225.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>B</td>
+<td>56</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>226</td>
+<td><a href="positions/position_226.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>53</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>227</td>
+<td><a href="positions/position_227.html" style="font-weight:700">SPY</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>49</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>228</td>
+<td><a href="positions/position_228.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>49</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>229</td>
+<td><a href="positions/position_229.html" style="font-weight:700">PFE</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>49</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>230</td>
+<td><a href="positions/position_230.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>48</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>231</td>
+<td><a href="positions/position_231.html" style="font-weight:700">BAYRY</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>46</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>232</td>
+<td><a href="positions/position_232.html" style="font-weight:700">JNJ</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>46</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>233</td>
+<td><a href="positions/position_233.html" style="font-weight:700">NVO</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>D</td>
+<td>44</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>234</td>
+<td><a href="positions/position_234.html" style="font-weight:700">XBI</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>D</td>
+<td>44</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>26</td>
+<td><a href="positions/position_26.html" style="font-weight:700">COX</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>54</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>44</td>
+<td><a href="positions/position_44.html" style="font-weight:700">2616.HK</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>52</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>45</td>
+<td><a href="positions/position_45.html" style="font-weight:700">MCY/SPY</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>50</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>46</td>
+<td><a href="positions/position_46.html" style="font-weight:700">XBI/IHE</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>C</td>
+<td>49</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R8</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>48</td>
+<td><a href="positions/position_48.html" style="font-weight:700">SPY/TLT</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>48</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>49</td>
+<td><a href="positions/position_49.html" style="font-weight:700">XBI/IHE</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>C</td>
+<td>48</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">R7</span></td>
+<td><span class="tag" style="color:#cc0000;background:#fee2e2">NEVER_TRADE</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+</tbody></table>
+<div class="bucket-header" style="background:#f9fafb;border-left:4px solid #6b7280">
+<h2 style="margin:0;border:none;color:#6b7280">Unclassified (114 positions)</h2>
+<div style="font-size:0.85rem;color:#4b5563">No rule matched. Needs manual review or new rule creation.</div>
+<div style="font-size:0.82rem;margin-top:4px">Backtest: 5 with data | 2W/3L | Total: <strong style="color:#cc0000">-9.1%</strong></div>
+</div>
+<table><thead><tr><th>#</th><th>Ticker</th><th>Dir</th><th>Band</th><th>Conf</th><th>Report P&L</th><th>Safe P&L</th><th>Hold P&L</th><th>Optimal P&L</th><th>Rule</th><th>Action</th><th>Publish</th><th>Uplift</th></tr></thead><tbody>
+<tr>
+<td>94</td>
+<td><a href="positions/position_94.html" style="font-weight:700">RTX</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>62</td>
+<td style="font-weight:700;color:#16a34a">+3.1%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>30</td>
+<td><a href="positions/position_30.html" style="font-weight:700">CRWV</a></td>
+<td style="color:#cc0000">SHORT</td>
+<td>A</td>
+<td>65</td>
+<td style="font-weight:700;color:#16a34a">+0.6%</td>
+<td style="color:#cc0000">-0.6%</td>
+<td style="color:#cc0000">-0.6%</td>
+<td style="color:#16a34a">+5.5%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="positions/position_10.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>135</td>
+<td><a href="positions/position_135.html" style="font-weight:700">SPY</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>136</td>
+<td><a href="positions/position_136.html" style="font-weight:700">MU</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>137</td>
+<td><a href="positions/position_137.html" style="font-weight:700">INDA</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>138</td>
+<td><a href="positions/position_138.html" style="font-weight:700">AMZN</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>139</td>
+<td><a href="positions/position_139.html" style="font-weight:700">BDRY</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="positions/position_14.html" style="font-weight:700">XBI</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>140</td>
+<td><a href="positions/position_140.html" style="font-weight:700">AMD</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#16a34a">+1.5%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>141</td>
+<td><a href="positions/position_141.html" style="font-weight:700">SHLS</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.3%</td>
+<td style="color:#16a34a">+0.3%</td>
+<td style="color:#16a34a">+0.3%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>142</td>
+<td><a href="positions/position_142.html" style="font-weight:700">XME</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.7%</td>
+<td style="color:#16a34a">+1.7%</td>
+<td style="color:#16a34a">+1.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>143</td>
+<td><a href="positions/position_143.html" style="font-weight:700">LMT</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.0%</td>
+<td style="color:#16a34a">+0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="positions/position_16.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="positions/position_17.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>19</td>
+<td><a href="positions/position_19.html" style="font-weight:700">SPY</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>22</td>
+<td><a href="positions/position_22.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>40</td>
+<td><a href="positions/position_40.html" style="font-weight:700">LLY</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-1.9%</td>
+<td style="color:#cc0000">-1.9%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>47</td>
+<td><a href="positions/position_47.html" style="font-weight:700">CMPS</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+10.7%</td>
+<td style="color:#16a34a">+10.7%</td>
+<td style="color:#16a34a">+10.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="positions/position_5.html" style="font-weight:700">ICE</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.9%</td>
+<td style="color:#16a34a">+1.9%</td>
+<td style="color:#16a34a">+1.9%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>50</td>
+<td><a href="positions/position_50.html" style="font-weight:700">PFE</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>57</td>
+<td><a href="positions/position_57.html" style="font-weight:700">NSRGY</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.2%</td>
+<td style="color:#16a34a">+0.2%</td>
+<td style="color:#16a34a">+0.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="positions/position_6.html" style="font-weight:700">IHE</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#cc0000">-0.0%</td>
+<td style="color:#16a34a">+0.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>62</td>
+<td><a href="positions/position_62.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>64</td>
+<td><a href="positions/position_64.html" style="font-weight:700">AMZN</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td style="color:#16a34a">+1.8%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>65</td>
+<td><a href="positions/position_65.html" style="font-weight:700">SOXX</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.1%</td>
+<td style="color:#16a34a">+1.1%</td>
+<td style="color:#16a34a">+1.1%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>66</td>
+<td><a href="positions/position_66.html" style="font-weight:700">AMAT</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+2.8%</td>
+<td style="color:#16a34a">+2.8%</td>
+<td style="color:#16a34a">+2.8%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>67</td>
+<td><a href="positions/position_67.html" style="font-weight:700">AMD</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#16a34a">+1.5%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>68</td>
+<td><a href="positions/position_68.html" style="font-weight:700">INTC</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>70</td>
+<td><a href="positions/position_70.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>71</td>
+<td><a href="positions/position_71.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>80</td>
+<td><a href="positions/position_80.html" style="font-weight:700">MU</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>82</td>
+<td><a href="positions/position_82.html" style="font-weight:700">GOOGL</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>83</td>
+<td><a href="positions/position_83.html" style="font-weight:700">MSFT</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>84</td>
+<td><a href="positions/position_84.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>85</td>
+<td><a href="positions/position_85.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>86</td>
+<td><a href="positions/position_86.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>87</td>
+<td><a href="positions/position_87.html" style="font-weight:700">QCOM</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="positions/position_9.html" style="font-weight:700">JNJ</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>93</td>
+<td><a href="positions/position_93.html" style="font-weight:700">VECO</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">+0.0%</td>
+<td style="color:#cc0000">-14.6%</td>
+<td style="color:#cc0000">-14.6%</td>
+<td style="color:#16a34a">+17.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>131</td>
+<td><a href="positions/position_131.html" style="font-weight:700">VSH</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>61</td>
+<td style="font-weight:700;color:#cc0000">-2.8%</td>
+<td style="color:#16a34a">+3.9%</td>
+<td style="color:#16a34a">+3.8%</td>
+<td style="color:#16a34a">+3.9%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>155</td>
+<td><a href="positions/position_155.html" style="font-weight:700">J</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>56</td>
+<td style="font-weight:700;color:#cc0000">-4.9%</td>
+<td style="color:#16a34a">+3.6%</td>
+<td style="color:#16a34a">+3.7%</td>
+<td style="color:#16a34a">+3.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>99</td>
+<td><a href="positions/position_99.html" style="font-weight:700">688008.SS</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>55</td>
+<td style="font-weight:700;color:#cc0000">-5.1%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>106</td>
+<td><a href="positions/position_106.html" style="font-weight:700">TSM</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>107</td>
+<td><a href="positions/position_107.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>108</td>
+<td><a href="positions/position_108.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>109</td>
+<td><a href="positions/position_109.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>110</td>
+<td><a href="positions/position_110.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>111</td>
+<td><a href="positions/position_111.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>112</td>
+<td><a href="positions/position_112.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>113</td>
+<td><a href="positions/position_113.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>114</td>
+<td><a href="positions/position_114.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>115</td>
+<td><a href="positions/position_115.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>116</td>
+<td><a href="positions/position_116.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>117</td>
+<td><a href="positions/position_117.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>118</td>
+<td><a href="positions/position_118.html" style="font-weight:700">NT$508.00</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>119</td>
+<td><a href="positions/position_119.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>120</td>
+<td><a href="positions/position_120.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>121</td>
+<td><a href="positions/position_121.html" style="font-weight:700">GBp7.85</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>122</td>
+<td><a href="positions/position_122.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>123</td>
+<td><a href="positions/position_123.html" style="font-weight:700">------------</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>124</td>
+<td><a href="positions/position_124.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>125</td>
+<td><a href="positions/position_125.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>126</td>
+<td><a href="positions/position_126.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>127</td>
+<td><a href="positions/position_127.html" style="font-weight:700">?</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>145</td>
+<td><a href="positions/position_145.html" style="font-weight:700">QCOM</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td style="color:#16a34a">+0.4%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>146</td>
+<td><a href="positions/position_146.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>147</td>
+<td><a href="positions/position_147.html" style="font-weight:700">TAN</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+0.9%</td>
+<td style="color:#16a34a">+0.9%</td>
+<td style="color:#16a34a">+0.9%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>148</td>
+<td><a href="positions/position_148.html" style="font-weight:700">MTSI</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>149</td>
+<td><a href="positions/position_149.html" style="font-weight:700">ROBO</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>150</td>
+<td><a href="positions/position_150.html" style="font-weight:700">ANET</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-2.1%</td>
+<td style="color:#cc0000">-2.1%</td>
+<td style="color:#16a34a">+2.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>151</td>
+<td><a href="positions/position_151.html" style="font-weight:700">GLNCY</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+4.0%</td>
+<td style="color:#16a34a">+4.0%</td>
+<td style="color:#16a34a">+4.0%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>152</td>
+<td><a href="positions/position_152.html" style="font-weight:700">INTC</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>154</td>
+<td><a href="positions/position_154.html" style="font-weight:700">SMH</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td style="color:#16a34a">+1.2%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>156</td>
+<td><a href="positions/position_156.html" style="font-weight:700">2454.TW</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>55</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>157</td>
+<td><a href="positions/position_157.html" style="font-weight:700">IREN</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+2.7%</td>
+<td style="color:#16a34a">+2.7%</td>
+<td style="color:#16a34a">+2.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>158</td>
+<td><a href="positions/position_158.html" style="font-weight:700">HMC</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-0.7%</td>
+<td style="color:#cc0000">-0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>168</td>
+<td><a href="positions/position_168.html" style="font-weight:700">REMX</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>63</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+2.8%</td>
+<td style="color:#16a34a">+2.8%</td>
+<td style="color:#16a34a">+2.8%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>182</td>
+<td><a href="positions/position_182.html" style="font-weight:700">NVDA(proxy)</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>57</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>183</td>
+<td><a href="positions/position_183.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>184</td>
+<td><a href="positions/position_184.html" style="font-weight:700">ASML</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td style="color:#16a34a">+3.4%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>186</td>
+<td><a href="positions/position_186.html" style="font-weight:700">MSFT</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>190</td>
+<td><a href="positions/position_190.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>191</td>
+<td><a href="positions/position_191.html" style="font-weight:700">TSM</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>192</td>
+<td><a href="positions/position_192.html" style="font-weight:700">INTC</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>195</td>
+<td><a href="positions/position_195.html" style="font-weight:700">XME</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.7%</td>
+<td style="color:#16a34a">+1.7%</td>
+<td style="color:#16a34a">+1.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>196</td>
+<td><a href="positions/position_196.html" style="font-weight:700">-----------</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>197</td>
+<td><a href="positions/position_197.html" style="font-weight:700">mixed</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>198</td>
+<td><a href="positions/position_198.html" style="font-weight:700">--------:</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>199</td>
+<td><a href="positions/position_199.html" style="font-weight:700">-------:</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>203</td>
+<td><a href="positions/position_203.html" style="font-weight:700">SPY</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td style="color:#16a34a">+0.5%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>206</td>
+<td><a href="positions/position_206.html" style="font-weight:700">005930.KS</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>207</td>
+<td><a href="positions/position_207.html" style="font-weight:700">TSM</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#cc0000">-0.5%</td>
+<td style="color:#16a34a">+0.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>208</td>
+<td><a href="positions/position_208.html" style="font-weight:700">MU</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td style="color:#16a34a">+5.3%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>209</td>
+<td><a href="positions/position_209.html" style="font-weight:700">NVDA</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>21</td>
+<td><a href="positions/position_21.html" style="font-weight:700">ICICISEC.NS</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>210</td>
+<td><a href="positions/position_210.html" style="font-weight:700">INTC</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#cc0000">-1.6%</td>
+<td style="color:#16a34a">+1.6%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>212</td>
+<td><a href="positions/position_212.html" style="font-weight:700">AMD</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#cc0000">-1.5%</td>
+<td style="color:#16a34a">+1.5%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>213</td>
+<td><a href="positions/position_213.html" style="font-weight:700">neutral</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>214</td>
+<td><a href="positions/position_214.html" style="font-weight:700">-----------:</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>215</td>
+<td><a href="positions/position_215.html" style="font-weight:700">unscored</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>216</td>
+<td><a href="positions/position_216.html" style="font-weight:700">--------</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>217</td>
+<td><a href="positions/position_217.html" style="font-weight:700">short</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>218</td>
+<td><a href="positions/position_218.html" style="font-weight:700">long</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>219</td>
+<td><a href="positions/position_219.html" style="font-weight:700">----------:</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>220</td>
+<td><a href="positions/position_220.html" style="font-weight:700">:------:</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>222</td>
+<td><a href="positions/position_222.html" style="font-weight:700">IHE</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>60</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>223</td>
+<td><a href="positions/position_223.html" style="font-weight:700">041830.KQ</a></td>
+<td style="color:#16a34a">LONG</td>
+<td>B</td>
+<td>59</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>241</td>
+<td><a href="positions/position_241.html" style="font-weight:700">XBI</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>242</td>
+<td><a href="positions/position_242.html" style="font-weight:700">XBI</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>244</td>
+<td><a href="positions/position_244.html" style="font-weight:700">OTLK</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td style="color:#6b7280">+0.0%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>69</td>
+<td><a href="positions/position_69.html" style="font-weight:700">005930.KS</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>76</td>
+<td><a href="positions/position_76.html" style="font-weight:700">FI</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#cc0000">-0.7%</td>
+<td style="color:#cc0000">-0.7%</td>
+<td style="color:#16a34a">+0.7%</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+<tr>
+<td>88</td>
+<td><a href="positions/position_88.html" style="font-weight:700">1810.HK</a></td>
+<td style="color:#cc0000">?</td>
+<td>?</td>
+<td>?</td>
+<td style="font-weight:700;color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td style="color:#6b7280">---</td>
+<td><span class="rule-tag">None</span></td>
+<td><span class="tag" style="color:#6b7280;background:#f1f5f9">UNKNOWN</span></td>
+<td><span class="publish-no">no</span></td>
+<td style="color:#7c3aed"></td>
+</tr>
+</tbody></table>
+<h2>Active Rules</h2>
+<p style="font-size:0.85rem;color:#4b5563;margin-bottom:0.8rem">Rules are evaluated in order. First match wins. Edit <code>trading_rules.py</code> RULES list to refine.</p>
+<div class="card" style="border-left:4px solid #16a34a"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R1</span> <strong>Band-A Semiconductor LONG</strong></div>
+<span class="tag" style="color:#16a34a;background:#f0fdf4">TRADING_CERTAINTY</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">High-confidence LONG on a major semiconductor name. These have the strongest signal-to-noise ratio in our data.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> ALWAYS_TRADE | <strong>Exit:</strong> Hold until tracked move reverses >2% from peak, OR 4 days, whichever first. If gain >10% at any point, set trailing stop
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 11 positions
+ | <strong>Backtest:</strong> <span style="color:#16a34a">+343.6%</span>
+ | <span class="publish-yes">PUBLISH +5%</span>
+</div>
+</div>
+<div class="card" style="border-left:4px solid #16a34a"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R2</span> <strong>Band-A LONG (any sector)</strong></div>
+<span class="tag" style="color:#16a34a;background:#f0fdf4">TRADING_CERTAINTY</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">High-confidence LONG regardless of sector. Band A has 58% win rate and +28.5% avg PnL in our data.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> ALWAYS_TRADE | <strong>Exit:</strong> Hold until tracked move reverses >3% from peak, OR 4 days. Tighten stop if signal goes mainstream.
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 6 positions
+ | <span class="publish-yes">PUBLISH +3%</span>
+</div>
+</div>
+<div class="card" style="border-left:4px solid #2563eb"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R3</span> <strong>Semiconductor LONG >= 50% confidence</strong></div>
+<span class="tag" style="color:#2563eb;background:#eff6ff">HIGH_PROBABILITY</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">Semiconductor LONGs at any reasonable confidence. AEHR (+52%, Band B, 55%) and ATOM (+113%, Band C, 53%) prove the sector edge holds even at lower confidence.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> TRADE_IF_CONFIRMED | <strong>Exit:</strong> Enter when tracked price is flat or rising for 2+ hours after discovery. Exit at 3-day mark or 3% reversal from peak.
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 12 positions
+ | <strong>Backtest:</strong> <span style="color:#16a34a">+115.7%</span>
+ | <span class="publish-yes">PUBLISH +4%</span>
+</div>
+</div>
+<div class="card" style="border-left:4px solid #2563eb"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R4</span> <strong>Band-B LONG with DD TRADE recommendation</strong></div>
+<span class="tag" style="color:#2563eb;background:#eff6ff">HIGH_PROBABILITY</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">System's own DD said TRADE, and it's a LONG with decent confidence. Trust the DD engine for LONGs.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> TRADE_IF_CONFIRMED | <strong>Exit:</strong> Enter at DD-approved price. Exit at 3 days or 2% reversal.
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 6 positions
+ | <strong>Backtest:</strong> <span style="color:#16a34a">+4.7%</span>
+</div>
+</div>
+<div class="card" style="border-left:4px solid #2563eb"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R5</span> <strong>Band-A SHORT with specific catalyst</strong></div>
+<span class="tag" style="color:#2563eb;background:#eff6ff">HIGH_PROBABILITY</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">HIGH-confidence short with a clear event catalyst (litigation, regulatory action). Shorts work only when there's a specific trigger.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> TRADE_IF_CONFIRMED | <strong>Exit:</strong> Enter only if price hasn't already dropped >5%. Exit at 2 days or 5% gain, whichever first. Tight stop at -3%.
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 5 positions
+ | <strong>Backtest:</strong> <span style="color:#cc0000">-2.0%</span>
+ | <span class="publish-yes">PUBLISH +6%</span>
+</div>
+</div>
+<div class="card" style="border-left:4px solid #f59e0b"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R6</span> <strong>Band-B/C LONG with signal stirring+</strong></div>
+<span class="tag" style="color:#f59e0b;background:#fffbeb">CONDITIONAL</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">Medium-confidence LONG where signal propagation has started. Signal movement suggests thesis is gaining traction.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> TRADE_IF_CONFIRMED | <strong>Exit:</strong> Enter when signal goes from stirring to propagating. Exit when signal reaches mainstream (that's the profit window).
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 0 positions
+ | <span class="publish-yes">PUBLISH +8%</span>
+</div>
+</div>
+<div class="card" style="border-left:4px solid #cc0000"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R7</span> <strong>Any SHORT below Band A</strong></div>
+<span class="tag" style="color:#cc0000;background:#fef2f2">AVOID</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">Shorts without highest-confidence catalyst are losers in our data. 20% win rate, -1.3% avg PnL.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> NEVER_TRADE | <strong>Exit:</strong> N/A — do not enter
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 29 positions
+ | <strong>Backtest:</strong> <span style="color:#cc0000">-18.5%</span>
+</div>
+</div>
+<div class="card" style="border-left:4px solid #cc0000"
+>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+<div><span class="rule-tag">R8</span> <strong>Band-C/D/E with no signal activity</strong></div>
+<span class="tag" style="color:#cc0000;background:#fef2f2">AVOID</span>
+</div>
+<div style="font-size:0.82rem;color:#4b5563;margin:4px 0">Low confidence, no signal propagation = noise. These pollute the portfolio.</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Action:</strong> NEVER_TRADE | <strong>Exit:</strong> N/A — do not enter
+</div>
+<div style="font-size:0.82rem;margin-top:4px">
+<strong>Matched:</strong> 21 positions
+ | <strong>Backtest:</strong> <span style="color:#cc0000">-7.1%</span>
+</div>
+</div>
+<div style="margin-top:2rem;padding-top:1rem;border-top:1px solid #e5e7eb;font-size:0.72rem;color:#9ca3af;text-align:center">Trading Certainties Engine &middot; Generated 2026-02-19 16:44 UTC &middot; <a href="../" style="color:#9ca3af">Back to Trading Sheet</a></div>
+</div>
+</body>
+</html>

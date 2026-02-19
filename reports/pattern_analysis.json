@@ -1,0 +1,1756 @@
+{
+  "total": 204,
+  "with_price_data": 46,
+  "no_price_data": 158,
+  "winner_count": 18,
+  "loser_count": 28,
+  "big_winners": [
+    {
+      "id": 79,
+      "ticker": "ASML",
+      "asset": "ASML Holding N.V.: business restructuring",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 70,
+      "band": "A",
+      "current_price": 1468.72,
+      "report_pnl": 237.2,
+      "conviction": null,
+      "thesis_status": null,
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "Price moved 225.9% in thesis direction \u2014 edge captured",
+      "dd_decisions": [
+        "KILL"
+      ],
+      "dd_price_move": 225.9,
+      "dd_staleness_hours": 152,
+      "price_count": 23,
+      "first_price": 1419.78,
+      "last_price": 1468.72,
+      "price_min": 1419.78,
+      "price_max": 1468.72,
+      "tracked_move_pct": 3.447012917494264,
+      "kill_category": "edge_already_captured"
+    },
+    {
+      "id": 101,
+      "ticker": "ATOM",
+      "asset": "Atomera Incorporated: licensing / GaN-on-Si",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 53,
+      "band": "C",
+      "current_price": 5.48,
+      "report_pnl": 113.2,
+      "conviction": null,
+      "thesis_status": null,
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "LLM DD (HIGH confidence): The price has already moved significantly (+123.0%) since the report, fully capturing the edge identified at $2.57. With such a large price increase and no new supporting evidence to validate the long position, the rationale for entering a trade has been invalidated.",
+      "dd_decisions": [
+        "KILL"
+      ],
+      "dd_price_move": 123.0,
+      "dd_staleness_hours": 218,
+      "price_count": 23,
+      "first_price": 5.73,
+      "last_price": 5.48,
+      "price_min": 5.48,
+      "price_max": 5.73,
+      "tracked_move_pct": -4.363001745200698,
+      "kill_category": "thesis_invalid"
+    },
+    {
+      "id": 164,
+      "ticker": "NVTS",
+      "asset": "Navitas Semiconductor: AI infrastructure",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 77,
+      "band": "A",
+      "current_price": 8.09,
+      "report_pnl": 96.4,
+      "conviction": null,
+      "thesis_status": null,
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "Price moved 99.5% in thesis direction \u2014 edge captured",
+      "dd_decisions": [
+        "KILL"
+      ],
+      "dd_price_move": 99.5,
+      "dd_staleness_hours": 271,
+      "price_count": 23,
+      "first_price": 8.22,
+      "last_price": 8.09,
+      "price_min": 8.09,
+      "price_max": 8.22,
+      "tracked_move_pct": -1.5815085158150948,
+      "kill_category": "edge_already_captured"
+    },
+    {
+      "id": 165,
+      "ticker": "AEHR",
+      "asset": "Aehr Test Systems: market growth",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 55,
+      "band": "B",
+      "current_price": 29.01,
+      "report_pnl": 51.7,
+      "conviction": null,
+      "thesis_status": null,
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "Price moved 49.0% in thesis direction \u2014 edge captured",
+      "dd_decisions": [
+        "KILL"
+      ],
+      "dd_price_move": 49.0,
+      "dd_staleness_hours": 271,
+      "price_count": 23,
+      "first_price": 28.49,
+      "last_price": 29.01,
+      "price_min": 28.49,
+      "price_max": 29.01,
+      "tracked_move_pct": 1.8252018252018363,
+      "kill_category": "edge_already_captured"
+    },
+    {
+      "id": 91,
+      "ticker": "INTC",
+      "asset": "Intel: client/PC processor roadmap & launch signals",
+      "state": "KILLED",
+      "direction": "SHORT",
+      "confidence": 76,
+      "band": "A",
+      "current_price": 45.46,
+      "report_pnl": 10.1,
+      "conviction": 2,
+      "thesis_status": null,
+      "signal_velocity": null,
+      "signal_hits": null,
+      "status_reason": "KILL (watching): With major outlets covering Intel's roadmap leaks, the market has likely captured the edge. The signal propagation is now mainstream, which diminishes any potential for asymmetrical returns. The origi",
+      "dd_decisions": [
+        "WATCH"
+      ],
+      "dd_price_move": 8.7,
+      "dd_staleness_hours": 218,
+      "price_count": 23,
+      "first_price": 46.18,
+      "last_price": 45.46,
+      "price_min": 45.46,
+      "price_max": 46.18,
+      "tracked_move_pct": -1.5591165006496293,
+      "kill_category": "signal_propagated"
+    },
+    {
+      "id": 128,
+      "ticker": "MU",
+      "asset": "Memory tightness (pricing/shortage + HBM demand pull)",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 88,
+      "band": "A",
+      "current_price": 420.95,
+      "report_pnl": 6.7,
+      "conviction": 4,
+      "thesis_status": null,
+      "signal_velocity": null,
+      "signal_hits": null,
+      "status_reason": "KILL (watching): The original thesis suggested a significant LONG opportunity for Micron based on supplier-side tightness and pricing power. However, with the signal now propagating widely and major coverage indicatin",
+      "dd_decisions": [
+        "WATCH"
+      ],
+      "dd_price_move": 1.3,
+      "dd_staleness_hours": 236,
+      "price_count": 23,
+      "first_price": 399.78,
+      "last_price": 420.95,
+      "price_min": 399.78,
+      "price_max": 420.95,
+      "tracked_move_pct": 5.295412476862279,
+      "kill_category": "signal_propagated"
+    },
+    {
+      "id": 89,
+      "ticker": "QCOM",
+      "asset": "Qualcomm India: chip design / ecosystem build",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 94,
+      "band": "A",
+      "current_price": 143.24,
+      "report_pnl": 4.3,
+      "conviction": 2,
+      "thesis_status": null,
+      "signal_velocity": null,
+      "signal_hits": null,
+      "status_reason": "KILL (watching): The original thesis surrounding Qualcomm's India 2nm tape-out is losing relevance, as the signal has propagated to major outlets, indicating that the edge may have been fully captured by the market. T",
+      "dd_decisions": [
+        "WATCH"
+      ],
+      "dd_price_move": 3.9,
+      "dd_staleness_hours": 218,
+      "price_count": 23,
+      "first_price": 142.63,
+      "last_price": 143.24,
+      "price_min": 142.63,
+      "price_max": 143.24,
+      "tracked_move_pct": 0.42768001121784593,
+      "kill_category": "signal_propagated"
+    },
+    {
+      "id": 162,
+      "ticker": "TSM",
+      "asset": "Packaging/foundry capacity positioning",
+      "state": "ACTIVE",
+      "direction": "LONG",
+      "confidence": 72,
+      "band": "A",
+      "entry_price": 364.2,
+      "current_price": 362.26,
+      "report_pnl": 3.8,
+      "trade_pnl": -0.5,
+      "conviction": 7,
+      "thesis_status": "weakening",
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "ENTERED: conviction 8/10, signal propagating, The mechanism connecting TSM's capacity positioning in advanced packaging to AI/HPC throughput is gaining traction as corroborated by recent publicati",
+      "dd_decisions": [
+        "WATCH",
+        "WATCH"
+      ],
+      "dd_price_move": 4.4,
+      "dd_staleness_hours": 268,
+      "price_count": 23,
+      "first_price": 364.2,
+      "last_price": 362.26,
+      "price_min": 362.2,
+      "price_max": 364.2,
+      "tracked_move_pct": -0.5326743547501367,
+      "kill_category": "signal_propagated"
+    },
+    {
+      "id": 94,
+      "ticker": "RTX",
+      "asset": "[Event] partnership: Raytheon",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 62,
+      "band": "B",
+      "current_price": 204.81,
+      "report_pnl": 3.1,
+      "conviction": null,
+      "thesis_status": null,
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "Critical staleness (218h) with moderate confidence (62%)",
+      "dd_decisions": [
+        "KILL"
+      ],
+      "dd_price_move": 2.4,
+      "dd_staleness_hours": 218,
+      "price_count": 23,
+      "first_price": 203.5,
+      "last_price": 204.81,
+      "price_min": 203.5,
+      "price_max": 204.81,
+      "tracked_move_pct": 0.6437346437346448,
+      "kill_category": "staleness"
+    },
+    {
+      "id": 134,
+      "ticker": "SMH",
+      "asset": "UAE: critical minerals supply chain",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 54,
+      "band": "C",
+      "current_price": 412.55,
+      "report_pnl": 2.7,
+      "conviction": null,
+      "thesis_status": null,
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "Critical staleness (236h) with moderate confidence (54%)",
+      "dd_decisions": [
+        "KILL"
+      ],
+      "dd_price_move": 1.5,
+      "dd_staleness_hours": 236,
+      "price_count": 23,
+      "first_price": 407.51,
+      "last_price": 412.55,
+      "price_min": 407.51,
+      "price_max": 412.55,
+      "tracked_move_pct": 1.2367794655345932,
+      "kill_category": "staleness"
+    },
+    {
+      "id": 42,
+      "ticker": "FRMI",
+      "asset": "Fermi, Inc.: litigation",
+      "state": "WATCH",
+      "direction": "SHORT",
+      "confidence": 54,
+      "band": "C",
+      "dd_approved_price": 9.61,
+      "current_price": 9.36,
+      "report_pnl": 2.6,
+      "conviction": 7,
+      "thesis_status": "strengthening",
+      "signal_velocity": null,
+      "signal_hits": null,
+      "status_reason": "DD approved \u2014 watching for signal confirmation",
+      "dd_decisions": [
+        "TRADE",
+        "TRADE",
+        "TRADE",
+        "TRADE",
+        "TRADE",
+        "TRADE",
+        "TRADE",
+        "TRADE"
+      ],
+      "dd_price_move": 0.0,
+      "dd_staleness_hours": 0,
+      "price_count": 24,
+      "first_price": 9.61,
+      "last_price": 9.36,
+      "price_min": 9.36,
+      "price_max": 9.61,
+      "tracked_move_pct": -2.601456815816858,
+      "kill_category": "other"
+    },
+    {
+      "id": 31,
+      "ticker": "XBI",
+      "asset": "Isomorphic Labs: AI applications in drug discovery and biotech innovation",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 64,
+      "band": "B",
+      "dd_approved_price": 122.86,
+      "current_price": 125.6,
+      "report_pnl": 2.2,
+      "conviction": 3,
+      "thesis_status": null,
+      "signal_velocity": null,
+      "signal_hits": null,
+      "status_reason": "KILL (watching): The original thesis connecting Isomorphic Labs' AI-driven productivity narrative to a longer position in XBI is no longer credible as the evidence fails to substantiate the claims. The bearish market",
+      "dd_decisions": [
+        "TRADE",
+        "TRADE"
+      ],
+      "dd_price_move": 0.0,
+      "dd_staleness_hours": 0,
+      "price_count": 46,
+      "first_price": 122.86,
+      "last_price": 125.6,
+      "price_min": 122.86,
+      "price_max": 125.6,
+      "tracked_move_pct": 2.230180693472241,
+      "kill_category": "thesis_invalid"
+    },
+    {
+      "id": 4,
+      "ticker": "XBI",
+      "asset": "Nicox: regulatory approval",
+      "state": "KILLED",
+      "direction": "LONG",
+      "confidence": 55,
+      "band": "B",
+      "dd_approved_price": 122.86,
+      "current_price": 125.6,
+      "report_pnl": 2.2,
+      "conviction": 6,
+      "thesis_status": "intact",
+      "signal_velocity": "quiet",
+      "signal_hits": 0,
+      "status_reason": "Max watch checks exceeded (5 checks)",
+      "dd_decisions": [
+        "TRADE",
+        "TRADE",
+        "TRADE",
+        "TRADE",
+        "WATCH",
+        "WATCH",
+        "WATCH",
+        "WATCH",
+        "WATCH"
+      ],
+      "dd_price_move": 0.0,
+      "dd_staleness_hours": 1,
+      "price_count": 64,
+      "first_price": 122.86,
+      "last_price": 125.6,
+      "price_min": 122.86,
+      "price_max": 125.6,
+      "tracked_move_pct": 2.230180693472241,
+      "kill_category": "max_watch_exceeded"
+    }
+  ],
+  "gap_analysis": [
+    {
+      "ticker": "ASML",
+      "report_pnl": 237.2,
+      "tracked_move": 3.447012917494264,
+      "staleness": 152,
+      "state": "KILLED",
+      "pre_tracking_move": 233.7529870825057
+    },
+    {
+      "ticker": "ATOM",
+      "report_pnl": 113.2,
+      "tracked_move": -4.363001745200698,
+      "staleness": 218,
+      "state": "KILLED",
+      "pre_tracking_move": 117.5630017452007
+    },
+    {
+      "ticker": "NVTS",
+      "report_pnl": 96.4,
+      "tracked_move": -1.5815085158150948,
+      "staleness": 271,
+      "state": "KILLED",
+      "pre_tracking_move": 97.9815085158151
+    },
+    {
+      "ticker": "AEHR",
+      "report_pnl": 51.7,
+      "tracked_move": 1.8252018252018363,
+      "staleness": 271,
+      "state": "KILLED",
+      "pre_tracking_move": 49.874798174798165
+    },
+    {
+      "ticker": "INTC",
+      "report_pnl": 10.1,
+      "tracked_move": -1.5591165006496293,
+      "staleness": 218,
+      "state": "KILLED",
+      "pre_tracking_move": 11.65911650064963
+    },
+    {
+      "ticker": "MU",
+      "report_pnl": 6.7,
+      "tracked_move": 5.295412476862279,
+      "staleness": 236,
+      "state": "KILLED",
+      "pre_tracking_move": 1.404587523137721
+    },
+    {
+      "ticker": "QCOM",
+      "report_pnl": 4.3,
+      "tracked_move": 0.42768001121784593,
+      "staleness": 218,
+      "state": "KILLED",
+      "pre_tracking_move": 3.872319988782154
+    },
+    {
+      "ticker": "TSM",
+      "report_pnl": 3.8,
+      "tracked_move": -0.5326743547501367,
+      "staleness": 268,
+      "state": "ACTIVE",
+      "pre_tracking_move": 4.332674354750137
+    },
+    {
+      "ticker": "RTX",
+      "report_pnl": 3.1,
+      "tracked_move": 0.6437346437346448,
+      "staleness": 218,
+      "state": "KILLED",
+      "pre_tracking_move": 2.456265356265355
+    },
+    {
+      "ticker": "SMH",
+      "report_pnl": 2.7,
+      "tracked_move": 1.2367794655345932,
+      "staleness": 236,
+      "state": "KILLED",
+      "pre_tracking_move": 1.463220534465407
+    },
+    {
+      "ticker": "FRMI",
+      "report_pnl": 2.6,
+      "tracked_move": -2.601456815816858,
+      "staleness": 0,
+      "state": "WATCH",
+      "pre_tracking_move": 5.201456815816858
+    },
+    {
+      "ticker": "XBI",
+      "report_pnl": 2.2,
+      "tracked_move": 2.230180693472241,
+      "staleness": 0,
+      "state": "KILLED",
+      "pre_tracking_move": -0.030180693472240616
+    },
+    {
+      "ticker": "XBI",
+      "report_pnl": 2.2,
+      "tracked_move": 2.230180693472241,
+      "staleness": 1,
+      "state": "KILLED",
+      "pre_tracking_move": -0.030180693472240616
+    }
+  ],
+  "band_performance": {
+    "A": {
+      "count": 12,
+      "wins": 7,
+      "losses": 5,
+      "win_rate": 58.333333333333336,
+      "avg_pnl": 28.516666666666666,
+      "total_pnl": 342.2,
+      "best": {
+        "id": 79,
+        "ticker": "ASML",
+        "asset": "ASML Holding N.V.: business restructuring",
+        "state": "KILLED",
+        "direction": "LONG",
+        "confidence": 70,
+        "band": "A",
+        "current_price": 1468.72,
+        "report_pnl": 237.2,
+        "conviction": null,
+        "thesis_status": null,
+        "signal_velocity": "quiet",
+        "signal_hits": 0,
+        "status_reason": "Price moved 225.9% in thesis direction \u2014 edge captured",
+        "dd_decisions": [
+          "KILL"
+        ],
+        "dd_price_move": 225.9,
+        "dd_staleness_hours": 152,
+        "price_count": 23,
+        "first_price": 1419.78,
+        "last_price": 1468.72,
+        "price_min": 1419.78,
+        "price_max": 1468.72,
+        "tracked_move_pct": 3.447012917494264,
+        "kill_category": "edge_already_captured"
+      },
+      "worst": {
+        "id": 166,
+        "ticker": "NVDA",
+        "asset": "US-China export controls / restrictions impacting AI chips",
+        "state": "KILLED",
+        "direction": "SHORT",
+        "confidence": 77,
+        "band": "A",
+        "current_price": 187.98,
+        "report_pnl": -9.4,
+        "conviction": 1,
+        "thesis_status": null,
+        "signal_velocity": null,
+        "signal_hits": null,
+        "status_reason": "KILL (watching): The original thesis around Nvidia's export controls impacting AI chips was based on supplier-side risks. However, with signal propagation shifting to mainstream media and recent articles suggesting re",
+        "dd_decisions": [
+          "WATCH",
+          "WATCH"
+        ],
+        "dd_price_move": 7.6,
+        "dd_staleness_hours": 287,
+        "price_count": 23,
+        "first_price": 184.97,
+        "last_price": 187.98,
+        "price_min": 184.97,
+        "price_max": 187.98,
+        "tracked_move_pct": 1.6272909120397854,
+        "kill_category": "signal_propagated"
+      }
+    },
+    "B": {
+      "count": 20,
+      "wins": 6,
+      "losses": 14,
+      "win_rate": 30.0,
+      "avg_pnl": -0.5750000000000001,
+      "total_pnl": -11.500000000000002,
+      "best": {
+        "id": 165,
+        "ticker": "AEHR",
+        "asset": "Aehr Test Systems: market growth",
+        "state": "KILLED",
+        "direction": "LONG",
+        "confidence": 55,
+        "band": "B",
+        "current_price": 29.01,
+        "report_pnl": 51.7,
+        "conviction": null,
+        "thesis_status": null,
+        "signal_velocity": "quiet",
+        "signal_hits": 0,
+        "status_reason": "Price moved 49.0% in thesis direction \u2014 edge captured",
+        "dd_decisions": [
+          "KILL"
+        ],
+        "dd_price_move": 49.0,
+        "dd_staleness_hours": 271,
+        "price_count": 23,
+        "first_price": 28.49,
+        "last_price": 29.01,
+        "price_min": 28.49,
+        "price_max": 29.01,
+        "tracked_move_pct": 1.8252018252018363,
+        "kill_category": "edge_already_captured"
+      },
+      "worst": {
+        "id": 97,
+        "ticker": "GILT",
+        "asset": "Gilat Satellite Networks: unknown",
+        "state": "KILLED",
+        "direction": "LONG",
+        "confidence": 57,
+        "band": "B",
+        "current_price": 14.56,
+        "report_pnl": -21.1,
+        "conviction": 2,
+        "thesis_status": null,
+        "signal_velocity": null,
+        "signal_hits": null,
+        "status_reason": "KILL (watching): The original thesis about Gilat's growth potential based on order flow and backlog visibility is undermined by strong mainstream coverage, indicating that the edge may already be captured. Given the c",
+        "dd_decisions": [
+          "WATCH"
+        ],
+        "dd_price_move": 23.0,
+        "dd_staleness_hours": 218,
+        "price_count": 23,
+        "first_price": 14.21,
+        "last_price": 14.56,
+        "price_min": 14.21,
+        "price_max": 14.56,
+        "tracked_move_pct": 2.4630541871921157,
+        "kill_category": "signal_propagated"
+      }
+    },
+    "C": {
+      "count": 14,
+      "wins": 5,
+      "losses": 9,
+      "win_rate": 35.714285714285715,
+      "avg_pnl": 6.8999999999999995,
+      "total_pnl": 96.6,
+      "best": {
+        "id": 101,
+        "ticker": "ATOM",
+        "asset": "Atomera Incorporated: licensing / GaN-on-Si",
+        "state": "KILLED",
+        "direction": "LONG",
+        "confidence": 53,
+        "band": "C",
+        "current_price": 5.48,
+        "report_pnl": 113.2,
+        "conviction": null,
+        "thesis_status": null,
+        "signal_velocity": "quiet",
+        "signal_hits": 0,
+        "status_reason": "LLM DD (HIGH confidence): The price has already moved significantly (+123.0%) since the report, fully capturing the edge identified at $2.57. With such a large price increase and no new supporting evidence to validate the long position, the rationale for entering a trade has been invalidated.",
+        "dd_decisions": [
+          "KILL"
+        ],
+        "dd_price_move": 123.0,
+        "dd_staleness_hours": 218,
+        "price_count": 23,
+        "first_price": 5.73,
+        "last_price": 5.48,
+        "price_min": 5.48,
+        "price_max": 5.73,
+        "tracked_move_pct": -4.363001745200698,
+        "kill_category": "thesis_invalid"
+      },
+      "worst": {
+        "id": 43,
+        "ticker": "PXED",
+        "asset": "Phoenix Education Partners, Inc.: litigation developments",
+        "state": "WATCH",
+        "direction": "SHORT",
+        "confidence": 52,
+        "band": "C",
+        "dd_approved_price": 28.48,
+        "current_price": 30.02,
+        "report_pnl": -5.4,
+        "conviction": 6,
+        "thesis_status": "intact",
+        "signal_velocity": null,
+        "signal_hits": null,
+        "status_reason": "DD approved \u2014 watching for signal confirmation",
+        "dd_decisions": [
+          "TRADE",
+          "TRADE",
+          "TRADE",
+          "TRADE",
+          "TRADE",
+          "TRADE",
+          "TRADE",
+          "TRADE"
+        ],
+        "dd_price_move": 0.0,
+        "dd_staleness_hours": 0,
+        "price_count": 24,
+        "first_price": 28.48,
+        "last_price": 30.02,
+        "price_min": 28.48,
+        "price_max": 30.02,
+        "tracked_move_pct": 5.407303370786514,
+        "kill_category": "other"
+      }
+    }
+  },
+  "direction_performance": {
+    "LONG": {
+      "count": 31,
+      "wins": 15,
+      "win_rate": 48.38709677419355,
+      "avg_pnl": 14.425806451612903,
+      "total_pnl": 447.2
+    },
+    "SHORT": {
+      "count": 15,
+      "wins": 3,
+      "win_rate": 20.0,
+      "avg_pnl": -1.326666666666667,
+      "total_pnl": -19.900000000000006
+    }
+  },
+  "confidence_performance": {
+    "70-100% (High)": {
+      "count": 11,
+      "wins": 6,
+      "win_rate": 54.54545454545454,
+      "avg_pnl": 31.05454545454546,
+      "total_pnl": 341.6
+    },
+    "55-69% (Medium)": {
+      "count": 21,
+      "wins": 7,
+      "win_rate": 33.33333333333333,
+      "avg_pnl": -0.5190476190476188,
+      "total_pnl": -10.899999999999993
+    },
+    "45-54% (Low)": {
+      "count": 14,
+      "wins": 5,
+      "win_rate": 35.714285714285715,
+      "avg_pnl": 6.8999999999999995,
+      "total_pnl": 96.6
+    }
+  },
+  "kill_analysis": {
+    "signal_propagated": {
+      "count": 20,
+      "winners_killed": 6,
+      "total_pnl_lost": 26.5,
+      "examples": [
+        {
+          "id": 91,
+          "ticker": "INTC",
+          "asset": "Intel: client/PC processor roadmap & launch signals",
+          "state": "KILLED",
+          "direction": "SHORT",
+          "confidence": 76,
+          "band": "A",
+          "current_price": 45.46,
+          "report_pnl": 10.1,
+          "conviction": 2,
+          "thesis_status": null,
+          "signal_velocity": null,
+          "signal_hits": null,
+          "status_reason": "KILL (watching): With major outlets covering Intel's roadmap leaks, the market has likely captured the edge. The signal propagation is now mainstream, which diminishes any potential for asymmetrical returns. The origi",
+          "dd_decisions": [
+            "WATCH"
+          ],
+          "dd_price_move": 8.7,
+          "dd_staleness_hours": 218,
+          "price_count": 23,
+          "first_price": 46.18,
+          "last_price": 45.46,
+          "price_min": 45.46,
+          "price_max": 46.18,
+          "tracked_move_pct": -1.5591165006496293,
+          "kill_category": "signal_propagated"
+        },
+        {
+          "id": 128,
+          "ticker": "MU",
+          "asset": "Memory tightness (pricing/shortage + HBM demand pull)",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 88,
+          "band": "A",
+          "current_price": 420.95,
+          "report_pnl": 6.7,
+          "conviction": 4,
+          "thesis_status": null,
+          "signal_velocity": null,
+          "signal_hits": null,
+          "status_reason": "KILL (watching): The original thesis suggested a significant LONG opportunity for Micron based on supplier-side tightness and pricing power. However, with the signal now propagating widely and major coverage indicatin",
+          "dd_decisions": [
+            "WATCH"
+          ],
+          "dd_price_move": 1.3,
+          "dd_staleness_hours": 236,
+          "price_count": 23,
+          "first_price": 399.78,
+          "last_price": 420.95,
+          "price_min": 399.78,
+          "price_max": 420.95,
+          "tracked_move_pct": 5.295412476862279,
+          "kill_category": "signal_propagated"
+        },
+        {
+          "id": 89,
+          "ticker": "QCOM",
+          "asset": "Qualcomm India: chip design / ecosystem build",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 94,
+          "band": "A",
+          "current_price": 143.24,
+          "report_pnl": 4.3,
+          "conviction": 2,
+          "thesis_status": null,
+          "signal_velocity": null,
+          "signal_hits": null,
+          "status_reason": "KILL (watching): The original thesis surrounding Qualcomm's India 2nm tape-out is losing relevance, as the signal has propagated to major outlets, indicating that the edge may have been fully captured by the market. T",
+          "dd_decisions": [
+            "WATCH"
+          ],
+          "dd_price_move": 3.9,
+          "dd_staleness_hours": 218,
+          "price_count": 23,
+          "first_price": 142.63,
+          "last_price": 143.24,
+          "price_min": 142.63,
+          "price_max": 143.24,
+          "tracked_move_pct": 0.42768001121784593,
+          "kill_category": "signal_propagated"
+        }
+      ]
+    },
+    "thesis_invalid": {
+      "count": 2,
+      "winners_killed": 2,
+      "total_pnl_lost": 115.4,
+      "examples": [
+        {
+          "id": 101,
+          "ticker": "ATOM",
+          "asset": "Atomera Incorporated: licensing / GaN-on-Si",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 53,
+          "band": "C",
+          "current_price": 5.48,
+          "report_pnl": 113.2,
+          "conviction": null,
+          "thesis_status": null,
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "LLM DD (HIGH confidence): The price has already moved significantly (+123.0%) since the report, fully capturing the edge identified at $2.57. With such a large price increase and no new supporting evidence to validate the long position, the rationale for entering a trade has been invalidated.",
+          "dd_decisions": [
+            "KILL"
+          ],
+          "dd_price_move": 123.0,
+          "dd_staleness_hours": 218,
+          "price_count": 23,
+          "first_price": 5.73,
+          "last_price": 5.48,
+          "price_min": 5.48,
+          "price_max": 5.73,
+          "tracked_move_pct": -4.363001745200698,
+          "kill_category": "thesis_invalid"
+        },
+        {
+          "id": 31,
+          "ticker": "XBI",
+          "asset": "Isomorphic Labs: AI applications in drug discovery and biotech innovation",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 64,
+          "band": "B",
+          "dd_approved_price": 122.86,
+          "current_price": 125.6,
+          "report_pnl": 2.2,
+          "conviction": 3,
+          "thesis_status": null,
+          "signal_velocity": null,
+          "signal_hits": null,
+          "status_reason": "KILL (watching): The original thesis connecting Isomorphic Labs' AI-driven productivity narrative to a longer position in XBI is no longer credible as the evidence fails to substantiate the claims. The bearish market",
+          "dd_decisions": [
+            "TRADE",
+            "TRADE"
+          ],
+          "dd_price_move": 0.0,
+          "dd_staleness_hours": 0,
+          "price_count": 46,
+          "first_price": 122.86,
+          "last_price": 125.6,
+          "price_min": 122.86,
+          "price_max": 125.6,
+          "tracked_move_pct": 2.230180693472241,
+          "kill_category": "thesis_invalid"
+        }
+      ]
+    },
+    "staleness": {
+      "count": 14,
+      "winners_killed": 4,
+      "total_pnl_lost": 7.9,
+      "examples": [
+        {
+          "id": 94,
+          "ticker": "RTX",
+          "asset": "[Event] partnership: Raytheon",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 62,
+          "band": "B",
+          "current_price": 204.81,
+          "report_pnl": 3.1,
+          "conviction": null,
+          "thesis_status": null,
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "Critical staleness (218h) with moderate confidence (62%)",
+          "dd_decisions": [
+            "KILL"
+          ],
+          "dd_price_move": 2.4,
+          "dd_staleness_hours": 218,
+          "price_count": 23,
+          "first_price": 203.5,
+          "last_price": 204.81,
+          "price_min": 203.5,
+          "price_max": 204.81,
+          "tracked_move_pct": 0.6437346437346448,
+          "kill_category": "staleness"
+        },
+        {
+          "id": 134,
+          "ticker": "SMH",
+          "asset": "UAE: critical minerals supply chain",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 54,
+          "band": "C",
+          "current_price": 412.55,
+          "report_pnl": 2.7,
+          "conviction": null,
+          "thesis_status": null,
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "Critical staleness (236h) with moderate confidence (54%)",
+          "dd_decisions": [
+            "KILL"
+          ],
+          "dd_price_move": 1.5,
+          "dd_staleness_hours": 236,
+          "price_count": 23,
+          "first_price": 407.51,
+          "last_price": 412.55,
+          "price_min": 407.51,
+          "price_max": 412.55,
+          "tracked_move_pct": 1.2367794655345932,
+          "kill_category": "staleness"
+        },
+        {
+          "id": 129,
+          "ticker": "NVDA",
+          "asset": "AI infrastructure capex (hyperscalers + Nvidia spillover)",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 63,
+          "band": "B",
+          "current_price": 187.98,
+          "report_pnl": 1.4,
+          "conviction": null,
+          "thesis_status": null,
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "Critical staleness (236h) with moderate confidence (63%)",
+          "dd_decisions": [
+            "KILL"
+          ],
+          "dd_price_move": 0.2,
+          "dd_staleness_hours": 236,
+          "price_count": 23,
+          "first_price": 184.97,
+          "last_price": 187.98,
+          "price_min": 184.97,
+          "price_max": 187.98,
+          "tracked_move_pct": 1.6272909120397854,
+          "kill_category": "staleness"
+        }
+      ]
+    },
+    "edge_already_captured": {
+      "count": 4,
+      "winners_killed": 3,
+      "total_pnl_lost": 385.3,
+      "examples": [
+        {
+          "id": 79,
+          "ticker": "ASML",
+          "asset": "ASML Holding N.V.: business restructuring",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 70,
+          "band": "A",
+          "current_price": 1468.72,
+          "report_pnl": 237.2,
+          "conviction": null,
+          "thesis_status": null,
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "Price moved 225.9% in thesis direction \u2014 edge captured",
+          "dd_decisions": [
+            "KILL"
+          ],
+          "dd_price_move": 225.9,
+          "dd_staleness_hours": 152,
+          "price_count": 23,
+          "first_price": 1419.78,
+          "last_price": 1468.72,
+          "price_min": 1419.78,
+          "price_max": 1468.72,
+          "tracked_move_pct": 3.447012917494264,
+          "kill_category": "edge_already_captured"
+        },
+        {
+          "id": 164,
+          "ticker": "NVTS",
+          "asset": "Navitas Semiconductor: AI infrastructure",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 77,
+          "band": "A",
+          "current_price": 8.09,
+          "report_pnl": 96.4,
+          "conviction": null,
+          "thesis_status": null,
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "Price moved 99.5% in thesis direction \u2014 edge captured",
+          "dd_decisions": [
+            "KILL"
+          ],
+          "dd_price_move": 99.5,
+          "dd_staleness_hours": 271,
+          "price_count": 23,
+          "first_price": 8.22,
+          "last_price": 8.09,
+          "price_min": 8.09,
+          "price_max": 8.22,
+          "tracked_move_pct": -1.5815085158150948,
+          "kill_category": "edge_already_captured"
+        },
+        {
+          "id": 165,
+          "ticker": "AEHR",
+          "asset": "Aehr Test Systems: market growth",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 55,
+          "band": "B",
+          "current_price": 29.01,
+          "report_pnl": 51.7,
+          "conviction": null,
+          "thesis_status": null,
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "Price moved 49.0% in thesis direction \u2014 edge captured",
+          "dd_decisions": [
+            "KILL"
+          ],
+          "dd_price_move": 49.0,
+          "dd_staleness_hours": 271,
+          "price_count": 23,
+          "first_price": 28.49,
+          "last_price": 29.01,
+          "price_min": 28.49,
+          "price_max": 29.01,
+          "tracked_move_pct": 1.8252018252018363,
+          "kill_category": "edge_already_captured"
+        }
+      ]
+    },
+    "other": {
+      "count": 5,
+      "winners_killed": 2,
+      "total_pnl_lost": 3.8,
+      "examples": [
+        {
+          "id": 42,
+          "ticker": "FRMI",
+          "asset": "Fermi, Inc.: litigation",
+          "state": "WATCH",
+          "direction": "SHORT",
+          "confidence": 54,
+          "band": "C",
+          "dd_approved_price": 9.61,
+          "current_price": 9.36,
+          "report_pnl": 2.6,
+          "conviction": 7,
+          "thesis_status": "strengthening",
+          "signal_velocity": null,
+          "signal_hits": null,
+          "status_reason": "DD approved \u2014 watching for signal confirmation",
+          "dd_decisions": [
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE"
+          ],
+          "dd_price_move": 0.0,
+          "dd_staleness_hours": 0,
+          "price_count": 24,
+          "first_price": 9.61,
+          "last_price": 9.36,
+          "price_min": 9.36,
+          "price_max": 9.61,
+          "tracked_move_pct": -2.601456815816858,
+          "kill_category": "other"
+        },
+        {
+          "id": 63,
+          "ticker": "SMH",
+          "asset": "Evolve Business Intelligence: market forecast",
+          "state": "WATCH",
+          "direction": "LONG",
+          "confidence": 54,
+          "band": "C",
+          "dd_approved_price": 407.51,
+          "current_price": 412.55,
+          "report_pnl": 1.2,
+          "conviction": 6,
+          "thesis_status": "intact",
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "DD approved \u2014 watching for signal confirmation",
+          "dd_decisions": [
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE"
+          ],
+          "dd_price_move": 0.0,
+          "dd_staleness_hours": 1,
+          "price_count": 23,
+          "first_price": 407.51,
+          "last_price": 412.55,
+          "price_min": 407.51,
+          "price_max": 412.55,
+          "tracked_move_pct": 1.2367794655345932,
+          "kill_category": "other"
+        }
+      ]
+    },
+    "max_watch_exceeded": {
+      "count": 1,
+      "winners_killed": 1,
+      "total_pnl_lost": 2.2,
+      "examples": [
+        {
+          "id": 4,
+          "ticker": "XBI",
+          "asset": "Nicox: regulatory approval",
+          "state": "KILLED",
+          "direction": "LONG",
+          "confidence": 55,
+          "band": "B",
+          "dd_approved_price": 122.86,
+          "current_price": 125.6,
+          "report_pnl": 2.2,
+          "conviction": 6,
+          "thesis_status": "intact",
+          "signal_velocity": "quiet",
+          "signal_hits": 0,
+          "status_reason": "Max watch checks exceeded (5 checks)",
+          "dd_decisions": [
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "TRADE",
+            "WATCH",
+            "WATCH",
+            "WATCH",
+            "WATCH",
+            "WATCH"
+          ],
+          "dd_price_move": 0.0,
+          "dd_staleness_hours": 1,
+          "price_count": 64,
+          "first_price": 122.86,
+          "last_price": 125.6,
+          "price_min": 122.86,
+          "price_max": 125.6,
+          "tracked_move_pct": 2.230180693472241,
+          "kill_category": "max_watch_exceeded"
+        }
+      ]
+    }
+  },
+  "backtest_scenarios": [
+    {
+      "name": "Semiconductor LONGs only",
+      "positions": 16,
+      "wins": 10,
+      "total_pnl": 497.1,
+      "avg_pnl": 31.06875,
+      "win_rate": 62.5,
+      "tickers": [
+        [
+          "ASML",
+          237.2
+        ],
+        [
+          "ATOM",
+          113.2
+        ],
+        [
+          "NVTS",
+          96.4
+        ],
+        [
+          "AEHR",
+          51.7
+        ],
+        [
+          "MU",
+          6.7
+        ],
+        [
+          "QCOM",
+          4.3
+        ],
+        [
+          "TSM",
+          3.8
+        ],
+        [
+          "SMH",
+          2.7
+        ],
+        [
+          "NVDA",
+          1.4
+        ],
+        [
+          "SMH",
+          1.2
+        ],
+        [
+          "SMH",
+          -0.5
+        ],
+        [
+          "INTC",
+          -1.6
+        ],
+        [
+          "TSM",
+          -3.2
+        ],
+        [
+          "AMD",
+          -4.0
+        ],
+        [
+          "VECO",
+          -4.5
+        ],
+        [
+          "TSEM",
+          -7.7
+        ]
+      ]
+    },
+    {
+      "name": "All Band-A LONGs (ignore staleness)",
+      "positions": 7,
+      "wins": 5,
+      "total_pnl": 343.6,
+      "avg_pnl": 49.08571428571429,
+      "win_rate": 71.42857142857143,
+      "tickers": [
+        [
+          "ASML",
+          237.2
+        ],
+        [
+          "NVTS",
+          96.4
+        ],
+        [
+          "MU",
+          6.7
+        ],
+        [
+          "QCOM",
+          4.3
+        ],
+        [
+          "TSM",
+          3.8
+        ],
+        [
+          "INTC",
+          -1.6
+        ],
+        [
+          "TSM",
+          -3.2
+        ]
+      ]
+    },
+    {
+      "name": "LONG + (Band A OR confidence >= 70%)",
+      "positions": 7,
+      "wins": 5,
+      "total_pnl": 343.6,
+      "avg_pnl": 49.08571428571429,
+      "win_rate": 71.42857142857143,
+      "tickers": [
+        [
+          "ASML",
+          237.2
+        ],
+        [
+          "NVTS",
+          96.4
+        ],
+        [
+          "MU",
+          6.7
+        ],
+        [
+          "QCOM",
+          4.3
+        ],
+        [
+          "TSM",
+          3.8
+        ],
+        [
+          "INTC",
+          -1.6
+        ],
+        [
+          "TSM",
+          -3.2
+        ]
+      ]
+    },
+    {
+      "name": "High confidence >= 70% (any direction)",
+      "positions": 11,
+      "wins": 6,
+      "total_pnl": 341.6,
+      "avg_pnl": 31.05454545454546,
+      "win_rate": 54.54545454545454,
+      "tickers": [
+        [
+          "ASML",
+          237.2
+        ],
+        [
+          "NVTS",
+          96.4
+        ],
+        [
+          "INTC",
+          10.1
+        ],
+        [
+          "MU",
+          6.7
+        ],
+        [
+          "QCOM",
+          4.3
+        ],
+        [
+          "TSM",
+          3.8
+        ],
+        [
+          "META",
+          -0.6
+        ],
+        [
+          "INTC",
+          -1.6
+        ],
+        [
+          "JPM",
+          -2.1
+        ],
+        [
+          "TSM",
+          -3.2
+        ],
+        [
+          "NVDA",
+          -9.4
+        ]
+      ]
+    },
+    {
+      "name": "All LONGs >= 55% confidence",
+      "positions": 22,
+      "wins": 11,
+      "total_pnl": 337.7,
+      "avg_pnl": 15.35,
+      "win_rate": 50.0,
+      "tickers": [
+        [
+          "ASML",
+          237.2
+        ],
+        [
+          "NVTS",
+          96.4
+        ],
+        [
+          "AEHR",
+          51.7
+        ],
+        [
+          "MU",
+          6.7
+        ],
+        [
+          "QCOM",
+          4.3
+        ],
+        [
+          "TSM",
+          3.8
+        ],
+        [
+          "RTX",
+          3.1
+        ],
+        [
+          "XBI",
+          2.2
+        ],
+        [
+          "XBI",
+          2.2
+        ],
+        [
+          "NVDA",
+          1.4
+        ],
+        [
+          "KKR",
+          1.0
+        ],
+        [
+          "SGSOY",
+          -0.7
+        ],
+        [
+          "INTC",
+          -1.6
+        ],
+        [
+          "VSH",
+          -2.8
+        ],
+        [
+          "TSM",
+          -3.2
+        ],
+        [
+          "AMD",
+          -4.0
+        ],
+        [
+          "VECO",
+          -4.5
+        ],
+        [
+          "J",
+          -4.9
+        ],
+        [
+          "688008.SS",
+          -5.1
+        ],
+        [
+          "TSEM",
+          -7.7
+        ],
+        [
+          "USAR",
+          -16.7
+        ],
+        [
+          "GILT",
+          -21.1
+        ]
+      ]
+    },
+    {
+      "name": "Band A+B LONGs only (drop shorts)",
+      "positions": 22,
+      "wins": 11,
+      "total_pnl": 337.7,
+      "avg_pnl": 15.35,
+      "win_rate": 50.0,
+      "tickers": [
+        [
+          "ASML",
+          237.2
+        ],
+        [
+          "NVTS",
+          96.4
+        ],
+        [
+          "AEHR",
+          51.7
+        ],
+        [
+          "MU",
+          6.7
+        ],
+        [
+          "QCOM",
+          4.3
+        ],
+        [
+          "TSM",
+          3.8
+        ],
+        [
+          "RTX",
+          3.1
+        ],
+        [
+          "XBI",
+          2.2
+        ],
+        [
+          "XBI",
+          2.2
+        ],
+        [
+          "NVDA",
+          1.4
+        ],
+        [
+          "KKR",
+          1.0
+        ],
+        [
+          "SGSOY",
+          -0.7
+        ],
+        [
+          "INTC",
+          -1.6
+        ],
+        [
+          "VSH",
+          -2.8
+        ],
+        [
+          "TSM",
+          -3.2
+        ],
+        [
+          "AMD",
+          -4.0
+        ],
+        [
+          "VECO",
+          -4.5
+        ],
+        [
+          "J",
+          -4.9
+        ],
+        [
+          "688008.SS",
+          -5.1
+        ],
+        [
+          "TSEM",
+          -7.7
+        ],
+        [
+          "USAR",
+          -16.7
+        ],
+        [
+          "GILT",
+          -21.1
+        ]
+      ]
+    },
+    {
+      "name": "All DD=TRADE decisions (the system's own picks)",
+      "positions": 20,
+      "wins": 7,
+      "total_pnl": -14.4,
+      "avg_pnl": -0.72,
+      "win_rate": 35.0,
+      "tickers": [
+        [
+          "FRMI",
+          2.6
+        ],
+        [
+          "XBI",
+          2.2
+        ],
+        [
+          "XBI",
+          2.2
+        ],
+        [
+          "SMH",
+          1.2
+        ],
+        [
+          "KKR",
+          1.0
+        ],
+        [
+          "SPY",
+          0.7
+        ],
+        [
+          "CRWV",
+          0.6
+        ],
+        [
+          "VOW3.DE",
+          -0.1
+        ],
+        [
+          "META",
+          -0.6
+        ],
+        [
+          "SPY",
+          -0.7
+        ],
+        [
+          "SGSOY",
+          -0.7
+        ],
+        [
+          "ARX",
+          -0.9
+        ],
+        [
+          "SMH",
+          -1.2
+        ],
+        [
+          "INTC",
+          -1.6
+        ],
+        [
+          "LLY",
+          -1.9
+        ],
+        [
+          "JPM",
+          -2.1
+        ],
+        [
+          "XBI",
+          -2.2
+        ],
+        [
+          "ORGN",
+          -3.1
+        ],
+        [
+          "SLDB",
+          -4.4
+        ],
+        [
+          "PXED",
+          -5.4
+        ]
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "number": 1,
+      "title": "LONG bias is critical",
+      "evidence": "LONGs: 48% win rate, 14.4% avg PnL, +447.2% total. SHORTs: 20% win rate, -1.3% avg PnL, -19.9% total.",
+      "rule": "Default to LONG unless SHORT thesis has Band A confidence (>=65%) AND specific catalyst event.",
+      "impact": "HIGH"
+    },
+    {
+      "number": 2,
+      "title": "Band A is the edge",
+      "evidence": "Band A: 58% win rate, +28.5% avg PnL, +342.2% total. Band B: 30% win rate, -0.6% avg PnL. Band C: 36% win rate, +6.9% avg PnL.",
+      "rule": "Always trade Band A. Band B only if LONG. Band C only if LONG + specific catalyst + signal stirring or better.",
+      "impact": "HIGH"
+    },
+    {
+      "number": 3,
+      "title": "Staleness kills are the #1 destroyer of value",
+      "evidence": "The 4 biggest winners (ASML +237%, ATOM +113%, NVTS +96%, AEHR +52%) were ALL killed for staleness or 'edge captured'. Combined missed profit: +498.5%. The system saw them, evaluated them, and said no.",
+      "rule": "NEVER auto-kill a Band A position for staleness alone. Instead, check if tracked price movement is < 5% \u2014 if the price hasn't moved much since we started tracking, the 'edge captured' assessment is wrong.",
+      "impact": "CRITICAL"
+    },
+    {
+      "number": 4,
+      "title": "Report PnL vs Tracked PnL: the staleness illusion",
+      "evidence": "ASML showed +237% report PnL but only +3.4% tracked price movement. NVTS showed +96% report PnL but -1.6% tracked movement. The massive report PnL was from a much earlier report price \u2014 by the time we tracked, price had already moved. But crucially, many STILL had room to run.",
+      "rule": "When staleness > 100h, compare report_price to first_tracked_price. If the gap is >10%, the edge is partially captured. But also check: is the tracked movement still positive? If yes, the thesis is still working.",
+      "impact": "HIGH"
+    },
+    {
+      "number": 5,
+      "title": "Semiconductor LONGs are the sweet spot",
+      "evidence": "Semiconductor LONGs generated the bulk of the P&L: ASML (+237%), NVTS (+96%), AEHR (+52%), MU (+6.7%), QCOM (+4.3%), TSM (+3.8%). The thesis signals from semiconductor reports are higher quality.",
+      "rule": "Apply lower threshold for semiconductor LONGs: trade at Band B or better, confidence >= 55%.",
+      "impact": "MEDIUM"
+    },
+    {
+      "number": 6,
+      "title": "DD TRADE decisions are actually decent stock pickers",
+      "evidence": "Positions where DD said TRADE had mixed results but selected real movers (XBI +2.2%, KKR +1.0%). The problem is the TRADE->WATCH->never-ACTIVE pipeline, not the stock selection.",
+      "rule": "When DD says TRADE with high confidence, enter immediately. Don't park in WATCH waiting for signal confirmation \u2014 the signal IS the report.",
+      "impact": "HIGH"
+    },
+    {
+      "number": 7,
+      "title": "Stop killing for 'signal propagated to mainstream'",
+      "evidence": "20 positions were killed because signal reached mainstream media. But mainstream coverage is CONFIRMATION, not invalidation. INTC SHORT (+10.1%) was killed when Bloomberg covered it \u2014 that was the profit window opening, not closing.",
+      "rule": "Signal propagation to mainstream should trigger a TIGHTER stop-loss, not an auto-kill. Set trailing stop at 50% of current gain when signal goes mainstream.",
+      "impact": "HIGH"
+    },
+    {
+      "number": 8,
+      "title": "5 watch checks is too few",
+      "evidence": "XBI (position 4) was killed after 5 watch checks with +2.2% report PnL and 9 DD decisions (TRADE x4, WATCH x5). The system believed in it, ran out of patience.",
+      "rule": "Increase MAX_WATCH_CHECKS to 8 for Band A/B. For positions where DD ever said TRADE, extend to 10 checks.",
+      "impact": "MEDIUM"
+    }
+  ]
+}
