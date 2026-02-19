@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-19T20:54:37.944222+00:00",
+  "updated_at": "2026-02-19T21:02:51.694253+00:00",
   "total_positions": 204,
   "active_count": 2,
   "publish_count": 0,
@@ -76,7 +76,7 @@
       "headline": "SGS Says Belgium Cleared Its Radiolabelled ADME Unit Again - Small Operational G",
       "publish_headline": "",
       "kill_reason": "",
-      "state_reason": "Stale (69h) but IGNITE propagation \u2014 edge may still fire",
+      "state_reason": "Stale (71h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
       "watching_for": "Looking for any official confirmation from SGS, documentation from the Belgian r",
