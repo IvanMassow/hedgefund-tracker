@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-19T20:49:21.822213+00:00",
+  "updated_at": "2026-02-19T20:54:37.944222+00:00",
   "total_positions": 204,
   "active_count": 2,
   "publish_count": 0,
@@ -79,7 +79,7 @@
       "state_reason": "Stale (69h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will watch for any official confirmation from SGS, documentation from the Belg",
+      "watching_for": "Looking for any official confirmation from SGS, documentation from the Belgian r",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -102,7 +102,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will watch for press releases from Volkswagen detailing the court dates and an",
+      "watching_for": "I'm monitoring for any press releases from Volkswagen regarding upcoming court p",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -125,7 +125,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 7,
       "thesis_status": "strengthening",
-      "watching_for": "I will be monitoring for more authoritative news coverage regarding FRMI's litig",
+      "watching_for": "I will be monitoring for authoritative news coverage regarding FRMI's litigation",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
@@ -148,7 +148,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will be looking for credible announcements regarding active litigation, case n",
+      "watching_for": "I will be on the lookout for credible announcements regarding active litigation ",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
