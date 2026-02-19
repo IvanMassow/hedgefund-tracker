@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-19T17:47:40.015255+00:00",
+  "updated_at": "2026-02-19T17:52:59.804863+00:00",
   "total_positions": 204,
   "active_count": 3,
   "publish_count": 0,
@@ -82,7 +82,7 @@
       "watching_for": "Next, I will monitor for any further commentary from regulatory bodies or additi",
       "journal_count": 1,
       "signal_velocity": "mainstream",
-      "signal_hits_24h": 15
+      "signal_hits_24h": 16
     },
     {
       "asset": "SGS: regulatory approval",
@@ -102,7 +102,7 @@
       "state_reason": "Stale (66h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will continue to monitor for any official announcements from SGS regarding the",
+      "watching_for": "I'm looking for any official confirmation from SGS regarding the regulatory appr",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -125,7 +125,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I am looking for press releases from Volkswagen that detail the impact of the up",
+      "watching_for": "I will closely monitor for any press releases from Volkswagen regarding the cour",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -148,7 +148,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 7,
       "thesis_status": "strengthening",
-      "watching_for": "I will continue to monitor for any authoritative news coverage on FRMI's litigat",
+      "watching_for": "I will look for authoritative coverage regarding the litigation, any actionable ",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
@@ -171,7 +171,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I'm looking for credible announcements of active litigation developments, along ",
+      "watching_for": "I am specifically looking for credible announcements regarding active litigation",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
