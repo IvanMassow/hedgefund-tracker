@@ -490,28 +490,34 @@ def _build_research_row(m):
 # ---------------------------------------------------------------------------
 
 def _build_backtest_card(s):
-    """Build the backtest performance summary card."""
+    """Build the signal performance summary card for qualified signals."""
+    total_pnl = s.get("qualified_total_pnl", 0)
+    avg_pnl = s.get("qualified_avg_pnl", 0)
+    total_color = "#16a34a" if total_pnl >= 0 else "#cc0000"
+    total_sign = "+" if total_pnl >= 0 else ""
+    avg_color = "#16a34a" if avg_pnl >= 0 else "#cc0000"
+    avg_sign = "+" if avg_pnl >= 0 else ""
     return """<div class="backtest-card">
     <div class="backtest-header">
         <span class="backtest-icon">&#9889;</span>
-        Backtest Performance &mdash; Qualified Signals
+        Signal Performance &mdash; Qualified Signals
     </div>
     <div class="backtest-stats">
         <div class="backtest-stat">
             <div class="backtest-num">{trades}</div>
-            <div class="backtest-label">Trades</div>
+            <div class="backtest-label">Signals</div>
         </div>
         <div class="backtest-stat">
             <div class="backtest-num">{win_rate:.0f}%</div>
             <div class="backtest-label">Win Rate</div>
         </div>
         <div class="backtest-stat">
-            <div class="backtest-num" style="color:#16a34a">+{total_pnl:.0f}%</div>
+            <div class="backtest-num" style="color:{total_color}">{total_sign}{total_pnl:.0f}%</div>
             <div class="backtest-label">Total P&amp;L</div>
         </div>
         <div class="backtest-stat">
-            <div class="backtest-num" style="color:#16a34a">+{avg_pnl:.1f}%</div>
-            <div class="backtest-label">Avg per Trade</div>
+            <div class="backtest-num" style="color:{avg_color}">{avg_sign}{avg_pnl:.1f}%</div>
+            <div class="backtest-label">Avg per Signal</div>
         </div>
         <div class="backtest-stat">
             <div class="backtest-num" style="color:var(--accent)">{profit_factor:.2f}&times;</div>
@@ -519,15 +525,19 @@ def _build_backtest_card(s):
         </div>
     </div>
     <div class="backtest-rules">
-        <span class="rules-label">Rules:</span>
-        Band A/B/C LONG auto-enter &middot; +15% take profit &middot; -8% stop loss &middot; 96h max hold
+        <span class="rules-label">Scope:</span>
+        Band A/B/C LONG signals &middot; Tracked since discovery &middot; Report P&amp;L from signal price
     </div>
 </div>""".format(
-        trades=s["backtest_trades"],
-        win_rate=s["backtest_win_rate"],
-        total_pnl=s["backtest_total_pnl"],
-        avg_pnl=s["backtest_avg_pnl"],
-        profit_factor=s["backtest_profit_factor"])
+        trades=s.get("qualified_measured", 0),
+        win_rate=s.get("qualified_win_rate", 0),
+        total_pnl=total_pnl,
+        total_color=total_color,
+        total_sign=total_sign,
+        avg_pnl=avg_pnl,
+        avg_color=avg_color,
+        avg_sign=avg_sign,
+        profit_factor=s.get("signal_profit_factor", 0))
 
 
 # ---------------------------------------------------------------------------
@@ -656,7 +666,7 @@ def _build_band_cards(band_perf):
         members_html = ""
         for mem in bp.get("members", [])[:6]:
             dot = _status_dot(mem.get("status", "grey"))
-            mem_pnl = mem.get("current_pnl")
+            mem_pnl = mem.get("report_pnl")
             mem_pnl_str = "{:.1f}%".format(mem_pnl) if mem_pnl is not None else "---"
             members_html += '<div class="member">{dot} {name} ({ticker}) <span style="margin-left:auto;font-weight:700">{pnl}</span></div>'.format(
                 dot=dot,
@@ -670,14 +680,14 @@ def _build_band_cards(band_perf):
     <div class="band-label" style="color:{bc}">{label}</div>
     <div class="band-stats">
         <div><span class="num">{count}</span> positions</div>
-        <div><span class="num">{traded}</span> traded</div>
+        <div><span class="num">{signal_count}</span> measured</div>
         <div><span class="num">{wr:.0f}%</span> win rate</div>
         <div><span class="num" style="color:{pc}">{ps}{pnl:.1f}%</span> avg P&amp;L</div>
     </div>
     <div class="members">{members}</div>
 </div>""".format(
             bc=bc, band=band_key, label=label,
-            count=bp["count"], traded=bp.get("traded_count", 0),
+            count=bp["count"], signal_count=bp.get("signal_count", 0),
             wr=bp.get("win_rate", 0),
             pc=pnl_color, ps=pnl_sign, pnl=pnl,
             members=members_html
@@ -810,14 +820,16 @@ def _build_learning_dashboard(data):
 # ---------------------------------------------------------------------------
 
 def _dynamic_headline(s):
-    """Generate dynamic headline based on portfolio performance."""
+    """Generate dynamic headline based on signal performance."""
     parts = []
     if s["active_count"] > 0:
         parts.append("{} Active Trade{}".format(s["active_count"], "s" if s["active_count"] != 1 else ""))
-    if s["qualified_count"] > 0:
-        parts.append("{} Qualified Signals".format(s["qualified_count"]))
-    if s["backtest_profit_factor"] > 1:
-        parts.append("{:.2f}x Profit Factor".format(s["backtest_profit_factor"]))
+    if s["measurable_signals"] > 0:
+        parts.append("{} Signals Tracked".format(s["measurable_signals"]))
+    if s.get("signal_win_rate", 0) > 0:
+        parts.append("{:.0f}% Win Rate".format(s["signal_win_rate"]))
+    if s.get("signal_profit_factor", 0) > 1:
+        parts.append("{:.2f}x Profit Factor".format(s["signal_profit_factor"]))
     if parts:
         return ", ".join(parts)
 
@@ -1127,6 +1139,10 @@ def generate_html_report():
     # Hero stats
     headline = _dynamic_headline(s)
 
+    # Pre-compute values that need sign handling for the template
+    sig_total = s.get("signal_total_pnl", 0)
+    sig_total_sign = "+" if sig_total >= 0 else ""
+
     html = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1136,12 +1152,12 @@ def generate_html_report():
 <!-- Open Graph / Social sharing preview -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="NOAH Hedge Fund Edge Tracker">
-<meta property="og:description" content="Information asymmetry intelligence. {backtest_trades} backtest trades, {backtest_win_rate:.0f}% win rate, +{backtest_total_pnl:.0f}% total P&amp;L.">
+<meta property="og:description" content="Information asymmetry intelligence. {measurable_signals} signals tracked, {signal_win_rate:.0f}% win rate, {sig_total_sign}{signal_total_pnl:.0f}% total signal P&amp;L.">
 <meta property="og:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
 <meta property="og:url" content="https://ivanmassow.github.io/hedgefund-tracker/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="NOAH Hedge Fund Edge Tracker">
-<meta name="twitter:description" content="Information asymmetry intelligence. {backtest_trades} backtest trades, +{backtest_total_pnl:.0f}% total P&amp;L.">
+<meta name="twitter:description" content="Information asymmetry intelligence. {measurable_signals} signals tracked, {sig_total_sign}{signal_total_pnl:.0f}% total signal P&amp;L.">
 <meta name="twitter:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -1594,8 +1610,8 @@ body {{
         <div class="headline">{headline}</div>
         <div class="stat-grid">
             <div class="stat-box">
-                <div class="num accent">{qualified}</div>
-                <div class="label">Qualified Signals</div>
+                <div class="num accent">{measurable_signals}</div>
+                <div class="label">Measurable Signals</div>
             </div>
             <div class="stat-box">
                 <div class="num">{active}</div>
@@ -1606,15 +1622,15 @@ body {{
                 <div class="label">Pipeline</div>
             </div>
             <div class="stat-box">
-                <div class="num green">+{backtest_total_pnl:.0f}%</div>
-                <div class="label">Backtest P&amp;L</div>
+                <div class="num green">{sig_total_sign}{signal_total_pnl:.0f}%</div>
+                <div class="label">Signal P&amp;L</div>
             </div>
             <div class="stat-box">
-                <div class="num">{backtest_win_rate:.0f}%</div>
-                <div class="label">Backtest Win Rate</div>
+                <div class="num">{signal_win_rate:.0f}%</div>
+                <div class="label">Win Rate</div>
             </div>
             <div class="stat-box">
-                <div class="num accent">{backtest_profit_factor:.2f}&times;</div>
+                <div class="num accent">{signal_profit_factor:.2f}&times;</div>
                 <div class="label">Profit Factor</div>
             </div>
         </div>
@@ -1699,14 +1715,14 @@ body {{
 </html>""".format(
         now_str=now_str,
         headline=headline,
-        qualified=s["qualified_count"],
+        measurable_signals=s.get("measurable_signals", 0),
         active=s["active_count"],
         active_s="s" if s["active_count"] != 1 else "",
         pipeline=s["pipeline_count"],
-        backtest_total_pnl=s["backtest_total_pnl"],
-        backtest_win_rate=s["backtest_win_rate"],
-        backtest_profit_factor=s["backtest_profit_factor"],
-        backtest_trades=s["backtest_trades"],
+        signal_total_pnl=s.get("signal_total_pnl", 0),
+        signal_win_rate=s.get("signal_win_rate", 0),
+        signal_profit_factor=s.get("signal_profit_factor", 0),
+        sig_total_sign=sig_total_sign,
         backtest_card=backtest_card,
         active_section=active_section,
         pipeline_section=pipeline_section,

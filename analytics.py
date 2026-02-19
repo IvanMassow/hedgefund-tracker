@@ -298,24 +298,31 @@ def _compute_portfolio_summary(metrics):
     pending = [m for m in tradeable if m["state"] == "PENDING"]
     published = [m for m in tradeable if m["state"] == "PUBLISH"]
 
-    active_pnls = [m["current_pnl"] for m in active if m["current_pnl"] is not None]
-    all_pnls = [m["current_pnl"] for m in tradeable
+    # Bot trade stats (old current_pnl based — kept for reference)
+    bot_pnls = [m["current_pnl"] for m in tradeable
                 if m["current_pnl"] is not None and m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
+    bot_winners = [p for p in bot_pnls if p > 0]
+    bot_losers = [p for p in bot_pnls if p <= 0]
 
-    winners = [p for p in all_pnls if p > 0]
-    losers = [p for p in all_pnls if p <= 0]
+    # Signal performance: report_pnl for ALL tradeable candidates
+    signal_pnls = [m["report_pnl"] for m in tradeable if m["report_pnl"] is not None]
+    signal_winners = [p for p in signal_pnls if p > 0]
+    signal_losers = [p for p in signal_pnls if p <= 0]
 
-    # Qualified positions: Band A/B/C LONGs (the ones that would actually trade)
+    signal_winner_sum = sum(signal_winners) if signal_winners else 0
+    signal_loser_sum = sum(signal_losers) if signal_losers else 0
+    signal_profit_factor = abs(signal_winner_sum) / abs(signal_loser_sum) if signal_loser_sum else (
+        float("inf") if signal_winner_sum > 0 else 0
+    )
+
+    # Qualified positions: Band A/B/C LONGs with report_pnl
     qualified = [m for m in tradeable
                  if m.get("direction") == "LONG" and m.get("band") in ("A", "B", "C")]
-    pipeline = [m for m in qualified if m["state"] == "WATCH"]
+    qualified_with_pnl = [m for m in qualified if m["report_pnl"] is not None]
+    qualified_pnls = [m["report_pnl"] for m in qualified_with_pnl]
+    qualified_winners = [p for p in qualified_pnls if p > 0]
 
-    # Backtest constants (from our analysis of 28 qualified Band A/B LONG trades)
-    backtest_trades = 28
-    backtest_win_rate = 50.0
-    backtest_total_pnl = 459.0
-    backtest_avg_pnl = 16.40
-    backtest_profit_factor = 7.85
+    pipeline = [m for m in qualified if m["state"] == "WATCH"]
 
     return {
         "total_candidates": len(tradeable),
@@ -324,23 +331,29 @@ def _compute_portfolio_summary(metrics):
         "killed_count": len(killed),
         "watch_count": len(watched),
         "pending_count": len(pending),
-        "total_pnl": round(sum(all_pnls), 2) if all_pnls else 0,
-        "avg_pnl": round(sum(all_pnls) / len(all_pnls), 2) if all_pnls else 0,
-        "win_rate": round(len(winners) / len(all_pnls) * 100, 1) if all_pnls else 0,
-        "best_trade": max(all_pnls) if all_pnls else 0,
-        "worst_trade": min(all_pnls) if all_pnls else 0,
         "avg_peak_gain": round(
             sum(m["peak_gain"] for m in metrics if m["peak_gain"]) / max(len(metrics), 1), 2
         ),
         "short_count": len([m for m in metrics if m["direction"] == "SHORT"]),
         "long_count": len([m for m in metrics if m["direction"] == "LONG"]),
+        # Signal performance (report_pnl based — the real signal stats)
+        "measurable_signals": len(signal_pnls),
+        "signal_total_pnl": round(sum(signal_pnls), 2) if signal_pnls else 0,
+        "signal_avg_pnl": round(sum(signal_pnls) / len(signal_pnls), 2) if signal_pnls else 0,
+        "signal_win_rate": round(len(signal_winners) / len(signal_pnls) * 100, 1) if signal_pnls else 0,
+        "signal_best": round(max(signal_pnls), 2) if signal_pnls else 0,
+        "signal_worst": round(min(signal_pnls), 2) if signal_pnls else 0,
+        "signal_profit_factor": round(signal_profit_factor, 2) if signal_profit_factor != float("inf") else 99.99,
+        # Qualified signal stats (Band A/B/C LONG with report_pnl)
         "qualified_count": len(qualified),
+        "qualified_measured": len(qualified_with_pnl),
+        "qualified_total_pnl": round(sum(qualified_pnls), 2) if qualified_pnls else 0,
+        "qualified_avg_pnl": round(sum(qualified_pnls) / len(qualified_pnls), 2) if qualified_pnls else 0,
+        "qualified_win_rate": round(len(qualified_winners) / len(qualified_pnls) * 100, 1) if qualified_pnls else 0,
         "pipeline_count": len(pipeline),
-        "backtest_trades": backtest_trades,
-        "backtest_win_rate": backtest_win_rate,
-        "backtest_total_pnl": backtest_total_pnl,
-        "backtest_avg_pnl": backtest_avg_pnl,
-        "backtest_profit_factor": backtest_profit_factor,
+        # Bot trade stats (kept for reference)
+        "bot_total_pnl": round(sum(bot_pnls), 2) if bot_pnls else 0,
+        "bot_win_rate": round(len(bot_winners) / len(bot_pnls) * 100, 1) if bot_pnls else 0,
     }
 
 
@@ -350,9 +363,13 @@ def _compute_band_performance(metrics):
     for band_key in ["A", "B", "C", "D", "E"]:
         band_info = BANDS[band_key]
         members = [m for m in metrics if m.get("band") == band_key]
+
+        # Signal stats from report_pnl (all members with data)
+        signal_pnls = [m["report_pnl"] for m in members if m["report_pnl"] is not None]
+        signal_winners = [p for p in signal_pnls if p > 0]
+
+        # Old traded stats kept for reference
         traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
-        pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
-        winners = [p for p in pnls if p > 0]
 
         bands[band_key] = {
             "label": band_info["label"],
@@ -360,11 +377,12 @@ def _compute_band_performance(metrics):
             "bg": band_info["bg"],
             "count": len(members),
             "traded_count": len(traded),
-            "win_rate": round(len(winners) / len(pnls) * 100, 1) if pnls else 0,
-            "avg_pnl": round(sum(pnls) / len(pnls), 2) if pnls else 0,
-            "total_pnl": round(sum(pnls), 2) if pnls else 0,
-            "best": max(pnls) if pnls else 0,
-            "worst": min(pnls) if pnls else 0,
+            "signal_count": len(signal_pnls),
+            "win_rate": round(len(signal_winners) / len(signal_pnls) * 100, 1) if signal_pnls else 0,
+            "avg_pnl": round(sum(signal_pnls) / len(signal_pnls), 2) if signal_pnls else 0,
+            "total_pnl": round(sum(signal_pnls), 2) if signal_pnls else 0,
+            "best": max(signal_pnls) if signal_pnls else 0,
+            "worst": min(signal_pnls) if signal_pnls else 0,
             "members": [{
                 "asset_theme": m["asset_theme"],
                 "primary_ticker": m["primary_ticker"],
@@ -372,6 +390,7 @@ def _compute_band_performance(metrics):
                 "confidence_pct": m["confidence_pct"],
                 "state": m["state"],
                 "current_pnl": m["current_pnl"],
+                "report_pnl": m["report_pnl"],
                 "status": m["status"],
             } for m in members],
         }
@@ -384,13 +403,12 @@ def _compute_edge_analysis(metrics):
     result = {}
     for eq in ["HIGH", "DECAYING"]:
         members = [m for m in metrics if m.get("edge_quality") == eq]
-        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
-        pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
+        pnls = [m["report_pnl"] for m in members if m["report_pnl"] is not None]
         winners = [p for p in pnls if p > 0]
 
         result[eq] = {
             "count": len(members),
-            "traded": len(traded),
+            "traded": len(pnls),
             "win_rate": round(len(winners) / len(pnls) * 100, 1) if pnls else 0,
             "avg_pnl": round(sum(pnls) / len(pnls), 2) if pnls else 0,
         }
@@ -402,13 +420,12 @@ def _compute_direction_analysis(metrics):
     result = {}
     for d in ["SHORT", "LONG", "MIXED"]:
         members = [m for m in metrics if m.get("direction") == d]
-        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
-        pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
+        pnls = [m["report_pnl"] for m in members if m["report_pnl"] is not None]
         winners = [p for p in pnls if p > 0]
 
         result[d] = {
             "count": len(members),
-            "traded": len(traded),
+            "traded": len(pnls),
             "win_rate": round(len(winners) / len(pnls) * 100, 1) if pnls else 0,
             "avg_pnl": round(sum(pnls) / len(pnls), 2) if pnls else 0,
         }
@@ -420,14 +437,13 @@ def _compute_propagation_analysis(metrics):
     result = {}
     for p in ["IGNITE", "CATALYTIC", "SILENT", "FRAGILE"]:
         members = [m for m in metrics if m.get("propagation") == p]
-        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
-        pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
+        pnls = [m["report_pnl"] for m in members if m["report_pnl"] is not None]
         winners = [p2 for p2 in pnls if p2 > 0]
 
         if members:
             result[p] = {
                 "count": len(members),
-                "traded": len(traded),
+                "traded": len(pnls),
                 "win_rate": round(len(winners) / len(pnls) * 100, 1) if pnls else 0,
                 "avg_pnl": round(sum(pnls) / len(pnls), 2) if pnls else 0,
             }
@@ -508,13 +524,12 @@ def _compute_staleness_impact(metrics):
                 if bounds["min"] <= staleness < bounds["max"]:
                     members.append(m)
 
-        traded = [m for m in members if m["state"] in ("ACTIVE", "PUBLISH", "KILLED")]
-        pnls = [m["current_pnl"] for m in traded if m["current_pnl"] is not None]
+        pnls = [m["report_pnl"] for m in members if m["report_pnl"] is not None]
         winners = [p for p in pnls if p > 0]
 
         result[label] = {
             "count": len(members),
-            "traded": len(traded),
+            "traded": len(pnls),
             "win_rate": round(len(winners) / len(pnls) * 100, 1) if pnls else 0,
             "avg_pnl": round(sum(pnls) / len(pnls), 2) if pnls else 0,
         }
@@ -583,8 +598,9 @@ def generate_claude_briefing():
     lines.append("  Active: {} | Watch: {} | Killed: {} | Pending: {}".format(
         s["active_count"], s["watch_count"], s["killed_count"], s["pending_count"]
     ))
-    lines.append("  Win rate: {}% | Avg P&L: {}%".format(s["win_rate"], s["avg_pnl"]))
-    lines.append("  Best: {}% | Worst: {}%".format(s["best_trade"], s["worst_trade"]))
+    lines.append("  Measurable signals: {} | Win rate: {}% | Avg P&L: {}%".format(
+        s["measurable_signals"], s["signal_win_rate"], s["signal_avg_pnl"]))
+    lines.append("  Best: {}% | Worst: {}%".format(s["signal_best"], s["signal_worst"]))
     lines.append("  Direction: {} SHORT, {} LONG".format(s["short_count"], s["long_count"]))
     lines.append("")
 
