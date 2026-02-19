@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-19T15:46:43.104687+00:00",
+  "updated_at": "2026-02-19T15:52:37.991941+00:00",
   "total_positions": 204,
   "active_count": 1,
   "publish_count": 0,
@@ -56,7 +56,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I'm monitoring for any official confirmation from SGS about the regulatory appro",
+      "watching_for": "I will look for any official confirmation from SGS regarding the regulatory appr",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -102,7 +102,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for press releases from Volkswagen discussing the implications of th",
+      "watching_for": "Next, I will specifically monitor for press releases from Volkswagen regarding t",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -125,7 +125,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 7,
       "thesis_status": "strengthening",
-      "watching_for": "I will be monitoring for additional coverage from authoritative outlets regardin",
+      "watching_for": "I'm looking for additional authoritative coverage related to the litigation, alo",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
@@ -148,7 +148,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for credible announcements regarding active litigation developments,",
+      "watching_for": "I will be closely monitoring for credible announcements of active litigation dev",
       "journal_count": 5,
       "signal_velocity": "stirring",
       "signal_hits_24h": 1
