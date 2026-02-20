@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-20T18:12:08.320279+00:00",
+  "updated_at": "2026-02-20T18:36:33.627093+00:00",
   "total_positions": 197,
   "active_count": 3,
   "publish_count": 0,
@@ -32,8 +32,8 @@
       "kill_reason": "",
       "state_reason": "ENTERED: conviction 8/10, signal propagating, The thesis on ",
       "conviction": 8,
-      "thesis_status": "strengthening",
-      "watching_for": "I will be watching for further authoritative news coverage or docket updates reg",
+      "thesis_status": "intact",
+      "watching_for": "I will continue to look for authoritative updates regarding the litigation, more",
       "journal_count": 5,
       "signal_velocity": "propagating",
       "signal_hits_24h": 5
@@ -102,7 +102,7 @@
       "state_reason": "Stale (49h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for any press releases from Volkswagen about court dates or any nich",
+      "watching_for": "I'm looking for press releases from Volkswagen regarding the court proceedings a",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -217,7 +217,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "intact",
-      "watching_for": "Next cycle, I will be looking for any significant corroborating evidence concern",
+      "watching_for": "In the next cycle, I will look for any significant corroborative evidence regard",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -240,8 +240,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "Next cycle, I am particularly focused on any discussions or coverage from niche ",
-      "journal_count": 3,
+      "watching_for": "I will continue to monitor for any discussions or reports in niche publications ",
+      "journal_count": 4,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     }
