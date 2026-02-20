@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-20T17:16:12.266025+00:00",
+  "updated_at": "2026-02-20T17:35:09.863539+00:00",
   "total_positions": 197,
   "active_count": 3,
   "publish_count": 0,
@@ -102,7 +102,7 @@
       "state_reason": "Stale (49h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I'm looking for any press releases from Volkswagen regarding the court dates or ",
+      "watching_for": "I will look for any press releases from Volkswagen about court dates or any nich",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -127,8 +127,8 @@
       "thesis_status": null,
       "watching_for": "",
       "journal_count": 0,
-      "signal_velocity": "quiet",
-      "signal_hits_24h": 0
+      "signal_velocity": "stirring",
+      "signal_hits_24h": 1
     },
     {
       "asset": "Memory tightness: DRAM/HBM + contract repricing",
@@ -217,7 +217,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "intact",
-      "watching_for": "I will be looking for any corroborating evidence regarding Vanguard's legal disc",
+      "watching_for": "Next cycle, I will be looking for any significant corroborating evidence concern",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -240,8 +240,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will be monitoring for discussions or reports in niche publications regarding ",
-      "journal_count": 2,
+      "watching_for": "Next cycle, I am particularly focused on any discussions or coverage from niche ",
+      "journal_count": 3,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     }
