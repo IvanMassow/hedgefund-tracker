@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-20T20:13:45.551845+00:00",
+  "updated_at": "2026-02-20T20:38:00.328042+00:00",
   "total_positions": 197,
   "active_count": 3,
   "publish_count": 0,
@@ -33,7 +33,7 @@
       "state_reason": "ENTERED: conviction 8/10, signal propagating, The thesis on ",
       "conviction": 8,
       "thesis_status": "intact",
-      "watching_for": "I will continue to look for authoritative updates regarding the litigation, more",
+      "watching_for": "I will monitor for any authoritative updates regarding the litigation from reput",
       "journal_count": 5,
       "signal_velocity": "propagating",
       "signal_hits_24h": 5
@@ -102,7 +102,7 @@
       "state_reason": "Stale (51h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will be looking for any press releases from Volkswagen regarding the upcoming ",
+      "watching_for": "I will look for press releases from Volkswagen regarding court dates or any repo",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -194,7 +194,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "intact",
-      "watching_for": "I'm looking for any significant corroborating evidence, such as reports from Van",
+      "watching_for": "I will be looking for significant corroborating evidence regarding Vanguard's le",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -217,7 +217,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "Next cycle, I will focus on any niche publications or industry discussions regar",
+      "watching_for": "I will keep an eye out for any discussions or reports in niche publications rega",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -240,7 +240,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I am looking for specific court updates, including docket references or hearing ",
+      "watching_for": "I will continue to look for specific updates on court docket references and hear",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
