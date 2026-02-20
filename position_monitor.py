@@ -10,9 +10,15 @@ import time
 from datetime import datetime, timezone, timedelta
 
 from db import get_conn
-from tracker import fetch_price_av, calculate_pnl
+from tracker import fetch_price_av, calculate_pnl, fetch_spy_change, store_intraday_candles, get_recent_candles
 from signal_hunter import build_signal_context
-from config import AV_RATE_LIMIT
+from config import (
+    AV_RATE_LIMIT,
+    EXIT_HARD_STOP_PCT, EXIT_SOFT_STOP_PCT,
+    EXIT_PROFIT_TAKE_PCT, EXIT_PROFIT_STRONG_PCT,
+    EXIT_DRAWDOWN_FROM_PEAK_PCT, EXIT_TIME_LIMIT_HOURS,
+    EXIT_MARKET_CRASH_PCT,
+)
 
 logger = logging.getLogger("hedgefund.position_monitor")
 
@@ -257,6 +263,150 @@ def _get_next_cycle_number(candidate_id):
     return current + 1
 
 
+def check_mechanical_exits(candidate, current_price, pnl_pct, hours_since_entry):
+    """6-checkpoint mechanical exit cascade. Runs BEFORE the LLM assessment.
+
+    Adapted from company-watch's battle-tested exit system.
+    Returns (should_exit, exit_type, exit_reason, skip_llm) tuple.
+    - should_exit: True if position should be exited immediately
+    - exit_type: "take_profit", "cut_loss", "market_crash", "time_limit"
+    - exit_reason: Human-readable reason for the exit
+    - skip_llm: True if LLM should be skipped entirely (hard exits)
+
+    Only applies to ACTIVE/PUBLISH positions (not WATCH).
+    """
+    direction = candidate.get("direction", "MIXED")
+    entry_price = candidate.get("entry_price")
+    peak_price = candidate.get("peak_price")
+
+    if not entry_price or not current_price:
+        return False, None, None, False
+
+    # Calculate peak P&L (from peak_price, not from snapshots)
+    peak_pnl = calculate_pnl(entry_price, peak_price, direction) if peak_price else pnl_pct
+
+    # ── CHECK 1: Hard stop-loss ──────────────────────────────────────
+    # P&L below hard stop → EXIT immediately, no LLM
+    if pnl_pct <= EXIT_HARD_STOP_PCT:
+        return (True, "cut_loss",
+                "HARD STOP: P&L {:.1f}% hit {:.0f}% stop-loss".format(
+                    pnl_pct, EXIT_HARD_STOP_PCT),
+                True)
+
+    # ── CHECK 2: Profit protection (drawdown from peak) ──────────────
+    # If we hit the profit threshold then pulled back by drawdown amount → EXIT
+    if peak_pnl >= EXIT_PROFIT_TAKE_PCT:
+        drawdown_from_peak = peak_pnl - pnl_pct
+        if drawdown_from_peak >= EXIT_DRAWDOWN_FROM_PEAK_PCT:
+            return (True, "take_profit",
+                    "PROFIT PROTECTION: Peak P&L was +{:.1f}%, pulled back {:.1f}% to {:.1f}%".format(
+                        peak_pnl, drawdown_from_peak, pnl_pct),
+                    True)
+
+    # ── CHECK 3: Strong profit-taking ────────────────────────────────
+    # P&L above strong threshold → EXIT and lock in gains
+    if pnl_pct >= EXIT_PROFIT_STRONG_PCT:
+        return (True, "take_profit",
+                "STRONG PROFIT: P&L +{:.1f}% exceeded +{:.0f}% threshold".format(
+                    pnl_pct, EXIT_PROFIT_STRONG_PCT),
+                True)
+
+    # ── CHECK 4: Market crash override ───────────────────────────────
+    # S&P down >3% on LONG positions → flatten immediately
+    if direction == "LONG":
+        spy_change = fetch_spy_change()
+        if spy_change is not None and spy_change <= EXIT_MARKET_CRASH_PCT:
+            return (True, "cut_loss",
+                    "MARKET CRASH: S&P down {:.1f}% (threshold {:.0f}%), flattening LONG".format(
+                        spy_change, EXIT_MARKET_CRASH_PCT),
+                    True)
+
+    # ── CHECK 5: Time limit ──────────────────────────────────────────
+    # Held too long with mediocre P&L → force exit or escalate
+    if hours_since_entry > EXIT_TIME_LIMIT_HOURS and pnl_pct < 5.0:
+        return (True, "cut_loss" if pnl_pct < 0 else "take_profit",
+                "TIME LIMIT: Held {:.0f}h (>{:.0f}h limit) with P&L {:.1f}%".format(
+                    hours_since_entry, EXIT_TIME_LIMIT_HOURS, pnl_pct),
+                True)
+
+    # ── CHECK 6: Soft stop-loss ──────────────────────────────────────
+    # P&L below soft stop → still run LLM but flag urgent review
+    if pnl_pct <= EXIT_SOFT_STOP_PCT:
+        return (False, None,
+                "SOFT STOP WARNING: P&L {:.1f}% below {:.0f}% — urgent LLM review".format(
+                    pnl_pct, EXIT_SOFT_STOP_PCT),
+                False)
+
+    return False, None, None, False
+
+
+def execute_mechanical_exit(candidate, current_price, pnl_pct, hours_since_entry,
+                            exit_type, exit_reason):
+    """Execute a mechanical exit — updates DB and logs the decision.
+    Uses the same pattern as _apply_decision in monitor_position.
+    """
+    now = datetime.now(timezone.utc)
+    conn = get_conn()
+
+    state_reason = "MECHANICAL {}: {}".format(exit_type.upper(), exit_reason)
+
+    conn.execute("""
+        UPDATE candidates SET
+            state = 'KILLED',
+            state_reason = ?,
+            state_changed_at = ?,
+            killed_at = ?,
+            kill_reason = ?,
+            killed_by = 'mechanical',
+            exit_price = ?,
+            exit_time = ?,
+            exit_reason = ?,
+            exit_pnl_pct = ?,
+            total_held_hours = ?
+        WHERE id = ?
+    """, (
+        state_reason[:200], now.isoformat(), now.isoformat(),
+        state_reason[:200],
+        current_price, now.isoformat(),
+        exit_type,
+        round(pnl_pct, 2),
+        round(hours_since_entry, 1),
+        candidate["id"]
+    ))
+
+    # Also log a journal entry for the mechanical exit
+    cycle_number = _get_next_cycle_number(candidate["id"])
+    peak_gain, max_drawdown = _get_position_metrics(candidate)
+
+    conn.execute("""
+        INSERT INTO trader_journal (
+            candidate_id, cycle_number, timestamp,
+            hours_since_entry, price_at_review, pnl_pct,
+            peak_gain_pct, max_drawdown_pct,
+            decision, conviction_score, conviction_change,
+            thesis_status, situation_summary, narrative,
+            risk_level, time_pressure
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        candidate["id"], cycle_number, now.isoformat(),
+        round(hours_since_entry, 1), current_price, round(pnl_pct, 2),
+        round(max(peak_gain, pnl_pct), 2), round(min(max_drawdown, pnl_pct), 2),
+        exit_type.upper(), 0, "mechanical_exit",
+        "mechanical_override", exit_reason,
+        "Mechanical exit rule fired — no LLM consultation",
+        "critical", "immediate"
+    ))
+
+    conn.commit()
+    conn.close()
+
+    logger.warning("MECHANICAL {}: {} ({}) @ ${:.2f} | P&L: {:.1f}% | {:.0f}h | {}".format(
+        exit_type.upper(),
+        candidate["asset_theme"][:30], candidate["primary_ticker"],
+        current_price, pnl_pct, hours_since_entry, exit_reason
+    ))
+
+
 def monitor_position(candidate_id, llm_trader):
     """Run a single monitoring cycle for one position.
 
@@ -267,10 +417,11 @@ def monitor_position(candidate_id, llm_trader):
     signal confirmation. When ready, it decides ENTER to promote to ACTIVE.
 
     Steps:
+    0. [NEW] Check mechanical exit rules (runs BEFORE LLM for ACTIVE/PUBLISH)
     1. Fetch current price
     2. Calculate metrics (P&L for ACTIVE, price movement for WATCH)
     3. Build journal context (last 5 entries)
-    4. Build price/signal context
+    4. Build price/signal context + candle context
     5. Call GPT to assess position
     6. Log journal entry
     7. Apply decisions: ENTER (WATCH→ACTIVE), TAKE_PROFIT, CUT_LOSS, KILL, HOLD
@@ -341,6 +492,65 @@ def monitor_position(candidate_id, llm_trader):
             except (ValueError, TypeError):
                 pass
 
+    # 2.5. MECHANICAL EXIT CHECK — runs BEFORE LLM for ACTIVE/PUBLISH positions
+    soft_stop_warning = None
+    if not is_watching and candidate.get("entry_price"):
+        should_exit, exit_type, exit_reason, skip_llm = check_mechanical_exits(
+            candidate, current_price, pnl_pct, hours_since_entry
+        )
+        if should_exit and skip_llm:
+            # Hard exit — execute immediately, skip LLM entirely
+            execute_mechanical_exit(
+                candidate, current_price, pnl_pct, hours_since_entry,
+                exit_type, exit_reason
+            )
+            return exit_type.upper()
+        elif exit_reason and not skip_llm:
+            # Soft stop warning — pass to LLM as urgent context
+            soft_stop_warning = exit_reason
+            logger.info("Soft stop flag for {} ({}): {}".format(
+                candidate["asset_theme"][:30], primary_ticker, exit_reason
+            ))
+
+    # 2.6. Fetch intraday candles for ACTIVE/PUBLISH positions
+    candle_context = None
+    if not is_watching and candidate.get("entry_price"):
+        try:
+            candles = store_intraday_candles(candidate_id, primary_ticker)
+            if candles:
+                candle_lines = []
+                green_count = 0
+                day_low = None
+                day_high = None
+                for c_bar in reversed(candles):  # Chronological order
+                    flag = ""
+                    if c_bar["close"] >= c_bar["open"]:
+                        flag = " ▲"
+                        green_count += 1
+                    else:
+                        flag = " ▼"
+                    candle_lines.append("  {} O:{:.2f} H:{:.2f} L:{:.2f} C:{:.2f} V:{:.0f}{}".format(
+                        c_bar["timestamp"][11:16] if len(c_bar["timestamp"]) > 11 else c_bar["timestamp"],
+                        c_bar["open"], c_bar["high"], c_bar["low"], c_bar["close"],
+                        c_bar["volume"], flag
+                    ))
+                    if day_low is None or c_bar["low"] < day_low:
+                        day_low = c_bar["low"]
+                    if day_high is None or c_bar["high"] > day_high:
+                        day_high = c_bar["high"]
+
+                trend = "Rising" if green_count > len(candles) / 2 else "Falling" if green_count < len(candles) / 2 else "Mixed"
+                candle_context = "=== INTRADAY PRICE ACTION (15min candles) ===\n"
+                candle_context += "\n".join(candle_lines)
+                candle_context += "\nTrend: {} ({} of {} candles green)".format(
+                    trend, green_count, len(candles))
+                if day_low and day_high:
+                    candle_context += "\nRange: ${:.2f} - ${:.2f}".format(day_low, day_high)
+                time.sleep(AV_RATE_LIMIT)  # Rate limit the candle fetch
+        except Exception as e:
+            logger.warning("Could not fetch candles for {} ({}): {}".format(
+                candidate["asset_theme"][:30], primary_ticker, e))
+
     # 3. Build context
     journal_context = build_journal_context(candidate_id)
     price_history_context = build_price_history_context(candidate_id)
@@ -366,7 +576,9 @@ def monitor_position(candidate_id, llm_trader):
     result = llm_trader.assess_position(
         candidate, current_price, peak_gain, max_drawdown,
         hours_since_entry, journal_context, price_history_context,
-        signal_context=signal_context
+        signal_context=signal_context,
+        candle_context=candle_context,
+        soft_stop_warning=soft_stop_warning
     )
 
     if not result:

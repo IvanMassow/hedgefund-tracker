@@ -250,10 +250,30 @@ def _build_active_row(m):
 
     timeline_html = _build_timeline_cells(m)
 
+    # Build exit rule micro-info
+    peak_g = m.get("peak_gain", 0)
+    stop_p = m.get("stop_price")
+    target_p = m.get("target_price")
+
+    exit_info_parts = []
+    if peak_g != 0:
+        pk_color = "#4ade80" if peak_g > 0 else "#f87171"
+        pk_sign = "+" if peak_g >= 0 else ""
+        exit_info_parts.append('<span style="color:{c}">Peak {s}{v:.1f}%</span>'.format(
+            c=pk_color, s=pk_sign, v=peak_g))
+    if stop_p:
+        exit_info_parts.append('<span style="color:#f87171">Stop ${:.0f}</span>'.format(stop_p))
+    if target_p:
+        exit_info_parts.append('<span style="color:#4ade80">Target ${:.0f}</span>'.format(target_p))
+
+    exit_info_html = ""
+    if exit_info_parts:
+        exit_info_html = '<div class="exit-micro">{}</div>'.format(" &middot; ".join(exit_info_parts))
+
     return """<tr class="active-row">
     <td class="td-ticker-active"><span class="ticker-name">{ticker}</span><span class="trade-badge">B</span>{thesis_micro} {notes_icon}</td>
     <td class="td-band" style="color:{bc}">{band}</td>
-    <td class="td-asset"><div class="name">{asset}</div><div class="thesis">{thesis}</div></td>
+    <td class="td-asset"><div class="name">{asset}</div><div class="thesis">{thesis}</div>{exit_info}</td>
     <td><span class="td-dir" style="color:{dc};background:{db}">{direction}</span></td>
     <td style="text-align:center;font-weight:700">{conf:.0f}%</td>
     <td class="td-price">{entry_str}</td>
@@ -264,6 +284,7 @@ def _build_active_row(m):
 </tr>""".format(
         ticker=ticker_raw, thesis_micro=thesis_micro, notes_icon=notes_icon,
         bc=bc, band=band, asset=asset, thesis=thesis,
+        exit_info=exit_info_html,
         dc=dc, db=db, direction=direction, conf=conf,
         entry_str=entry_str, current_str=current_str,
         trade_pnl_str=trade_pnl_str, report_pnl_str=report_pnl_str,
@@ -556,6 +577,52 @@ def _build_backtest_card(s):
         res_wr=res_wr,
         res_pnl=res_pnl,
         res_sign=res_sign)
+
+
+def _build_exit_rules_card(exit_stats):
+    """Build exit rules summary card showing mechanical guardrails."""
+    from config import (EXIT_HARD_STOP_PCT, EXIT_SOFT_STOP_PCT,
+                        EXIT_PROFIT_TAKE_PCT, EXIT_PROFIT_STRONG_PCT,
+                        EXIT_DRAWDOWN_FROM_PEAK_PCT, EXIT_TIME_LIMIT_HOURS,
+                        EXIT_MARKET_CRASH_PCT)
+
+    mech = exit_stats.get("mechanical", {})
+    llm_d = exit_stats.get("llm_decided", {})
+    total = exit_stats.get("total_exits", 0)
+    mech_count = mech.get("count", 0)
+    llm_count = llm_d.get("count", 0)
+
+    # Exit breakdown line
+    if total > 0:
+        breakdown = '{} exits total: {} mechanical, {} LLM-decided'.format(
+            total, mech_count, llm_count)
+    else:
+        breakdown = 'No exits recorded yet'
+
+    return """<div class="backtest-card" style="margin-top:1rem">
+    <div class="backtest-header">
+        <span class="backtest-icon">&#9888;</span>
+        Mechanical Exit Rules
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 1.5rem;font-size:0.78rem;margin-top:0.8rem">
+        <div><span style="color:#f87171;font-weight:700">Hard Stop:</span> {hard:.0f}%</div>
+        <div><span style="color:#fbbf24;font-weight:700">Soft Stop:</span> {soft:.0f}% (LLM review)</div>
+        <div><span style="color:#4ade80;font-weight:700">Profit Take:</span> +{profit:.0f}%</div>
+        <div><span style="color:#2dd4bf;font-weight:700">Strong Profit:</span> +{strong:.0f}%</div>
+        <div><span style="color:#a78bfa;font-weight:700">Peak Drawdown:</span> {drawdown:.0f}% from peak</div>
+        <div><span style="color:#60a5fa;font-weight:700">Time Limit:</span> {time:.0f}h</div>
+        <div style="grid-column:span 2"><span style="color:#f87171;font-weight:700">Market Crash:</span> S&amp;P down >{crash:.0f}% &rarr; flatten longs</div>
+    </div>
+    <div style="margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid rgba(255,255,255,0.08);font-size:0.72rem;color:rgba(255,255,255,0.5)">{breakdown}</div>
+</div>""".format(
+        hard=EXIT_HARD_STOP_PCT,
+        soft=EXIT_SOFT_STOP_PCT,
+        profit=EXIT_PROFIT_TAKE_PCT,
+        strong=EXIT_PROFIT_STRONG_PCT,
+        drawdown=EXIT_DRAWDOWN_FROM_PEAK_PCT,
+        time=EXIT_TIME_LIMIT_HOURS,
+        crash=abs(EXIT_MARKET_CRASH_PCT),
+        breakdown=breakdown)
 
 
 # ---------------------------------------------------------------------------
@@ -1145,6 +1212,9 @@ def generate_html_report():
     # Build backtest card
     backtest_card = _build_backtest_card(s)
 
+    # Build exit rules card
+    exit_rules_card = _build_exit_rules_card(data.get("exit_stats", {}))
+
     # Build band cluster cards
     band_cards = _build_band_cards(data["band_performance"])
 
@@ -1474,6 +1544,8 @@ body {{
 .td-asset {{ max-width: 220px; }}
 .td-asset .name {{ font-weight: 700; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 .td-asset .thesis {{ font-size: 0.68rem; color: var(--ink-mid); font-style: italic; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 210px; }}
+.exit-micro {{ font-size: 0.62rem; margin-top: 2px; letter-spacing: 0.01em; white-space: nowrap; }}
+.exit-micro span {{ font-weight: 600; }}
 .td-dir {{
     font-weight: 700; font-size: 0.72rem;
     letter-spacing: 0.04em; text-align: center;
@@ -1658,10 +1730,11 @@ body {{
     </div>
 </div>
 
-<!-- Backtest Performance Card -->
+<!-- Backtest Performance Card + Exit Rules -->
 <div class="section" style="padding-bottom:0">
     <div class="container">
         {backtest_card}
+        {exit_rules_card}
     </div>
 </div>
 
@@ -1744,6 +1817,7 @@ body {{
         alpha_total_sign=alpha_total_sign,
         research_measured=s.get("research_measured", 0),
         backtest_card=backtest_card,
+        exit_rules_card=exit_rules_card,
         active_section=active_section,
         pipeline_section=pipeline_section,
         research_section=research_section,

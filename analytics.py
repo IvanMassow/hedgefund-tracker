@@ -8,7 +8,10 @@ from datetime import datetime, timezone
 from collections import defaultdict
 
 from db import get_conn
-from config import BANDS, ALPHA_DIRECTIONS, ALPHA_BANDS, ALPHA_FORMULA_DESC
+from config import (
+    BANDS, ALPHA_DIRECTIONS, ALPHA_BANDS, ALPHA_FORMULA_DESC,
+    EXIT_HARD_STOP_PCT, EXIT_PROFIT_TAKE_PCT, EXIT_PROFIT_STRONG_PCT,
+)
 
 logger = logging.getLogger("hedgefund.analytics")
 
@@ -48,6 +51,9 @@ def generate_analytics():
     # Propagation analysis
     prop_analysis = _compute_propagation_analysis(metrics)
 
+    # Exit statistics (mechanical vs LLM-decided)
+    exit_stats = _compute_exit_stats(metrics)
+
     # Kill/watch validation
     kill_validation = _compute_kill_validation(metrics)
 
@@ -67,6 +73,7 @@ def generate_analytics():
         "edge_analysis": edge_analysis,
         "direction_analysis": direction_analysis,
         "propagation_analysis": prop_analysis,
+        "exit_stats": exit_stats,
         "kill_validation": kill_validation,
         "staleness_impact": staleness_impact,
         "timing_analysis": timing_analysis,
@@ -253,6 +260,19 @@ def _compute_candidate_metrics(c, conn):
         and c.get("band") in ALPHA_BANDS
     )
 
+    # Stop/target price levels (for active positions)
+    stop_price = None
+    target_price = None
+    strong_target_price = None
+    if entry_price and entry_price > 0 and direction == "LONG":
+        stop_price = round(entry_price * (1 + EXIT_HARD_STOP_PCT / 100), 2)
+        target_price = round(entry_price * (1 + EXIT_PROFIT_TAKE_PCT / 100), 2)
+        strong_target_price = round(entry_price * (1 + EXIT_PROFIT_STRONG_PCT / 100), 2)
+    elif entry_price and entry_price > 0 and direction == "SHORT":
+        stop_price = round(entry_price * (1 - EXIT_HARD_STOP_PCT / 100), 2)
+        target_price = round(entry_price * (1 - EXIT_PROFIT_TAKE_PCT / 100), 2)
+        strong_target_price = round(entry_price * (1 - EXIT_PROFIT_STRONG_PCT / 100), 2)
+
     return {
         **c,
         "snapshots": snapshots,
@@ -279,6 +299,9 @@ def _compute_candidate_metrics(c, conn):
         "signal_hits_24h": c.get("signal_hits_24h") or 0,
         "signal_query": c.get("signal_query") or "",
         "alpha": is_alpha,
+        "stop_price": stop_price,
+        "target_price": target_price,
+        "strong_target_price": strong_target_price,
     }
 
 
@@ -477,6 +500,46 @@ def _compute_propagation_analysis(metrics):
                 "avg_pnl": round(sum(pnls) / len(pnls), 2) if pnls else 0,
             }
     return result
+
+
+def _compute_exit_stats(metrics):
+    """Compute exit statistics: mechanical vs LLM-decided exits."""
+    exited = [m for m in metrics if m.get("exit_price") and m.get("exit_reason")]
+
+    mechanical_exits = [m for m in exited if m.get("killed_by") == "mechanical"]
+    llm_exits = [m for m in exited if m.get("killed_by") in ("monitor", "llm")]
+    other_exits = [m for m in exited if m.get("killed_by") not in ("mechanical", "monitor", "llm")]
+
+    def _exit_summary(exits):
+        pnls = [m.get("exit_pnl_pct", 0) for m in exits if m.get("exit_pnl_pct") is not None]
+        hold_hours = [m.get("total_held_hours", 0) for m in exits if m.get("total_held_hours") is not None]
+        profits = [p for p in pnls if p > 0]
+        losses = [p for p in pnls if p <= 0]
+        return {
+            "count": len(exits),
+            "avg_pnl": round(sum(pnls) / len(pnls), 2) if pnls else 0,
+            "total_pnl": round(sum(pnls), 2) if pnls else 0,
+            "avg_hold_hours": round(sum(hold_hours) / len(hold_hours), 1) if hold_hours else 0,
+            "profit_count": len(profits),
+            "loss_count": len(losses),
+            "by_reason": _count_by_reason(exits),
+        }
+
+    return {
+        "total_exits": len(exited),
+        "mechanical": _exit_summary(mechanical_exits),
+        "llm_decided": _exit_summary(llm_exits),
+        "other": _exit_summary(other_exits),
+    }
+
+
+def _count_by_reason(exits):
+    """Count exits by exit_reason type."""
+    reasons = defaultdict(int)
+    for m in exits:
+        reason = m.get("exit_reason") or "unknown"
+        reasons[reason] += 1
+    return dict(reasons)
 
 
 def _compute_kill_validation(metrics):

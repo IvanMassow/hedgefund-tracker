@@ -72,6 +72,8 @@ def export_dashboard_json():
         for m in sorted_candidates:
             if m.get("state") == "EXPIRED":
                 continue
+            if not m.get("is_active", 1):
+                continue  # Skip no-ticker positions
             recent_positions.append({
                 "asset": (m.get("asset_theme") or "?")[:50],
                 "ticker": m.get("primary_ticker", "?"),
@@ -79,7 +81,10 @@ def export_dashboard_json():
                 "confidence": m.get("confidence_pct", 0),
                 "band": m.get("band", "E"),
                 "entry_price": m.get("entry_price"),
+                "dd_approved_price": m.get("dd_approved_price"),
+                "current_price": m.get("current_price"),
                 "current_pnl": m.get("current_pnl"),
+                "report_pnl": m.get("report_pnl"),
                 "state": m.get("state", "PENDING"),
                 "headline": (m.get("headline") or m.get("mechanism") or "")[:80],
                 "publish_headline": (m.get("publish_headline") or "")[:80],
@@ -152,8 +157,16 @@ def push_to_github():
             return False
         git_cwd = project_root
 
+        # Also copy position detail pages to root for GitHub Pages
+        pos_src = os.path.join(REPORTS_DIR, "positions")
+        pos_dst = os.path.join(project_root, "positions")
+        if os.path.isdir(pos_src):
+            if os.path.isdir(pos_dst):
+                shutil.rmtree(pos_dst)
+            shutil.copytree(pos_src, pos_dst)
+
         subprocess.run(
-            ["git", "add", "index.html", "reports/latest.html", "summary.json"],
+            ["git", "add", "index.html", "reports/latest.html", "summary.json", "positions/"],
             cwd=git_cwd, capture_output=True, check=True
         )
         now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")

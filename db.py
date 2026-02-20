@@ -191,6 +191,21 @@ def init_db():
         ON trader_journal(candidate_id, cycle_number);
     CREATE INDEX IF NOT EXISTS idx_signal_scans_candidate
         ON signal_scans(candidate_id, timestamp);
+
+    CREATE TABLE IF NOT EXISTS intraday_candles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        candidate_id INTEGER NOT NULL,
+        timestamp TEXT NOT NULL,
+        interval TEXT NOT NULL,
+        open REAL,
+        high REAL,
+        low REAL,
+        close REAL,
+        volume REAL,
+        FOREIGN KEY (candidate_id) REFERENCES candidates(id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_candles_candidate
+        ON intraday_candles(candidate_id, timestamp);
     """)
 
     # Add PUBLISH columns if they don't exist yet (safe migration)
@@ -220,6 +235,9 @@ def init_db():
         # Stalking mode: DD approves but bot watches before entering
         ("dd_approved_price", "REAL"),
         ("dd_approved_at", "TEXT"),
+        # Peak/trough tracking for mechanical exit rules
+        ("peak_price", "REAL"),
+        ("trough_price", "REAL"),
     ]
     for col_name, col_type in new_cols:
         if col_name not in existing_cols:

@@ -412,7 +412,7 @@ RESPONSE FORMAT (JSON only, no markdown):
 
 def assess_position(candidate, current_price, peak_gain, max_drawdown,
                     hours_since_entry, journal_context, price_history_context,
-                    signal_context=None):
+                    signal_context=None, candle_context=None, soft_stop_warning=None):
     """Call GPT to assess an active position as part of ongoing monitoring.
 
     Args:
@@ -424,6 +424,8 @@ def assess_position(candidate, current_price, peak_gain, max_drawdown,
         journal_context: text block of previous journal entries
         price_history_context: summary of price trajectory
         signal_context: text block of signal propagation findings (from signal_hunter)
+        candle_context: text block of intraday candle data (OHLCV)
+        soft_stop_warning: string if soft stop-loss triggered — flags urgent review
     """
     api_key = OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY")
     if not api_key:
@@ -501,6 +503,21 @@ def assess_position(candidate, current_price, peak_gain, max_drawdown,
         "What is the signal propagation telling you? What are you watching for?"
     )
 
+    # Build optional sections
+    candle_section = ""
+    if candle_context:
+        candle_section = "\n{}\n".format(candle_context)
+
+    urgency_section = ""
+    if soft_stop_warning:
+        urgency_section = (
+            "\n=== ⚠️ MECHANICAL STOP-LOSS WARNING ===\n"
+            "{}\n"
+            "The mechanical exit system has flagged this position. If the thesis is broken,\n"
+            "recommend CUT_LOSS. If you believe the thesis is still intact despite the drawdown,\n"
+            "explain clearly why you are holding.\n"
+        ).format(soft_stop_warning)
+
     user_prompt = """=== POSITION UNDER REVIEW ===
 
 ORIGINAL THESIS:
@@ -523,7 +540,7 @@ EVIDENCE: {evidence}
 KNOWN RISKS: {risks}
 
 {position_section}
-
+{candle_section}
 === PRICE TRAJECTORY ===
 {price_history}
 
@@ -532,7 +549,7 @@ KNOWN RISKS: {risks}
 
 === YOUR PREVIOUS JOURNAL ENTRIES ===
 {journal}
-
+{urgency_section}
 {review_question}""".format(
         asset=candidate.get("asset_theme", "Unknown"),
         ticker=candidate.get("primary_ticker", "?"),
@@ -548,9 +565,11 @@ KNOWN RISKS: {risks}
         evidence=candidate.get("evidence") or "N/A",
         risks=candidate.get("risks") or "N/A",
         position_section=position_section,
+        candle_section=candle_section,
         price_history=price_history_context or "No price history available yet.",
         signal_evidence=signal_context or "No signal scan data available yet.",
         journal=journal_context or "This is the FIRST review. No previous journal entries.",
+        urgency_section=urgency_section,
         review_question=review_question
     )
 

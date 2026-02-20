@@ -111,9 +111,10 @@ def make_trade_decision(candidate, current_price, staleness_hours, llm_result=No
     propagation = candidate.get("propagation") or "IGNITE"
     action = candidate["action"]
 
-    # Already marked AVOID by report
-    if action == "AVOID":
-        return "KILL", "Report marked as AVOID (no investable instrument)", None
+    # Report marked AVOID — but the bot investigates independently.
+    # AVOID is just the report's opinion. If the analytics/thesis look interesting
+    # and we have a tradeable instrument, let the bot decide for itself.
+    # (Positions with no ticker were already killed on intake by scanner.py)
 
     # Get report price for comparison
     prices_json = candidate.get("prices_at_report") or "{}"

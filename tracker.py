@@ -14,6 +14,9 @@ from config import ALPHA_VANTAGE_KEY, ALPHA_VANTAGE_BASE, AV_RATE_LIMIT
 
 logger = logging.getLogger("hedgefund.tracker")
 
+# Module-level SPY cache — reset each tracking cycle
+_spy_change_cache = {"value": None, "fetched_at": None}
+
 
 def get_active_candidates():
     """Get all candidates still being tracked.
@@ -118,6 +121,119 @@ def calculate_pnl(entry_price, current_price, direction):
     return None
 
 
+def fetch_spy_change():
+    """Fetch SPY daily change percentage. Cached per tracking cycle.
+    Used for market crash detection (S&P down >3% = flatten longs).
+    """
+    global _spy_change_cache
+    # Return cached value if fetched within the last 30 minutes
+    if _spy_change_cache["value"] is not None and _spy_change_cache["fetched_at"]:
+        age = (datetime.now(timezone.utc) - _spy_change_cache["fetched_at"]).total_seconds()
+        if age < 1800:  # 30 minutes
+            return _spy_change_cache["value"]
+
+    data = fetch_price_av("SPY")
+    if data and data.get("change_pct") is not None:
+        _spy_change_cache["value"] = data["change_pct"]
+        _spy_change_cache["fetched_at"] = datetime.now(timezone.utc)
+        logger.info("SPY change today: {:.2f}%".format(data["change_pct"]))
+        return data["change_pct"]
+
+    logger.warning("Could not fetch SPY change — crash detection unavailable this cycle")
+    return None
+
+
+def fetch_intraday_candles(ticker, interval="15min", outputsize="compact"):
+    """Fetch intraday candle data from Alpha Vantage TIME_SERIES_INTRADAY.
+    Returns last 10 candles as list of dicts with OHLCV data.
+    Only call for ACTIVE/PUBLISH positions near exit thresholds to conserve API calls.
+    """
+    if not ALPHA_VANTAGE_KEY:
+        return []
+
+    try:
+        resp = requests.get(
+            ALPHA_VANTAGE_BASE,
+            params={
+                "function": "TIME_SERIES_INTRADAY",
+                "symbol": ticker,
+                "interval": interval,
+                "outputsize": outputsize,
+                "apikey": ALPHA_VANTAGE_KEY,
+            },
+            timeout=15
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        series_key = "Time Series ({})".format(interval)
+        series = data.get(series_key, {})
+        if not series:
+            if "Note" in data or "Information" in data:
+                logger.warning("AV rate limit on intraday for {}: {}".format(
+                    ticker, data.get("Note", data.get("Information", ""))[:100]
+                ))
+            return []
+
+        # Sort by timestamp descending, take last 10
+        candles = []
+        for ts in sorted(series.keys(), reverse=True)[:10]:
+            bar = series[ts]
+            candles.append({
+                "timestamp": ts,
+                "open": float(bar["1. open"]),
+                "high": float(bar["2. high"]),
+                "low": float(bar["3. low"]),
+                "close": float(bar["4. close"]),
+                "volume": float(bar["5. volume"]),
+            })
+        logger.debug("Fetched {} intraday candles for {}".format(len(candles), ticker))
+        return candles
+
+    except Exception as e:
+        logger.warning("Intraday candle fetch failed for {}: {}".format(ticker, e))
+        return []
+
+
+def store_intraday_candles(candidate_id, ticker, interval="15min"):
+    """Fetch and store intraday candles for a candidate. Returns the candles."""
+    candles = fetch_intraday_candles(ticker, interval)
+    if not candles:
+        return []
+
+    conn = get_conn()
+    for c in candles:
+        # Upsert: skip if we already have this exact timestamp+interval
+        existing = conn.execute(
+            "SELECT 1 FROM intraday_candles WHERE candidate_id=? AND timestamp=? AND interval=?",
+            (candidate_id, c["timestamp"], interval)
+        ).fetchone()
+        if not existing:
+            conn.execute("""
+                INSERT INTO intraday_candles
+                (candidate_id, timestamp, interval, open, high, low, close, volume)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (candidate_id, c["timestamp"], interval,
+                  c["open"], c["high"], c["low"], c["close"], c["volume"]))
+    conn.commit()
+    conn.close()
+    return candles
+
+
+def get_recent_candles(candidate_id, limit=10):
+    """Retrieve the most recent intraday candles for a candidate from DB."""
+    conn = get_conn()
+    rows = conn.execute("""
+        SELECT timestamp, interval, open, high, low, close, volume
+        FROM intraday_candles
+        WHERE candidate_id = ?
+        ORDER BY timestamp DESC
+        LIMIT ?
+    """, (candidate_id, limit)).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
 def track_prices():
     """Main tracking function. Fetches prices for all active candidates."""
     deactivate_expired()
@@ -190,6 +306,28 @@ def track_prices():
             round(hours_since_entry, 2) if hours_since_entry else None,
             pnl_pct
         ))
+        # Update peak/trough for positions with entry prices (mechanical exit support)
+        if c["state"] in ("ACTIVE", "PUBLISH") and c["entry_price"]:
+            current_price = price_data["price"]
+            peak = c["peak_price"] if c["peak_price"] else current_price
+            trough = c["trough_price"] if c["trough_price"] else current_price
+            updated = False
+            if current_price > peak:
+                conn.execute("UPDATE candidates SET peak_price=? WHERE id=?",
+                             (current_price, cid))
+                updated = True
+            if current_price < trough:
+                conn.execute("UPDATE candidates SET trough_price=? WHERE id=?",
+                             (current_price, cid))
+                updated = True
+            # Initialize if not set yet
+            if not c["peak_price"]:
+                conn.execute("UPDATE candidates SET peak_price=? WHERE id=?",
+                             (current_price, cid))
+            if not c["trough_price"]:
+                conn.execute("UPDATE candidates SET trough_price=? WHERE id=?",
+                             (current_price, cid))
+
         tracked += 1
         logger.debug("  {} ({}): ${:.2f} P&L={}".format(
             c["asset_theme"][:30], ticker, price_data["price"],

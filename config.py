@@ -56,6 +56,16 @@ ALPHA_DIRECTIONS = ["LONG"]       # Only LONG positions (SHORTs lose systematica
 ALPHA_BANDS = ["A", "B"]          # Band A (65%+) and B (55-64%) — high confidence only
 ALPHA_FORMULA_DESC = "LONG direction + Band A/B (55%+ confidence)"
 
+# Exit thresholds — mechanical guardrails (Alpha Group positions)
+# Adapted from company-watch's battle-tested 6-checkpoint cascade
+EXIT_HARD_STOP_PCT = -15.0        # Immediate exit, no LLM consultation
+EXIT_SOFT_STOP_PCT = -10.0        # Ask LLM if thesis broken
+EXIT_PROFIT_TAKE_PCT = 15.0       # Start protecting gains at +15%
+EXIT_PROFIT_STRONG_PCT = 25.0     # Strong take-profit at +25%
+EXIT_DRAWDOWN_FROM_PEAK_PCT = 5.0 # If pulled back 5% from peak after hitting +15%, exit
+EXIT_TIME_LIMIT_HOURS = 96        # Max hold time (force review at 96h)
+EXIT_MARKET_CRASH_PCT = -3.0      # S&P down >3% intraday = flatten longs
+
 # Staleness thresholds (hours)
 STALENESS_LOW = 6       # Still fresh
 STALENESS_MEDIUM = 24   # Moderate concern
