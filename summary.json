@@ -1,7 +1,7 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-20T19:16:03.343641+00:00",
+  "updated_at": "2026-02-20T19:37:45.666328+00:00",
   "total_positions": 197,
   "active_count": 3,
   "publish_count": 0,
@@ -54,9 +54,9 @@
       "publish_headline": "",
       "kill_reason": "",
       "state_reason": "ENTERED: conviction 8/10, signal propagating, The mechanism ",
-      "conviction": 6,
+      "conviction": 5,
       "thesis_status": "weakening",
-      "watching_for": "I'm looking for any firm announcements regarding capacity additions, operational",
+      "watching_for": "I will be closely monitoring for upcoming announcements related to TSM's capacit",
       "journal_count": 5,
       "signal_velocity": "propagating",
       "signal_hits_24h": 3
@@ -79,8 +79,8 @@
       "state_reason": "ENTERED: conviction 7/10, signal stirring, The original thes",
       "conviction": 7,
       "thesis_status": "intact",
-      "watching_for": "I'll look for any developments in mainstream media coverage regarding Blue Cross",
-      "journal_count": 3,
+      "watching_for": "I will look for any developments in mainstream media coverage regarding Blue Cro",
+      "journal_count": 4,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     },
@@ -102,7 +102,7 @@
       "state_reason": "Stale (51h) but IGNITE propagation \u2014 edge may still fire",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I'm looking for press releases from Volkswagen regarding the court proceedings a",
+      "watching_for": "I will be looking for any press releases from Volkswagen regarding the upcoming ",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -194,7 +194,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 5,
       "thesis_status": "intact",
-      "watching_for": "In the next cycle, I will look for any significant corroborative evidence regard",
+      "watching_for": "I'm looking for any significant corroborating evidence, such as reports from Van",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -217,8 +217,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will continue to monitor for any discussions or reports in niche publications ",
-      "journal_count": 4,
+      "watching_for": "Next cycle, I will focus on any niche publications or industry discussions regar",
+      "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     },
@@ -240,8 +240,8 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will continue to seek updates regarding court docket references, hearing dates",
-      "journal_count": 4,
+      "watching_for": "I am looking for specific court updates, including docket references or hearing ",
+      "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
     }
