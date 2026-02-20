@@ -50,6 +50,12 @@ BANDS = {
     "E": {"min": 0, "max": 34, "label": "Frontier Scout", "color": "#73788a", "bg": "#f1f5f9"},
 }
 
+# Alpha Group formula — signals that conform to our trading rules
+# These are the grading criteria that back-testing showed produce consistent profits
+ALPHA_DIRECTIONS = ["LONG"]       # Only LONG positions (SHORTs lose systematically)
+ALPHA_BANDS = ["A", "B"]          # Band A (65%+) and B (55-64%) — high confidence only
+ALPHA_FORMULA_DESC = "LONG direction + Band A/B (55%+ confidence)"
+
 # Staleness thresholds (hours)
 STALENESS_LOW = 6       # Still fresh
 STALENESS_MEDIUM = 24   # Moderate concern

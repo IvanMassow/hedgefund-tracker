@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from collections import defaultdict
 
 from db import get_conn
-from config import BANDS
+from config import BANDS, ALPHA_DIRECTIONS, ALPHA_BANDS, ALPHA_FORMULA_DESC
 
 logger = logging.getLogger("hedgefund.analytics")
 
@@ -247,6 +247,12 @@ def _compute_candidate_metrics(c, conn):
                     "thesis_status": j.get("thesis_status"),
                 })
 
+    # Alpha group classification — does this signal match our trading formula?
+    is_alpha = (
+        c.get("direction") in ALPHA_DIRECTIONS
+        and c.get("band") in ALPHA_BANDS
+    )
+
     return {
         **c,
         "snapshots": snapshots,
@@ -272,6 +278,7 @@ def _compute_candidate_metrics(c, conn):
         "signal_velocity": c.get("signal_velocity") or "quiet",
         "signal_hits_24h": c.get("signal_hits_24h") or 0,
         "signal_query": c.get("signal_query") or "",
+        "alpha": is_alpha,
     }
 
 
@@ -315,14 +322,26 @@ def _compute_portfolio_summary(metrics):
         float("inf") if signal_winner_sum > 0 else 0
     )
 
-    # Qualified positions: Band A/B/C LONGs with report_pnl
-    qualified = [m for m in tradeable
-                 if m.get("direction") == "LONG" and m.get("band") in ("A", "B", "C")]
-    qualified_with_pnl = [m for m in qualified if m["report_pnl"] is not None]
-    qualified_pnls = [m["report_pnl"] for m in qualified_with_pnl]
-    qualified_winners = [p for p in qualified_pnls if p > 0]
+    # Alpha Group: signals matching our trading formula (LONG + Band A/B)
+    alpha_all = [m for m in tradeable if m.get("alpha")]
+    alpha_with_pnl = [m for m in alpha_all if m["report_pnl"] is not None]
+    alpha_pnls = [m["report_pnl"] for m in alpha_with_pnl]
+    alpha_winners = [p for p in alpha_pnls if p > 0]
+    alpha_losers = [p for p in alpha_pnls if p <= 0]
+    alpha_winner_sum = sum(alpha_winners) if alpha_winners else 0
+    alpha_loser_sum = sum(alpha_losers) if alpha_losers else 0
+    alpha_profit_factor = abs(alpha_winner_sum) / abs(alpha_loser_sum) if alpha_loser_sum else (
+        float("inf") if alpha_winner_sum > 0 else 0
+    )
 
-    pipeline = [m for m in qualified if m["state"] == "WATCH"]
+    # Research Group: everything NOT alpha that has report_pnl
+    research_all = [m for m in tradeable if not m.get("alpha")]
+    research_with_pnl = [m for m in research_all if m["report_pnl"] is not None]
+    research_pnls = [m["report_pnl"] for m in research_with_pnl]
+    research_winners = [p for p in research_pnls if p > 0]
+
+    # Pipeline: alpha candidates in WATCH state
+    pipeline = [m for m in alpha_all if m["state"] == "WATCH"]
 
     return {
         "total_candidates": len(tradeable),
@@ -336,7 +355,7 @@ def _compute_portfolio_summary(metrics):
         ),
         "short_count": len([m for m in metrics if m["direction"] == "SHORT"]),
         "long_count": len([m for m in metrics if m["direction"] == "LONG"]),
-        # Signal performance (report_pnl based — the real signal stats)
+        # All signals (report_pnl based)
         "measurable_signals": len(signal_pnls),
         "signal_total_pnl": round(sum(signal_pnls), 2) if signal_pnls else 0,
         "signal_avg_pnl": round(sum(signal_pnls) / len(signal_pnls), 2) if signal_pnls else 0,
@@ -344,12 +363,22 @@ def _compute_portfolio_summary(metrics):
         "signal_best": round(max(signal_pnls), 2) if signal_pnls else 0,
         "signal_worst": round(min(signal_pnls), 2) if signal_pnls else 0,
         "signal_profit_factor": round(signal_profit_factor, 2) if signal_profit_factor != float("inf") else 99.99,
-        # Qualified signal stats (Band A/B/C LONG with report_pnl)
-        "qualified_count": len(qualified),
-        "qualified_measured": len(qualified_with_pnl),
-        "qualified_total_pnl": round(sum(qualified_pnls), 2) if qualified_pnls else 0,
-        "qualified_avg_pnl": round(sum(qualified_pnls) / len(qualified_pnls), 2) if qualified_pnls else 0,
-        "qualified_win_rate": round(len(qualified_winners) / len(qualified_pnls) * 100, 1) if qualified_pnls else 0,
+        # Alpha Group stats (the headline numbers)
+        "alpha_formula": ALPHA_FORMULA_DESC,
+        "alpha_count": len(alpha_all),
+        "alpha_measured": len(alpha_with_pnl),
+        "alpha_total_pnl": round(sum(alpha_pnls), 2) if alpha_pnls else 0,
+        "alpha_avg_pnl": round(sum(alpha_pnls) / len(alpha_pnls), 2) if alpha_pnls else 0,
+        "alpha_win_rate": round(len(alpha_winners) / len(alpha_pnls) * 100, 1) if alpha_pnls else 0,
+        "alpha_best": round(max(alpha_pnls), 2) if alpha_pnls else 0,
+        "alpha_worst": round(min(alpha_pnls), 2) if alpha_pnls else 0,
+        "alpha_profit_factor": round(alpha_profit_factor, 2) if alpha_profit_factor != float("inf") else 99.99,
+        # Research Group stats (non-alpha, for comparison)
+        "research_count": len(research_all),
+        "research_measured": len(research_with_pnl),
+        "research_total_pnl": round(sum(research_pnls), 2) if research_pnls else 0,
+        "research_avg_pnl": round(sum(research_pnls) / len(research_pnls), 2) if research_pnls else 0,
+        "research_win_rate": round(len(research_winners) / len(research_pnls) * 100, 1) if research_pnls else 0,
         "pipeline_count": len(pipeline),
         # Bot trade stats (kept for reference)
         "bot_total_pnl": round(sum(bot_pnls), 2) if bot_pnls else 0,
@@ -602,6 +631,20 @@ def generate_claude_briefing():
         s["measurable_signals"], s["signal_win_rate"], s["signal_avg_pnl"]))
     lines.append("  Best: {}% | Worst: {}%".format(s["signal_best"], s["signal_worst"]))
     lines.append("  Direction: {} SHORT, {} LONG".format(s["short_count"], s["long_count"]))
+    lines.append("")
+    lines.append("ALPHA GROUP ({})".format(s.get("alpha_formula", "")))
+    lines.append("  Signals: {} measured ({} total) | Win rate: {}% | Avg P&L: {}%".format(
+        s.get("alpha_measured", 0), s.get("alpha_count", 0),
+        s.get("alpha_win_rate", 0), s.get("alpha_avg_pnl", 0)))
+    lines.append("  Total P&L: {}% | Profit Factor: {}x".format(
+        s.get("alpha_total_pnl", 0), s.get("alpha_profit_factor", 0)))
+    lines.append("  Best: {}% | Worst: {}%".format(
+        s.get("alpha_best", 0), s.get("alpha_worst", 0)))
+    lines.append("")
+    lines.append("RESEARCH GROUP (non-alpha):")
+    lines.append("  Signals: {} measured | Win rate: {}% | Avg P&L: {}%".format(
+        s.get("research_measured", 0), s.get("research_win_rate", 0),
+        s.get("research_avg_pnl", 0)))
     lines.append("")
 
     lines.append("CONFIDENCE BAND PERFORMANCE:")

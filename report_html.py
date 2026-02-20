@@ -9,7 +9,7 @@ import logging
 from datetime import datetime, timezone
 
 from analytics import generate_analytics
-from config import REPORTS_DIR, BANDS, KILL_DISPLAY_HOURS
+from config import REPORTS_DIR, BANDS, KILL_DISPLAY_HOURS, ALPHA_FORMULA_DESC
 
 logger = logging.getLogger("hedgefund.report")
 
@@ -106,11 +106,11 @@ def _build_timeline_cells(m):
 # ---------------------------------------------------------------------------
 
 def _classify_candidates(candidates):
-    """Split candidates into three sections: active, pipeline, research.
+    """Split candidates into three sections: active, alpha pipeline, research.
 
     Active: state in (ACTIVE, PUBLISH)
-    Pipeline (qualified): state == WATCH AND direction == LONG AND band in (A, B, C)
-    Research Lab: everything else that is visible (recent kills, non-qualifying WATCH)
+    Alpha Pipeline: state == WATCH AND alpha == True (LONG + Band A/B)
+    Research Lab: everything else that is visible (non-alpha WATCH, kills, pending)
     """
     now = datetime.now(timezone.utc)
 
@@ -141,7 +141,7 @@ def _classify_candidates(candidates):
 
         if state in ("ACTIVE", "PUBLISH"):
             active_list.append(m)
-        elif state == "WATCH" and m.get("direction") == "LONG" and m.get("band") in ("A", "B", "C"):
+        elif state == "WATCH" and m.get("alpha"):
             pipeline_list.append(m)
         else:
             research_list.append(m)
@@ -271,18 +271,18 @@ def _build_active_row(m):
 
 
 def _build_pipeline_section(pipeline_list):
-    """Build HTML for Pipeline -- Qualified Candidates section."""
+    """Build HTML for Alpha Pipeline section."""
     count = len(pipeline_list)
     header = (
         '<div class="section-bar section-bar-pipeline">'
         '<span class="section-bar-icon">&#9670;</span> '
-        'Pipeline &mdash; Qualified Candidates'
-        '<span class="section-bar-count">{} candidate{} awaiting entry</span>'
+        'Alpha Pipeline &mdash; Trading Formula Candidates'
+        '<span class="section-bar-count">{} alpha candidate{} awaiting entry</span>'
         '</div>'
     ).format(count, "s" if count != 1 else "")
 
     if not pipeline_list:
-        return header + '<div class="section-empty">No qualified candidates in the pipeline. Scanning for Band A/B/C LONG signals.</div>'
+        return header + '<div class="section-empty">No alpha candidates in the pipeline. Scanning for LONG + Band A/B signals.</div>'
 
     rows = []
     for m in pipeline_list:
@@ -393,7 +393,7 @@ def _build_research_section(research_list, hidden_kills):
         '<div class="section-bar section-bar-research">'
         '<span class="section-bar-icon">&#9881;</span> '
         'Research Lab &mdash; Experimental &amp; Dismissed'
-        '<span class="section-bar-count">{killed} killed, {watch} non-qualifying watch</span>'
+        '<span class="section-bar-count">{killed} killed, {watch} non-alpha watch</span>'
         '</div>'
     ).format(killed=killed_in_list, watch=watch_in_list)
 
@@ -448,13 +448,13 @@ def _build_research_row(m):
 
     reason = m.get("state_reason") or m.get("kill_reason") or ""
     if not reason and state == "WATCH":
-        # Explain why it is not qualified
+        # Explain why it is not in the alpha group
         if m.get("direction") != "LONG":
-            reason = "Non-LONG direction"
-        elif m.get("band") not in ("A", "B", "C"):
-            reason = "Band {} (below threshold)".format(m.get("band", "?"))
+            reason = "Non-LONG direction (not alpha)"
+        elif m.get("band") not in ("A", "B"):
+            reason = "Band {} (below alpha threshold)".format(m.get("band", "?"))
         else:
-            reason = "Does not meet qualification criteria"
+            reason = "Does not meet alpha criteria"
     reason = reason[:80]
 
     row_class = "killed-row" if state == "KILLED" else "research-watch-row"
@@ -490,54 +490,72 @@ def _build_research_row(m):
 # ---------------------------------------------------------------------------
 
 def _build_backtest_card(s):
-    """Build the signal performance summary card for qualified signals."""
-    total_pnl = s.get("qualified_total_pnl", 0)
-    avg_pnl = s.get("qualified_avg_pnl", 0)
-    total_color = "#16a34a" if total_pnl >= 0 else "#cc0000"
-    total_sign = "+" if total_pnl >= 0 else ""
-    avg_color = "#16a34a" if avg_pnl >= 0 else "#cc0000"
-    avg_sign = "+" if avg_pnl >= 0 else ""
+    """Build the Alpha Group performance card — the headline card."""
+    alpha_pnl = s.get("alpha_total_pnl", 0)
+    alpha_avg = s.get("alpha_avg_pnl", 0)
+    alpha_color = "#4ade80" if alpha_pnl >= 0 else "#f87171"
+    alpha_sign = "+" if alpha_pnl >= 0 else ""
+    avg_color = "#4ade80" if alpha_avg >= 0 else "#f87171"
+    avg_sign = "+" if alpha_avg >= 0 else ""
+
+    # Research group comparison
+    res_pnl = s.get("research_total_pnl", 0)
+    res_wr = s.get("research_win_rate", 0)
+    res_measured = s.get("research_measured", 0)
+    res_sign = "+" if res_pnl >= 0 else ""
+
     return """<div class="backtest-card">
     <div class="backtest-header">
-        <span class="backtest-icon">&#9889;</span>
-        Signal Performance &mdash; Qualified Signals
+        <span class="backtest-icon">&#9733;</span>
+        Alpha Group Performance
     </div>
     <div class="backtest-stats">
         <div class="backtest-stat">
-            <div class="backtest-num">{trades}</div>
-            <div class="backtest-label">Signals</div>
+            <div class="backtest-num">{alpha_measured}</div>
+            <div class="backtest-label">Alpha Signals</div>
         </div>
         <div class="backtest-stat">
-            <div class="backtest-num">{win_rate:.0f}%</div>
+            <div class="backtest-num">{alpha_wr:.0f}%</div>
             <div class="backtest-label">Win Rate</div>
         </div>
         <div class="backtest-stat">
-            <div class="backtest-num" style="color:{total_color}">{total_sign}{total_pnl:.0f}%</div>
+            <div class="backtest-num" style="color:{alpha_color}">{alpha_sign}{alpha_pnl:.0f}%</div>
             <div class="backtest-label">Total P&amp;L</div>
         </div>
         <div class="backtest-stat">
-            <div class="backtest-num" style="color:{avg_color}">{avg_sign}{avg_pnl:.1f}%</div>
+            <div class="backtest-num" style="color:{avg_color}">{avg_sign}{alpha_avg:.1f}%</div>
             <div class="backtest-label">Avg per Signal</div>
         </div>
         <div class="backtest-stat">
-            <div class="backtest-num" style="color:var(--accent)">{profit_factor:.2f}&times;</div>
+            <div class="backtest-num" style="color:#2dd4bf">{alpha_pf:.2f}&times;</div>
             <div class="backtest-label">Profit Factor</div>
         </div>
     </div>
     <div class="backtest-rules">
-        <span class="rules-label">Scope:</span>
-        Band A/B/C LONG signals &middot; Tracked since discovery &middot; Report P&amp;L from signal price
+        <span class="rules-label">Formula:</span>
+        {formula} &middot; Report P&amp;L from signal price
+    </div>
+    <div style="margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:2rem;flex-wrap:wrap;font-size:0.78rem">
+        <div style="color:rgba(255,255,255,0.5)">
+            <span style="font-weight:700;color:rgba(255,255,255,0.7)">Research:</span>
+            {res_measured} signals &middot; {res_wr:.0f}% win rate &middot; {res_sign}{res_pnl:.0f}% total P&amp;L
+        </div>
     </div>
 </div>""".format(
-        trades=s.get("qualified_measured", 0),
-        win_rate=s.get("qualified_win_rate", 0),
-        total_pnl=total_pnl,
-        total_color=total_color,
-        total_sign=total_sign,
-        avg_pnl=avg_pnl,
+        alpha_measured=s.get("alpha_measured", 0),
+        alpha_wr=s.get("alpha_win_rate", 0),
+        alpha_pnl=alpha_pnl,
+        alpha_color=alpha_color,
+        alpha_sign=alpha_sign,
+        alpha_avg=alpha_avg,
         avg_color=avg_color,
         avg_sign=avg_sign,
-        profit_factor=s.get("signal_profit_factor", 0))
+        alpha_pf=s.get("alpha_profit_factor", 0),
+        formula=ALPHA_FORMULA_DESC,
+        res_measured=res_measured,
+        res_wr=res_wr,
+        res_pnl=res_pnl,
+        res_sign=res_sign)
 
 
 # ---------------------------------------------------------------------------
@@ -820,23 +838,26 @@ def _build_learning_dashboard(data):
 # ---------------------------------------------------------------------------
 
 def _dynamic_headline(s):
-    """Generate dynamic headline based on signal performance."""
-    parts = []
-    if s["active_count"] > 0:
-        parts.append("{} Active Trade{}".format(s["active_count"], "s" if s["active_count"] != 1 else ""))
-    if s["measurable_signals"] > 0:
-        parts.append("{} Signals Tracked".format(s["measurable_signals"]))
-    if s.get("signal_win_rate", 0) > 0:
-        parts.append("{:.0f}% Win Rate".format(s["signal_win_rate"]))
-    if s.get("signal_profit_factor", 0) > 1:
-        parts.append("{:.2f}x Profit Factor".format(s["signal_profit_factor"]))
-    if parts:
+    """Generate dynamic headline based on alpha group performance."""
+    alpha_measured = s.get("alpha_measured", 0)
+    alpha_wr = s.get("alpha_win_rate", 0)
+    alpha_pf = s.get("alpha_profit_factor", 0)
+
+    if alpha_measured > 0:
+        parts = []
+        parts.append("{} Alpha Signals".format(alpha_measured))
+        if alpha_wr > 0:
+            parts.append("{:.0f}% Win Rate".format(alpha_wr))
+        if alpha_pf > 1:
+            parts.append("{:.1f}x Profit Factor".format(alpha_pf))
+        if s.get("research_measured", 0) > 0:
+            parts.append("{} Research Signals".format(s["research_measured"]))
         return ", ".join(parts)
 
     if s["total_candidates"] == 0:
         return "No positions yet. Awaiting first report."
     if s["pipeline_count"] > 0:
-        return "{} candidates in pipeline, awaiting optimal entry.".format(s["pipeline_count"])
+        return "{} candidates in alpha pipeline, awaiting optimal entry.".format(s["pipeline_count"])
     return "Tracking {} positions across confidence bands.".format(s["total_candidates"])
 
 
@@ -1140,8 +1161,8 @@ def generate_html_report():
     headline = _dynamic_headline(s)
 
     # Pre-compute values that need sign handling for the template
-    sig_total = s.get("signal_total_pnl", 0)
-    sig_total_sign = "+" if sig_total >= 0 else ""
+    alpha_total = s.get("alpha_total_pnl", 0)
+    alpha_total_sign = "+" if alpha_total >= 0 else ""
 
     html = """<!DOCTYPE html>
 <html lang="en">
@@ -1152,12 +1173,12 @@ def generate_html_report():
 <!-- Open Graph / Social sharing preview -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="NOAH Hedge Fund Edge Tracker">
-<meta property="og:description" content="Information asymmetry intelligence. {measurable_signals} signals tracked, {signal_win_rate:.0f}% win rate, {sig_total_sign}{signal_total_pnl:.0f}% total signal P&amp;L.">
+<meta property="og:description" content="Alpha Group: {alpha_measured} signals, {alpha_win_rate:.0f}% win rate, {alpha_total_sign}{alpha_total_pnl:.0f}% P&amp;L, {alpha_profit_factor:.1f}x profit factor.">
 <meta property="og:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
 <meta property="og:url" content="https://ivanmassow.github.io/hedgefund-tracker/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="NOAH Hedge Fund Edge Tracker">
-<meta name="twitter:description" content="Information asymmetry intelligence. {measurable_signals} signals tracked, {sig_total_sign}{signal_total_pnl:.0f}% total signal P&amp;L.">
+<meta name="twitter:description" content="Alpha Group: {alpha_measured} signals, {alpha_win_rate:.0f}% win rate, {alpha_total_sign}{alpha_total_pnl:.0f}% P&amp;L, {alpha_profit_factor:.1f}x profit factor.">
 <meta name="twitter:image" content="https://ivanmassow.github.io/hedgefund-tracker/og-image.png?v=2">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -1610,28 +1631,28 @@ body {{
         <div class="headline">{headline}</div>
         <div class="stat-grid">
             <div class="stat-box">
-                <div class="num accent">{measurable_signals}</div>
-                <div class="label">Measurable Signals</div>
+                <div class="num accent">{alpha_measured}</div>
+                <div class="label">Alpha Signals</div>
             </div>
             <div class="stat-box">
                 <div class="num">{active}</div>
                 <div class="label">Active Trade{active_s}</div>
             </div>
             <div class="stat-box">
-                <div class="num">{pipeline}</div>
-                <div class="label">Pipeline</div>
+                <div class="num green">{alpha_total_sign}{alpha_total_pnl:.0f}%</div>
+                <div class="label">Alpha P&amp;L</div>
             </div>
             <div class="stat-box">
-                <div class="num green">{sig_total_sign}{signal_total_pnl:.0f}%</div>
-                <div class="label">Signal P&amp;L</div>
+                <div class="num">{alpha_win_rate:.0f}%</div>
+                <div class="label">Alpha Win Rate</div>
             </div>
             <div class="stat-box">
-                <div class="num">{signal_win_rate:.0f}%</div>
-                <div class="label">Win Rate</div>
-            </div>
-            <div class="stat-box">
-                <div class="num accent">{signal_profit_factor:.2f}&times;</div>
+                <div class="num accent">{alpha_profit_factor:.2f}&times;</div>
                 <div class="label">Profit Factor</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" style="color:var(--grey-400)">{research_measured}</div>
+                <div class="label">Research Signals</div>
             </div>
         </div>
     </div>
@@ -1650,12 +1671,10 @@ body {{
         <div class="section-label">Act I</div>
         <div class="section-title">Trading Sheet</div>
         <div class="section-intro">
-            Three-tier view: <strong style="color:#2563eb">Active trades</strong> at the top,
-            <strong style="color:#0d7680">qualified pipeline</strong> candidates next,
-            and the <strong style="color:#6b7280">research lab</strong> below.
-            Blue <strong>B</strong> badges mark live trades.
-            <span style="color:#7c3aed;font-weight:700">Report P&amp;L</span> (purple) shows movement since the report price.
-            <span style="color:#16a34a;font-weight:700">Trade P&amp;L</span> shows performance from actual entry.
+            <strong style="color:#2563eb">Active trades</strong> at the top,
+            <strong style="color:#0d7680">Alpha Pipeline</strong> (LONG + Band A/B signals matching our formula) next,
+            and the <strong style="color:#6b7280">Research Lab</strong> below for learning.
+            <span style="color:#7c3aed;font-weight:700">Report P&amp;L</span> shows movement since the signal price.
         </div>
 
         {active_section}
@@ -1715,14 +1734,15 @@ body {{
 </html>""".format(
         now_str=now_str,
         headline=headline,
-        measurable_signals=s.get("measurable_signals", 0),
+        alpha_measured=s.get("alpha_measured", 0),
         active=s["active_count"],
         active_s="s" if s["active_count"] != 1 else "",
         pipeline=s["pipeline_count"],
-        signal_total_pnl=s.get("signal_total_pnl", 0),
-        signal_win_rate=s.get("signal_win_rate", 0),
-        signal_profit_factor=s.get("signal_profit_factor", 0),
-        sig_total_sign=sig_total_sign,
+        alpha_total_pnl=s.get("alpha_total_pnl", 0),
+        alpha_win_rate=s.get("alpha_win_rate", 0),
+        alpha_profit_factor=s.get("alpha_profit_factor", 0),
+        alpha_total_sign=alpha_total_sign,
+        research_measured=s.get("research_measured", 0),
         backtest_card=backtest_card,
         active_section=active_section,
         pipeline_section=pipeline_section,
