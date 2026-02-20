@@ -1,12 +1,12 @@
 {
   "system": "hedgefund",
   "title": "Hedge Fund Edge Tracker",
-  "updated_at": "2026-02-20T15:12:50.024037+00:00",
+  "updated_at": "2026-02-20T15:39:11.966648+00:00",
   "total_positions": 197,
   "active_count": 2,
   "publish_count": 0,
-  "watch_count": 21,
-  "killed_count": 174,
+  "watch_count": 17,
+  "killed_count": 178,
   "pending_count": 0,
   "total_pnl": -6.1,
   "win_rate": 33.3,
@@ -79,7 +79,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I will look for press releases from Volkswagen regarding the upcoming court date",
+      "watching_for": "I will monitor for any press releases from Volkswagen regarding the court procee",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
@@ -102,7 +102,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 7,
       "thesis_status": "strengthening",
-      "watching_for": "I will monitor for any authoritative news regarding FRMI's litigation details, s",
+      "watching_for": "I'm looking for actionable updates on the litigation from authoritative sources ",
       "journal_count": 5,
       "signal_velocity": "propagating",
       "signal_hits_24h": 5
@@ -125,7 +125,7 @@
       "state_reason": "DD approved \u2014 watching for signal confirmation",
       "conviction": 6,
       "thesis_status": "intact",
-      "watching_for": "I am specifically looking for credible announcements of active litigation, such ",
+      "watching_for": "I am looking for credible evidence of active litigation, such as case numbers or",
       "journal_count": 5,
       "signal_velocity": "quiet",
       "signal_hits_24h": 0
